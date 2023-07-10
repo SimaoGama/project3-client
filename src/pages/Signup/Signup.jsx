@@ -1,21 +1,22 @@
 // import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { ThemeProvider } from '@mui/material/styles';
-import { tokens } from '../../data/theme';
-import { useContext } from 'react';
-import { ColorModeContext } from '../../context/theme.context';
-import HowToRegTwoToneIcon from '@mui/icons-material/HowToRegTwoTone';
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { ThemeProvider } from "@mui/material/styles";
+import { tokens } from "../../data/theme";
+import { useContext } from "react";
+import { ColorModeContext } from "../../context/theme.context";
+import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
+import { Link as RouterLink } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -25,12 +26,12 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
@@ -41,12 +42,12 @@ const SignUp = () => {
 
   const colors = tokens(theme.palette.mode);
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get('email'),
-      password: data.get('password')
+      email: data.get("email"),
+      password: data.get("password"),
     });
   };
 
@@ -61,12 +62,12 @@ const SignUp = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <HowToRegTwoToneIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -90,8 +91,8 @@ const SignUp = () => {
                   InputLabelProps={{
                     style: {
                       color: theme.palette.text.primary, // Set label color for light and dark themes
-                      borderColor: colors.grey[100]
-                    }
+                      borderColor: colors.grey[100],
+                    },
                   }}
                 />
               </Grid>
@@ -106,8 +107,8 @@ const SignUp = () => {
                   InputLabelProps={{
                     style: {
                       color: theme.palette.text.primary,
-                      orderColor: theme.palette.divider
-                    }
+                      orderColor: theme.palette.divider,
+                    },
                   }}
                 />
               </Grid>
@@ -139,10 +140,10 @@ const SignUp = () => {
                       value="allowExtraEmails"
                       color="primary"
                       sx={{
-                        '&.Mui-checked': {
+                        "&.Mui-checked": {
                           color:
-                            theme.palette.mode === 'dark' ? '#fff' : 'inherit'
-                        }
+                            theme.palette.mode === "dark" ? "#fff" : "inherit",
+                        },
                       }}
                     />
                   }
@@ -160,15 +161,17 @@ const SignUp = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link
-                  href="/login"
+                <RouterLink
+                  to="/login"
                   variant="body2"
                   sx={{
-                    color: theme.palette.mode === 'dark' ? '#fff' : 'inherit'
+                    color: theme.palette.mode === "dark" ? "#fff" : "inherit",
                   }}
                 >
-                  Already have an account? Sign in
-                </Link>
+                  <Typography sx={{ fontSize: "0.7rem" }} variant="h6">
+                    Already have an account? Sign in
+                  </Typography>
+                </RouterLink>
               </Grid>
             </Grid>
             <Button
