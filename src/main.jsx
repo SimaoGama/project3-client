@@ -1,29 +1,17 @@
-import React from "react";
-import { createRoot } from "react-dom";
-import App from "./App.jsx";
-import { BrowserRouter as Router } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
-import { colorModeContext, useMode } from "./data/theme.js";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+// import { ThemeProvider } from './context/theme.context';
+import App from './App.jsx';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { CssBaseline } from '@mui/material';
+import ThemeProviderWrapper from './context/theme.context.jsx';
 
-const Root = () => {
-  const [theme, colorMode] = useMode();
-
-  return (
-    <colorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <App />
-        </Router>
-      </ThemeProvider>
-    </colorModeContext.Provider>
-  );
-};
-
-const rootElement = document.getElementById("root");
-const root = createRoot(rootElement);
-
-root.render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Root />
+    <Router>
+      <ThemeProviderWrapper>
+        <App />
+      </ThemeProviderWrapper>
+    </Router>
   </React.StrictMode>
 );

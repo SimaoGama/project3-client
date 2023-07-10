@@ -1,8 +1,42 @@
-import { createContext, useState, useMemo } from 'react';
+/* import React, { createContext, useState, useMemo, useContext } from 'react';
 
 import { createTheme } from '@mui/material/styles';
+import { themeSettings } from '../data/theme';
+import { ThemeProvider } from '@mui/system';
 
-//color design tokens
+const ThemeContext = createContext();
+
+export const colorModeContext = createContext({
+  toggleColorMode: () => {}
+});
+
+export const useMode = () => {
+  const [mode, setMode] = useState('light');
+
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () =>
+        setMode(prev => (prev === 'light' ? 'dark' : 'light'))
+    }),
+    []
+  );
+
+  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+
+  return [theme, colorMode];
+};
+
+export const ThemeProviderWrapper = ({ children }) => {
+  const { theme } = useContext(ThemeContext);
+
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+};
+
+export { ThemeContext };
+ */
+
+import { createTheme } from '@mui/material';
+import { createContext, useEffect, useState } from 'react';
 export const tokens = mode => ({
   ...(mode === 'dark'
     ? {
@@ -200,23 +234,39 @@ export const themeSettings = mode => {
   };
 };
 
-// context for color mode
-export const colorModeContext = createContext({
-  toggleColorMode: () => {}
-});
+export const ColorModeContext = createContext();
 
-export const useMode = () => {
-  const [mode, setMode] = useState('light');
+const defaultTheme = createTheme(themeSettings('light'));
 
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () =>
-        setMode(prev => (prev === 'light' ? 'dark' : 'light'))
-    }),
-    []
+export default function ThemeProviderWrapper({ children }) {
+  const [colorMode, setColorMode] = useState('light');
+  const [theme, setTheme] = useState(defaultTheme);
+
+  const handleThemeChange = () => {
+    switch (colorMode) {
+      case 'light':
+        setColorMode('dark');
+        break;
+      default:
+        setColorMode('light');
+    }
+    setTheme(createTheme(themeSettings(colorMode)));
+  };
+
+  useEffect(() => {
+    handleThemeChange();
+  }, []);
+
+  const value = {
+    colorMode,
+    setColorMode,
+    handleThemeChange,
+    theme
+  };
+
+  return (
+    <ColorModeContext.Provider value={value}>
+      {children}
+    </ColorModeContext.Provider>
   );
-
-  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-
-  return [theme, colorMode];
-};
+}
