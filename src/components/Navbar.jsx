@@ -5,14 +5,17 @@ import { MdDarkMode } from 'react-icons/md';
 import { MdLightMode } from 'react-icons/md';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { tokens, useMode } from '../data/theme';
 import { Typography } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import Button from '@mui/material/Button';
+import { AuthContext } from '../context/auth.context';
 
 const Navbar = () => {
   const [isClicked, setIsClicked] = useState(false);
+  const { isLoggedIn, logOutUser } = useContext(AuthContext);
+
   const [theme, colorMode] = useMode();
   const { toggleColorMode } = colorMode;
   const colors = tokens(theme.palette.mode);
@@ -67,32 +70,55 @@ const Navbar = () => {
                     </Typography>
                   </NavLink>
                 </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/signup"
-                    className={({ isActive }) =>
-                      'nav-links' + (isActive ? ' activated' : '')
-                    }
-                    onClick={closeMobileMenu}
-                  >
-                    <Typography component="h1" variant="h4">
-                      Signup
-                    </Typography>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/login"
-                    className={({ isActive }) =>
-                      'nav-links' + (isActive ? ' activated' : '')
-                    }
-                    onClick={closeMobileMenu}
-                  >
-                    <Typography component="h1" variant="h4">
-                      Login
-                    </Typography>
-                  </NavLink>
-                </li>
+
+                {isLoggedIn && (
+                  <>
+                    <li className="nav-item">
+                      <NavLink
+                        to="/login"
+                        className={({ isActive }) =>
+                          'nav-links' + (isActive ? ' activated' : '')
+                        }
+                        onClick={logOutUser}
+                      >
+                        <Typography component="h1" variant="h4">
+                          Logout
+                        </Typography>
+                      </NavLink>
+                    </li>
+                  </>
+                )}
+
+                {!isLoggedIn && (
+                  <>
+                    <li className="nav-item">
+                      <NavLink
+                        to="/signup"
+                        className={({ isActive }) =>
+                          'nav-links' + (isActive ? ' activated' : '')
+                        }
+                        onClick={closeMobileMenu}
+                      >
+                        <Typography component="h1" variant="h4">
+                          Signup
+                        </Typography>
+                      </NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink
+                        to="/login"
+                        className={({ isActive }) =>
+                          'nav-links' + (isActive ? ' activated' : '')
+                        }
+                        onClick={closeMobileMenu}
+                      >
+                        <Typography component="h1" variant="h4">
+                          Login
+                        </Typography>
+                      </NavLink>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </nav>

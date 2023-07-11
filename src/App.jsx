@@ -3,10 +3,11 @@ import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/Home/LandingPage';
 import SignUp from './pages/Signup/Signup';
 import Navbar from './components/Navbar';
-import Login from './pages/Login/Login';
 import { useContext } from 'react';
 import { ColorModeContext } from './context/theme.context';
 import LogIn from './pages/Login/Login';
+import IsAnon from './components/Validation/isAnon';
+import { ToastContainer } from 'react-toastify';
 
 const TestComponent = () => {
   const { theme, handleThemeChange } = useContext(ColorModeContext);
@@ -23,10 +24,26 @@ function App() {
     <>
       <Navbar />
 
+      <ToastContainer position="bottom-center" />
+
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<LogIn />} />
+        <Route
+          path="/signup"
+          element={
+            <IsAnon>
+              <SignUp />
+            </IsAnon>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <IsAnon>
+              <LogIn />
+            </IsAnon>
+          }
+        />
         <Route path="/test" element={<TestComponent />} />
       </Routes>
     </>
