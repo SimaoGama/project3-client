@@ -1,16 +1,19 @@
-import { Link, NavLink } from 'react-router-dom';
-import './Navbar.css';
-import { GiWorld } from 'react-icons/gi';
-import { MdDarkMode } from 'react-icons/md';
-import { MdLightMode } from 'react-icons/md';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { IconContext } from 'react-icons/lib';
-import { useContext, useState } from 'react';
-import { tokens, useMode } from '../data/theme';
-import { Typography } from '@mui/material';
-import { ThemeProvider } from '@emotion/react';
-import Button from '@mui/material/Button';
-import { AuthContext } from '../context/auth.context';
+import { Link, NavLink } from "react-router-dom";
+import "./Navbar.css";
+import { GiWorld } from "react-icons/gi";
+import { MdDarkMode } from "react-icons/md";
+import { MdLightMode } from "react-icons/md";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { IconContext } from "react-icons/lib";
+import { useContext, useState } from "react";
+import { tokens, useMode } from "../data/theme";
+import { Box, IconButton, Typography } from "@mui/material";
+import { ThemeProvider } from "@emotion/react";
+import { AuthContext } from "../context/auth.context";
+import { LightModeOutlined, DarkModeOutlined } from "@mui/icons-material";
+
+import SettingsIcon from "@mui/icons-material/Settings";
+import Topbar from "./Topbar/Topbar";
 
 const Navbar = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -31,7 +34,7 @@ const Navbar = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <IconContext.Provider value={{ color: '#fff' }}>
+        <IconContext.Provider value={{ color: "#fff" }}>
           <nav className="navbar">
             <div className="navbar-container container">
               <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
@@ -43,12 +46,12 @@ const Navbar = () => {
               <div className="menu-icon" onClick={handleClick}>
                 {isClicked ? <FaTimes /> : <FaBars />}
               </div>
-              <ul className={isClicked ? 'nav-menu active' : 'nav-menu'}>
+              <ul className={isClicked ? "nav-menu active" : "nav-menu"}>
                 <li className="nav-item">
                   <NavLink
                     to="/"
                     className={({ isActive }) =>
-                      'nav-links' + (isActive ? ' activated' : '')
+                      "nav-links" + (isActive ? " activated" : "")
                     }
                     onClick={closeMobileMenu}
                   >
@@ -61,7 +64,7 @@ const Navbar = () => {
                   <NavLink
                     to="/about"
                     className={({ isActive }) =>
-                      'nav-links' + (isActive ? ' activated' : '')
+                      "nav-links" + (isActive ? " activated" : "")
                     }
                     onClick={closeMobileMenu}
                   >
@@ -71,13 +74,27 @@ const Navbar = () => {
                   </NavLink>
                 </li>
 
+                {/* //HANDLE USER PRIVATE OPTIONS */}
+
                 {isLoggedIn && (
                   <>
                     <li className="nav-item">
                       <NavLink
+                        to="/dashboard"
+                        className={({ isActive }) =>
+                          "nav-links" + (isActive ? " activated" : "")
+                        }
+                      >
+                        <Typography component="h1" variant="h4">
+                          Dashboard
+                        </Typography>
+                      </NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink
                         to="/login"
                         className={({ isActive }) =>
-                          'nav-links' + (isActive ? ' activated' : '')
+                          "nav-links" + (isActive ? " activated" : "")
                         }
                         onClick={logOutUser}
                       >
@@ -86,8 +103,13 @@ const Navbar = () => {
                         </Typography>
                       </NavLink>
                     </li>
+                    <Box display="flex">
+                      <Topbar />
+                    </Box>
                   </>
                 )}
+
+                {/* //HANDLE ANON OPTIONS */}
 
                 {!isLoggedIn && (
                   <>
@@ -95,7 +117,7 @@ const Navbar = () => {
                       <NavLink
                         to="/signup"
                         className={({ isActive }) =>
-                          'nav-links' + (isActive ? ' activated' : '')
+                          "nav-links" + (isActive ? " activated" : "")
                         }
                         onClick={closeMobileMenu}
                       >
@@ -108,7 +130,7 @@ const Navbar = () => {
                       <NavLink
                         to="/login"
                         className={({ isActive }) =>
-                          'nav-links' + (isActive ? ' activated' : '')
+                          "nav-links" + (isActive ? " activated" : "")
                         }
                         onClick={closeMobileMenu}
                       >
