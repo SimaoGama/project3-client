@@ -1,17 +1,17 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom';
 // import { useContext } from "react";
-import LandingPage from "./pages/Home/LandingPage";
-import SignUp from "./pages/Signup/Signup";
-import Navbar from "./components/Navbar";
-import { useContext } from "react";
-import { ColorModeContext } from "./context/theme.context";
-import LogIn from "./pages/Login/Login";
-import IsAnon from "./components/Validation/isAnon";
-import IsPrivate from "./components/Validation/isPrivate";
-import { ToastContainer } from "react-toastify";
-import CreateTrip from "./components/CreateTrip/CreateTrip";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Topbar from "./components/Topbar/Topbar";
+import LandingPage from './pages/Home/LandingPage';
+import SignUp from './pages/Signup/Signup';
+import Navbar from './components/Header/Navbar/Navbar';
+import { useContext } from 'react';
+import { ColorModeContext } from './context/theme.context';
+import LogIn from './pages/Login/Login';
+import IsAnon from './components/Validation/isAnon';
+import IsPrivate from './components/Validation/isPrivate';
+import { ToastContainer } from 'react-toastify';
+import CreateTrip from './components/CreateTrip/CreateTrip';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Topbar from './components/Header/Topbar/Topbar';
 
 // const TestComponent = () => {
 //   const { theme, handleThemeChange } = useContext(ColorModeContext);

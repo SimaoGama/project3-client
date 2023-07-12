@@ -147,3 +147,45 @@
     cursor: pointer;
   }
 }
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.icon-container {
+  position: relative;
+}
+
+.menu-item:hover .icon-container svg {
+  opacity: 1;
+}
+
+.menu-item .menu-text {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.menu-item:hover .menu-text {
+  opacity: 0;
+}
+
+.menu-item .menu-text {
+  display: inline-flex;
+  align-items: center;
+}
+
+.menu-text span {
+  margin-left: 6px; /* Adjust the spacing between icon and text as desired */
+}
+
+.menu-text svg {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.nav-links:hover .menu-text svg {
+  opacity: 1;
+}
