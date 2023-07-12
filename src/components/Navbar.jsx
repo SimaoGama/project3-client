@@ -14,13 +14,14 @@ import { LightModeOutlined, DarkModeOutlined } from "@mui/icons-material";
 
 import SettingsIcon from "@mui/icons-material/Settings";
 import Topbar from "./Topbar/Topbar";
+import { ColorModeContext } from "../context/theme.context";
 
 const Navbar = () => {
   const [isClicked, setIsClicked] = useState(false);
-  const { isLoggedIn, logOutUser } = useContext(AuthContext);
+  const { isLoggedIn, logOutUser, user } = useContext(AuthContext);
 
-  const [theme, colorMode] = useMode();
-  const { toggleColorMode } = colorMode;
+  const { handleThemeChange: toggleColorMode, theme } =
+    useContext(ColorModeContext);
   const colors = tokens(theme.palette.mode);
 
   const handleToggleTheme = () => {
@@ -100,6 +101,21 @@ const Navbar = () => {
                       >
                         <Typography component="h1" variant="h4">
                           Logout
+                        </Typography>
+                      </NavLink>
+                    </li>
+
+                    <li className="nav-item">
+                      <NavLink
+                        to="/login"
+                        className={({ isActive }) =>
+                          "nav-links" + (isActive ? " activated" : "")
+                        }
+                      >
+                        <Typography component="h2" variant="h5">
+                          {`Welcome ${user.firstName}` +
+                            " " +
+                            `${user.lastName}`}
                         </Typography>
                       </NavLink>
                     </li>

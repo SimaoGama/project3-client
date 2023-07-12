@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Sidebar as ProSidebar,
   Menu,
@@ -22,6 +22,7 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
+import { AuthContext } from "../../context/auth.context";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -44,6 +45,7 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const { isLoggedIn, logOutUser, user } = useContext(AuthContext);
 
   return (
     <Box
@@ -100,19 +102,19 @@ const Sidebar = () => {
                 <img
                   alt="profile-user"
                   width="100px"
-                  height="100px"
+                  height="50px"
                   src={`../../assets/user.png`}
                   style={{ cursor: "pointer", borderRadius: "10%" }}
                 />
               </Box>
               <Box textAlign="center">
                 <Typography
-                  variant="h3"
+                  variant="h4"
                   color={colors.grey[100]}
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Simao Gama
+                  {`${user.firstName}` + " " + `${user.lastName}`}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   VP Fancy Admin

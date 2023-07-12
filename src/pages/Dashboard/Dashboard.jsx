@@ -1,5 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import { useContext } from "react";
+import { AuthContext } from "../../context/auth.context";
 
 const Dashboard = () => {
   return (

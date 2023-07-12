@@ -10,13 +10,15 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutline";
 import SearchOutlinedIcon from "@mui/icons-material/Search";
 import { useMode } from "../../data/theme";
 import { AuthContext } from "../../context/auth.context";
+import { ColorModeContext } from "../../context/theme.context";
 
 const Topbar = () => {
   const [isClicked, setIsClicked] = useState(false);
-  const { isLoggedIn, logOutUser } = useContext(AuthContext);
+  const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
+  const { isLoggedIn, logOutUser, user } = useContext(AuthContext);
 
-  const [theme, colorMode] = useMode();
-  const { toggleColorMode } = colorMode;
+  const { handleThemeChange: toggleColorMode, theme } =
+    useContext(ColorModeContext);
   const colors = tokens(theme.palette.mode);
 
   const handleToggleTheme = () => {
@@ -29,20 +31,9 @@ const Topbar = () => {
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
-      <Box
-        display="flex"
-        backgroundColor={colors.primary[400]}
-        borderRadius="3px"
-      >
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
-        <IconButton type=" button" sx={{ p: 1 }}>
-          <SearchOutlinedIcon />
-        </IconButton>
-      </Box>
-
       {/* ICONS */}
       <Box display="flex">
-        <IconButton onClick={toggleColorMode}>
+        <IconButton onClick={handleToggleTheme}>
           {theme.palette.mode === "light" ? (
             <DarkModeOutlinedIcon style={{ color: "white" }} />
           ) : (
@@ -58,13 +49,30 @@ const Topbar = () => {
         <IconButton style={{ color: "white" }}>
           <PersonOutlinedIcon />
         </IconButton>
-        <IconButton style={{ color: "white" }}>
-          <NotificationsOutlinedIcon />
-        </IconButton>
-        <IconButton style={{ color: "white" }}>
+      </Box>
+      {!isSearchBarOpen ? (
+        <IconButton
+          style={{ color: "white" }}
+          onClick={() => setIsSearchBarOpen(!isSearchBarOpen)}
+        >
           <SearchOutlinedIcon />
         </IconButton>
-      </Box>
+      ) : (
+        <Box
+          display="flex"
+          backgroundColor={colors.primary[400]}
+          borderRadius="3px"
+        >
+          <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
+          <IconButton
+            type="button"
+            sx={{ p: 1 }}
+            onClick={() => setIsSearchBarOpen(!isSearchBarOpen)}
+          >
+            <SearchOutlinedIcon />
+          </IconButton>
+        </Box>
+      )}
     </Box>
   );
 };
