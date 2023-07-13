@@ -9,10 +9,10 @@ import LogIn from "./pages/Login/Login";
 import IsAnon from "./components/Validation/isAnon";
 import IsPrivate from "./components/Validation/isPrivate";
 import { ToastContainer } from "react-toastify";
-import CreateTrip from "./components/CreateTrip/CreateTrip";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Topbar from "./components/Header/Topbar/Topbar";
 import { ThemeProvider } from "@mui/material";
+import NewTrip from "./components/CreateTrip/NewTrip";
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -50,7 +50,7 @@ function App() {
             path="/trips/new"
             element={
               <IsPrivate>
-                <CreateTrip />
+                <NewTrip />
               </IsPrivate>
             }
           />

@@ -15,6 +15,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
@@ -27,6 +28,7 @@ import { AuthContext } from "../../context/auth.context";
 import { ColorModeContext } from "../../context/theme.context";
 
 import "./Sidebar.css";
+import NewTrip from "../CreateTrip/NewTrip";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -167,7 +169,7 @@ const Sidebar = () => {
               />
               <Item
                 title="My Trips"
-                to="/contacts"
+                to="/trips"
                 icon={<MapOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
@@ -195,9 +197,9 @@ const Sidebar = () => {
                 setSelected={setSelected}
               />
               <Item
-                title="Calendar"
-                to="/calendar"
-                icon={<CalendarTodayOutlinedIcon />}
+                title="New Trip"
+                to="/trips/new"
+                icon={<TravelExploreIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
