@@ -1,19 +1,19 @@
-import { createContext, useEffect, useState } from 'react';
-import { verify } from '../api/auth.api';
+import { createContext, useEffect, useState } from "react";
+import { verify } from "../api/auth.api";
 const AuthContext = createContext();
 
-const AuthProviderWrapper = props => {
+const AuthProviderWrapper = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const storeToken = token => {
-    localStorage.setItem('authToken', token);
+  const storeToken = (token) => {
+    localStorage.setItem("authToken", token);
   };
 
   const authenticateUser = async () => {
     //get token from local storage
-    const storedToken = localStorage.getItem('authToken');
+    const storedToken = localStorage.getItem("authToken");
 
     if (storedToken) {
       try {
@@ -22,7 +22,7 @@ const AuthProviderWrapper = props => {
         setUser(user);
         setIsLoggedIn(true);
       } catch (error) {
-        console.log('An error ocurred authenticating the user', error);
+        console.log("An error ocurred authenticating the user", error);
 
         //if token is invalid, the server response is an error
         setUser(null);
@@ -42,7 +42,7 @@ const AuthProviderWrapper = props => {
 
   const removeToken = () => {
     //delete the token from local storage
-    localStorage.removeItem('authToken');
+    localStorage.removeItem("authToken");
   };
 
   const logOutUser = () => {
@@ -60,7 +60,7 @@ const AuthProviderWrapper = props => {
         user,
         storeToken,
         authenticateUser,
-        logOutUser
+        logOutUser,
       }}
     >
       {props.children}

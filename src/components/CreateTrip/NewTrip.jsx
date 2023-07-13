@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Box } from "@mui/material";
 import { addTrip } from "../../api/trips.api";
 import { AuthContext } from "../../context/auth.context";
@@ -14,9 +14,9 @@ const NewTrip = () => {
   const [destination, setDestination] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const { user } = useContext(AuthContext);
+  const { user, authenticateUser } = useContext(AuthContext);
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleNameChange = (event) => {
     setDestination(event.target.value);
@@ -43,6 +43,8 @@ const NewTrip = () => {
       const response = await addTrip(newTrip, userId);
       console.log("New trip created:", response.data);
       handleClose();
+      // Fetch updated user data to include the new trip
+      authenticateUser(true);
     } catch (error) {
       console.log("Error creating new trip:", error);
     }
@@ -72,9 +74,9 @@ const NewTrip = () => {
         height: "100vh",
       }}
     >
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
+      <Button variant="outlined" onClick={handleClickOpen}>
         Create new trip
-      </Button> */}
+      </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create new trip</DialogTitle>
         <DialogContent>
