@@ -1,19 +1,19 @@
-import { Link, NavLink } from 'react-router-dom';
-import './Navbar.css';
-import { GiWorld } from 'react-icons/gi';
+import { Link, NavLink } from "react-router-dom";
+import "./Navbar.css";
+import { GiWorld } from "react-icons/gi";
 
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { IconContext } from 'react-icons/lib';
-import { useContext, useState } from 'react';
-import { tokens } from '../../../context/theme.context';
-import { Avatar, Box, MenuItem, Typography } from '@mui/material';
-import { ThemeProvider } from '@emotion/react';
-import Topbar from '../Topbar/Topbar';
-import { ColorModeContext } from '../../../context/theme.context';
-import { AuthContext } from '../../../context/auth.context';
-import LoginIcon from '@mui/icons-material/Login';
-import HowToRegTwoToneIcon from '@mui/icons-material/HowToRegTwoTone';
-import Darkmode from '../Darkmode';
+import { FaBars, FaTimes } from "react-icons/fa";
+import { IconContext } from "react-icons/lib";
+import { useContext, useState } from "react";
+import { tokens } from "../../../context/theme.context";
+import { Avatar, Box, MenuItem, Typography } from "@mui/material";
+import { ThemeProvider } from "@emotion/react";
+import Topbar from "../Topbar/Topbar";
+import { ColorModeContext } from "../../../context/theme.context";
+import { AuthContext } from "../../../context/auth.context";
+import LoginIcon from "@mui/icons-material/Login";
+import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
+import Darkmode from "../Darkmode";
 
 const Navbar = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -34,7 +34,7 @@ const Navbar = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <IconContext.Provider value={{ color: '#fff' }}>
+        <IconContext.Provider value={{ color: "#fff" }}>
           <nav className="navbar">
             <div className="navbar-container container">
               <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
@@ -46,12 +46,12 @@ const Navbar = () => {
               <div className="menu-icon" onClick={handleClick}>
                 {isClicked ? <FaTimes /> : <FaBars />}
               </div>
-              <ul className={isClicked ? 'nav-menu active' : 'nav-menu'}>
+              <ul className={isClicked ? "nav-menu active" : "nav-menu"}>
                 <li className="nav-item">
                   <NavLink
                     to="/"
                     className={({ isActive }) =>
-                      'nav-links' + (isActive ? ' activated' : '')
+                      "nav-links" + (isActive ? " activated" : "")
                     }
                     onClick={closeMobileMenu}
                   >
@@ -64,7 +64,7 @@ const Navbar = () => {
                   <NavLink
                     to="/about"
                     className={({ isActive }) =>
-                      'nav-links' + (isActive ? ' activated' : '')
+                      "nav-links" + (isActive ? " activated" : "")
                     }
                     onClick={closeMobileMenu}
                   >
@@ -81,12 +81,12 @@ const Navbar = () => {
                     <li className="nav-item">
                       <NavLink
                         className={({ isActive }) =>
-                          'nav-links' + (isActive ? ' activated' : '')
+                          "nav-links" + (isActive ? " activated" : "")
                         }
                       >
                         <Typography component="h2" variant="h5">
                           {`Welcome ${user.firstName}` +
-                            ' ' +
+                            " " +
                             `${user.lastName}`}
                         </Typography>
                       </NavLink>
@@ -105,15 +105,15 @@ const Navbar = () => {
                       <NavLink
                         to="/signup"
                         className={({ isActive }) =>
-                          'nav-links' + (isActive ? ' activated' : '')
+                          "nav-links" + (isActive ? " activated" : "")
                         }
                         onClick={closeMobileMenu}
                       >
                         <MenuItem className="menu-item">
-                          <span className="menu-text">Signup</span>
                           <span className="icon-container">
                             <HowToRegTwoToneIcon className="fade-icon" />
                           </span>
+                          <Typography className="menu-text">Signup</Typography>
                         </MenuItem>
                       </NavLink>
                     </li>
@@ -121,15 +121,15 @@ const Navbar = () => {
                       <NavLink
                         to="/login"
                         className={({ isActive }) =>
-                          'nav-links' + (isActive ? ' activated' : '')
+                          "nav-links" + (isActive ? " activated" : "")
                         }
                         onClick={closeMobileMenu}
                       >
                         <MenuItem className="menu-item">
-                          <span className="menu-text">Login</span>
                           <span className="icon-container">
                             <LoginIcon className="fade-icon" />
                           </span>
+                          <Typography className="menu-text">Login</Typography>
                         </MenuItem>
                       </NavLink>
                     </li>

@@ -139,7 +139,7 @@ const LogIn = () => {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <RouterLink
-                  to="/login"
+                  to="/signup"
                   variant="body2"
                   sx={{
                     color: theme.palette.mode === "dark" ? "#fff" : "inherit",
@@ -152,7 +152,6 @@ const LogIn = () => {
               </Grid>
             </Grid>
             <Button
-              onClick={handleToggleTheme}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2, bgcolor: colors.blueAccent }}

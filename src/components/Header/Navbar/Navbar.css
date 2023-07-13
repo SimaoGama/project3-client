@@ -10,7 +10,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* font-size: 1.2rem; */
   position: sticky;
   top: 0;
   z-index: 999;
@@ -188,4 +187,23 @@
 
 .nav-links:hover .menu-text svg {
   opacity: 1;
+}
+
+.nav-item .menu-item .icon-container {
+  display: flex;
+  align-items: flex-end;
+  transition: transform 0.3s ease;
+}
+
+.nav-item .menu-item .menu-text {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.nav-item .menu-item:hover .icon-container {
+  transform: translateY(10px);
+}
+
+.nav-item .menu-item:hover .menu-text {
+  opacity: 0;
 }
