@@ -16,7 +16,7 @@ const NewTrip = () => {
   const [endDate, setEndDate] = useState("");
   const { user } = useContext(AuthContext);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleNameChange = (event) => {
     setDestination(event.target.value);
@@ -72,9 +72,9 @@ const NewTrip = () => {
         height: "100vh",
       }}
     >
-      <Button variant="outlined" onClick={handleClickOpen}>
+      {/* <Button variant="outlined" onClick={handleClickOpen}>
         Create new trip
-      </Button>
+      </Button> */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create new trip</DialogTitle>
         <DialogContent>

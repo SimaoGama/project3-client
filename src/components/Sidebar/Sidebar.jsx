@@ -135,7 +135,7 @@ const Sidebar = () => {
                     fontWeight="bold"
                     sx={{ m: "10px 0 0 0" }}
                   >
-                    {`${user.firstName}` + " " + `${user.lastName}`}
+                    {user && `${user.firstName}` + " " + `${user.lastName}`}
                   </Typography>
                   <Typography variant="h5" color={colors.grey[500]}>
                     VP Fancy Admin

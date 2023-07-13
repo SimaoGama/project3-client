@@ -13,56 +13,61 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Topbar from "./components/Header/Topbar/Topbar";
 import { ThemeProvider } from "@mui/material";
 import NewTrip from "./components/CreateTrip/NewTrip";
+import { Sidebar } from "react-pro-sidebar";
+import { AuthContext } from "./context/auth.context";
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
     useContext(ColorModeContext);
   const colors = tokens(theme.palette.mode);
+  const { isLoggedIn, user } = useContext(AuthContext);
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        {/* <Dashboard /> */}
         <Navbar />
-        {/* <Topbar /> */}
+        <div className="app">
+          {isLoggedIn && <Dashboard />}
+          <main className="content">
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route
+                path="/signup"
+                element={
+                  <IsAnon>
+                    <SignUp />
+                  </IsAnon>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <IsAnon>
+                    <LogIn />
+                  </IsAnon>
+                }
+              />
 
-        <ToastContainer position="bottom-center" />
+              <Route
+                path="/dashboard"
+                element={
+                  <IsPrivate>
+                    <Dashboard />
+                  </IsPrivate>
+                }
+              />
 
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route
-            path="/signup"
-            element={
-              <IsAnon>
-                <SignUp />
-              </IsAnon>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <IsAnon>
-                <LogIn />
-              </IsAnon>
-            }
-          />
-          <Route
-            path="/trips/new"
-            element={
-              <IsPrivate>
-                <NewTrip />
-              </IsPrivate>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <IsPrivate>
-                <Dashboard />
-              </IsPrivate>
-            }
-          />
-        </Routes>
+              <Route
+                path="/trips/new"
+                element={
+                  <IsPrivate>
+                    <NewTrip />
+                  </IsPrivate>
+                }
+              />
+            </Routes>
+          </main>
+        </div>
       </ThemeProvider>
     </>
   );

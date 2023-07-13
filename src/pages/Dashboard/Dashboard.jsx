@@ -3,6 +3,9 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
 import { ColorModeContext, tokens } from "../../context/theme.context";
+import NewTrip from "../../components/CreateTrip/NewTrip";
+import { Route, Routes } from "react-router-dom";
+import IsPrivate from "../../components/Validation/isPrivate";
 
 const Dashboard = () => {
   const { handleThemeChange: toggleColorMode, theme } =
