@@ -20,8 +20,8 @@ const setAuthorizationHeaders = () => {
 
 setAuthorizationHeaders();
 
-export const getAllTrips = () => {
-  return axios.get(`${baseURL}/trips`);
+export const getAllTrips = (userId) => {
+  return axios.get(`${baseURL}/trips?userId=${userId}`);
 };
 
 export const getTrip = (id) => {

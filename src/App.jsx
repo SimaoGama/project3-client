@@ -12,6 +12,7 @@ import { ThemeProvider } from "@mui/material";
 import NewTrip from "./components/CreateTrip/NewTrip";
 import { AuthContext } from "./context/auth.context";
 import TripCard from "./components/MyTrips/TripCard";
+import TripList from "./components/MyTrips/TripList";
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -67,7 +68,7 @@ function App() {
                 path="/trips"
                 element={
                   <IsPrivate>
-                    <TripCard />
+                    <TripList />
                   </IsPrivate>
                 }
               />
