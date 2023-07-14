@@ -75,17 +75,17 @@ const NewTrip = () => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md">
+    <Dialog open={open} onClose={handleClose} maxWidth="md" sx={{}}>
       <DialogTitle>Create new trip</DialogTitle>
       <form onSubmit={handleCreateNewTrip}>
-        <DialogContent>
+        <DialogContent sx={{ width: 600 }}>
           <DialogContentText>Name your new trip!</DialogContentText>
           <Box sx={{ mb: 2 }}>
             <TextField
               autoFocus
               margin="dense"
               id="destination"
-              label="My trip to ..."
+              label={"My trip to ..."}
               type="text"
               value={destination}
               onChange={handleNameChange}
@@ -117,6 +117,11 @@ const NewTrip = () => {
               onChange={handleEndDateChange}
               fullWidth
               variant="standard"
+              InputLabelProps={{
+                style: {
+                  color: "text.secondary",
+                },
+              }}
             />
           </Box>
         </DialogContent>

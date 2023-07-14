@@ -17,6 +17,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import { useState } from "react";
 import { deleteTrip } from "../../api/trips.api";
 import DeleteModal from "../Modal/DeleteModal";
+import DayList from "./DayList";
 
 const IMG_URL =
   "https://www.gtitravel.com/wp-content/uploads/2017/06/Do-Travel-Agents-get-free-trips.jpg";
@@ -126,8 +127,8 @@ const TripCard = ({ trip, handleDelete }) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>{trip?.destination}</Typography>
+          <Typography paragraph>Overview:</Typography>
+          <DayList days={trip.days} />
         </CardContent>
       </Collapse>
     </Card>
