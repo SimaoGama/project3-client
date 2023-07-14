@@ -38,12 +38,22 @@ const TripCard = ({ trip }) => {
     return date.toISOString().substring(0, 10);
   };
 
+  const getTotalDays = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const timeDiff = Math.abs(end.getTime() - start.getTime());
+    const totalDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    return totalDays;
+  };
+
+  const totalDays = getTotalDays(trip?.startDate, trip?.endDate);
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            T
+            {trip?.destination.charAt(0)}
           </Avatar>
         }
         action={
@@ -51,7 +61,11 @@ const TripCard = ({ trip }) => {
             <MoreVertIcon />
           </IconButton>
         }
-        title={trip?.destination}
+        title={
+          <Typography variant="h4" component="div">
+            {trip?.destination}
+          </Typography>
+        }
         subheader={`From: ${formatDate(trip?.startDate)} to ${formatDate(
           trip?.endDate
         )}`}
@@ -60,11 +74,11 @@ const TripCard = ({ trip }) => {
         component="img"
         height="194"
         image="/static/images/cards/paella.jpg"
-        alt="Paella dish"
+        alt="Destination img"
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {trip?.startDate}
+          {`My ${totalDays}-day trip to ${trip?.destination}`}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
