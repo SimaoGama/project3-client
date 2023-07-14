@@ -13,7 +13,13 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { useState } from "react";
+import { deleteTrip } from "../../api/trips.api";
+import DeleteModal from "../Modal/DeleteModal";
+
+const IMG_URL =
+  "https://www.gtitravel.com/wp-content/uploads/2017/06/Do-Travel-Agents-get-free-trips.jpg";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -26,8 +32,9 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const TripCard = ({ trip }) => {
+const TripCard = ({ trip, handleDelete }) => {
   const [expanded, setExpanded] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -47,6 +54,15 @@ const TripCard = ({ trip }) => {
   };
 
   const totalDays = getTotalDays(trip?.startDate, trip?.endDate);
+
+  const handleDeleteClick = async () => {
+    try {
+      await deleteTrip(trip._id);
+      handleDelete(trip._id); // Call the parent component's handleDelete function to remove the deleted trip from the UI
+    } catch (error) {
+      console.log("Error deleting trip:", error);
+    }
+  };
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -73,7 +89,7 @@ const TripCard = ({ trip }) => {
       <CardMedia
         component="img"
         height="194"
-        image="/static/images/cards/paella.jpg"
+        image={trip.img ? trip.img : IMG_URL}
         alt="Destination img"
       />
       <CardContent>
@@ -88,6 +104,17 @@ const TripCard = ({ trip }) => {
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
+        <IconButton
+          aria-label="delete"
+          onClick={() => setIsConfirmationOpen(true)}
+        >
+          <DeleteForeverOutlinedIcon />
+        </IconButton>
+        <DeleteModal
+          isConfirmationOpen={isConfirmationOpen}
+          setIsConfirmationOpen={setIsConfirmationOpen}
+          handleDeleteClick={handleDeleteClick}
+        />
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

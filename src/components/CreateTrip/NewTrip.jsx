@@ -9,14 +9,22 @@ import { useContext, useState } from "react";
 import { Box } from "@mui/material";
 import { addTrip } from "../../api/trips.api";
 import { AuthContext } from "../../context/auth.context";
+import { useNavigate } from "react-router-dom";
 
 const NewTrip = () => {
   const [destination, setDestination] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [days, setDays] = useState([]);
   const { user, authenticateUser } = useContext(AuthContext);
 
-  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate("/trips");
+  };
+
+  const [open, setOpen] = useState(true);
 
   const handleNameChange = (event) => {
     setDestination(event.target.value);
@@ -37,6 +45,7 @@ const NewTrip = () => {
       destination,
       startDate,
       endDate,
+      days,
     };
 
     try {
@@ -45,6 +54,7 @@ const NewTrip = () => {
       handleClose();
       // Fetch updated user data to include the new trip
       authenticateUser(true);
+      handleNavigate(); // Navigate to "/trips"
     } catch (error) {
       console.log("Error creating new trip:", error);
     }
@@ -52,6 +62,7 @@ const NewTrip = () => {
     setDestination("");
     setStartDate("");
     setEndDate("");
+    setDays([]);
   };
 
   const handleClickOpen = () => {
@@ -60,67 +71,65 @@ const NewTrip = () => {
 
   const handleClose = () => {
     setOpen(false);
+    navigate("/trips");
   };
 
   return (
-    <Box
-      component="form"
-      noValidate
-      onSubmit={handleCreateNewTrip}
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Create new trip
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create new trip</DialogTitle>
+    <Dialog open={open} onClose={handleClose} maxWidth="md">
+      <DialogTitle>Create new trip</DialogTitle>
+      <form onSubmit={handleCreateNewTrip}>
         <DialogContent>
           <DialogContentText>Name your new trip!</DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="destination"
-            label="My trip to ..."
-            type="text"
-            value={destination}
-            onChange={handleNameChange}
-            fullWidth
-            variant="standard"
-          />
+          <Box sx={{ mb: 2 }}>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="destination"
+              label="My trip to ..."
+              type="text"
+              value={destination}
+              onChange={handleNameChange}
+              fullWidth
+              variant="standard"
+            />
+          </Box>
 
-          <TextField
-            margin="dense"
-            id="startDate"
-            label=""
-            type="date"
-            value={startDate}
-            onChange={handleStartDateChange}
-            fullWidth
-            variant="standard"
-          />
+          <Box sx={{ mb: 2 }}>
+            <DialogContentText>Start Date</DialogContentText>
+            <TextField
+              margin="dense"
+              id="startDate"
+              type="date"
+              value={startDate}
+              onChange={handleStartDateChange}
+              fullWidth
+              variant="standard"
+            />
+          </Box>
 
-          <TextField
-            margin="dense"
-            id="endDate"
-            label=""
-            type="date"
-            value={endDate}
-            onChange={handleEndDateChange}
-            fullWidth
-            variant="standard"
-          />
-          <DialogActions>
-            <Button onClick={handleClose}>confirm</Button>
-          </DialogActions>
+          <Box>
+            <DialogContentText>End Date</DialogContentText>
+            <TextField
+              margin="dense"
+              id="endDate"
+              type="date"
+              value={endDate}
+              onChange={handleEndDateChange}
+              fullWidth
+              variant="standard"
+            />
+          </Box>
         </DialogContent>
-      </Dialog>
-      <Button type="submit">Submit new trip</Button>
-    </Box>
+        <DialogActions>
+          <Button sx={{ color: "text.secondary" }} onClick={handleClose}>
+            Close
+          </Button>
+          <Button sx={{ color: "text.secondary" }} type="submit">
+            Submit new trip
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 
