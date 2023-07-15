@@ -1,57 +1,57 @@
-import { useContext, useState } from "react";
-import { Sidebar as ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { useContext, useState } from 'react';
+import { Sidebar as ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
 
 import {
   Box,
   IconButton,
   ThemeProvider,
   Typography,
-  useTheme,
-} from "@mui/material";
+  useTheme
+} from '@mui/material';
 
-import { Link } from "react-router-dom";
-import { tokens } from "../../data/theme";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
-import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
-import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import { Link } from 'react-router-dom';
+import { tokens } from '../../data/theme';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import ReceiptOutlinedIcon from '@mui/icons-material/ReceiptOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutlined';
+import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 
-import { AuthContext } from "../../context/auth.context";
-import { ColorModeContext } from "../../context/theme.context";
+import { AuthContext } from '../../context/auth.context';
+import { ColorModeContext } from '../../context/theme.context';
 
-import "./Sidebar.css";
-import NewTrip from "../CreateTrip/NewTrip";
+import './Sidebar.css';
+import NewTrip from '../CreateTrip/NewTrip';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   return (
-    <Link to={to} style={{ textDecoration: "none" }}>
+    <Link to={to} style={{ textDecoration: 'none' }}>
       <MenuItem
         active={selected === title}
         style={
-          theme.palette.mode === "dark"
+          theme.palette.mode === 'dark'
             ? { color: colors.grey[800] }
             : { color: colors.grey[100] }
         }
         onClick={() => setSelected(title)}
         icon={
-          <span className={selected === title ? "wiggle" : ""}>{icon}</span>
+          <span className={selected === title ? 'wiggle' : ''}>{icon}</span>
         }
       >
         <Typography>{title}</Typography>
         <div
           className={`fade-overlay ${
-            selected === title ? "fade-overlay-active" : ""
+            selected === title ? 'fade-overlay-active' : ''
           }`}
         ></div>
       </MenuItem>
@@ -61,7 +61,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
+  const [selected, setSelected] = useState('Dashboard');
   const { isLoggedIn, logOutUser, user } = useContext(AuthContext);
 
   const theme = useTheme();
@@ -71,21 +71,21 @@ const Sidebar = () => {
     <ThemeProvider theme={theme}>
       <Box
         sx={{
-          "& .pro-sidebar-inner": {
-            background: `${colors.primary[400]} !important`,
+          '& .pro-sidebar-inner': {
+            background: `${colors.primary[400]} !important`
           },
-          "& .pro-icon-wrapper": {
-            backgroundColor: "transparent !important",
+          '& .pro-icon-wrapper': {
+            backgroundColor: 'transparent !important'
           },
-          "& .pro-inner-item": {
-            pading: "5px 35px 5px 20px !important",
+          '& .pro-inner-item': {
+            pading: '5px 35px 5px 20px !important'
           },
-          "& .pro-inner-item:hover": {
-            color: "#868dfb !important",
+          '& .pro-inner-item:hover': {
+            color: '#868dfb !important'
           },
-          "& .pro-menu-item.active": {
-            color: "#6870fa !important",
-          },
+          '& .pro-menu-item.active': {
+            color: '#6870fa !important'
+          }
         }}
       >
         <ProSidebar collapsed={isCollapsed}>
@@ -95,8 +95,8 @@ const Sidebar = () => {
               onClick={() => setIsCollapsed(!isCollapsed)}
               icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
               style={{
-                margin: "10px 0 10px 0",
-                color: colors.grey[100],
+                margin: '10px 0 10px 0',
+                color: colors.grey[100]
               }}
             >
               {!isCollapsed && (
@@ -109,7 +109,7 @@ const Sidebar = () => {
                 >
                   <IconButton
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    style={{ fontSize: "1rem" }} // Increase the font size as desired
+                    style={{ fontSize: '1rem' }} // Increase the font size as desired
                   >
                     <MenuOutlinedIcon />
                   </IconButton>
@@ -124,8 +124,8 @@ const Sidebar = () => {
                     alt="profile-user"
                     width="100px"
                     height="100px"
-                    src={""}
-                    style={{ cursor: "pointer", borderRadius: "10%" }}
+                    src={''}
+                    style={{ cursor: 'pointer', borderRadius: '10%' }}
                   />
                 </Box>
                 <Box textAlign="center">
@@ -133,9 +133,9 @@ const Sidebar = () => {
                     variant="h3"
                     color={colors.primary[500]}
                     fontWeight="bold"
-                    sx={{ m: "10px 0 0 0" }}
+                    sx={{ m: '10px 0 0 0' }}
                   >
-                    {user && `${user.firstName}` + " " + `${user.lastName}`}
+                    {user && `${user.firstName}` + ' ' + `${user.lastName}`}
                   </Typography>
                   <Typography variant="h5" color={colors.grey[500]}>
                     VP Fancy Admin
@@ -144,7 +144,7 @@ const Sidebar = () => {
               </Box>
             )}
             {/* MENU ITEMS */}
-            <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+            <Box paddingLeft={isCollapsed ? undefined : '10%'}>
               <Item
                 to="/"
                 title="Home"
@@ -156,7 +156,7 @@ const Sidebar = () => {
               <Typography
                 variant="h6"
                 color={colors.grey[600]}
-                sx={{ m: "15px 0 5px 20px", fontWeight: "bold" }}
+                sx={{ m: '15px 0 5px 20px', fontWeight: 'bold' }}
               >
                 USER
               </Typography>
@@ -185,7 +185,7 @@ const Sidebar = () => {
               <Typography
                 variant="h6"
                 color={colors.grey[600]}
-                sx={{ m: "15px 0 5px 20px", fontWeight: "bold" }}
+                sx={{ m: '15px 0 5px 20px', fontWeight: 'bold' }}
               >
                 PAGES
               </Typography>
@@ -214,7 +214,7 @@ const Sidebar = () => {
               <Typography
                 variant="h6"
                 color={colors.grey[600]}
-                sx={{ m: "15px 0 5px 20px", fontWeight: "bold" }}
+                sx={{ m: '15px 0 5px 20px', fontWeight: 'bold' }}
               >
                 INFO
               </Typography>

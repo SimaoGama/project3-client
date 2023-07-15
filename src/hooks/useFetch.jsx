@@ -10,10 +10,12 @@ const useFetch = url => {
     const selectData = async () => {
       try {
         const response = await axios.get(url);
+        console.log(response);
         setData(response.data);
-        setIsLoading(false);
       } catch (err) {
         setError(err);
+      } finally {
+        setIsLoading(false);
       }
     };
     selectData();
@@ -25,10 +27,11 @@ const useFetch = url => {
       try {
         const response = await axios.get(url);
         setData(response.data);
-        setIsLoading(false);
         console.log('reFetch');
       } catch (err) {
         setError(err);
+      } finally {
+        setIsLoading(false);
       }
     };
     selectData();

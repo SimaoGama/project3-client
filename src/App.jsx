@@ -1,18 +1,19 @@
-import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/Home/LandingPage";
-import SignUp from "./pages/Signup/Signup";
-import Navbar from "./components/Header/Navbar/Navbar";
-import { useContext } from "react";
-import { ColorModeContext, tokens } from "./context/theme.context";
-import LogIn from "./pages/Login/Login";
-import IsAnon from "./components/Validation/isAnon";
-import IsPrivate from "./components/Validation/isPrivate";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import { ThemeProvider } from "@mui/material";
-import NewTrip from "./components/CreateTrip/NewTrip";
-import { AuthContext } from "./context/auth.context";
-import TripCard from "./components/MyTrips/TripCard";
-import TripList from "./components/MyTrips/TripList";
+import { Routes, Route } from 'react-router-dom';
+import LandingPage from './pages/Home/LandingPage';
+import SignUp from './pages/Signup/Signup';
+import Navbar from './components/Header/Navbar/Navbar';
+import { useContext } from 'react';
+import { ColorModeContext, tokens } from './context/theme.context';
+import LogIn from './pages/Login/Login';
+import IsAnon from './components/Validation/isAnon';
+import IsPrivate from './components/Validation/isPrivate';
+import Dashboard from './pages/Dashboard/Dashboard';
+import { ThemeProvider } from '@mui/material';
+import NewTrip from './components/CreateTrip/NewTrip';
+import { AuthContext } from './context/auth.context';
+import TripCard from './components/MyTrips/TripCard';
+import TripList from './components/MyTrips/TripList';
+import EditTrip from './components/EditTrip/EditTrip';
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -60,6 +61,15 @@ function App() {
                 element={
                   <IsPrivate>
                     <NewTrip />
+                  </IsPrivate>
+                }
+              />
+
+              <Route
+                path="/trips/edit/:tripId"
+                element={
+                  <IsPrivate>
+                    <EditTrip />
                   </IsPrivate>
                 }
               />
