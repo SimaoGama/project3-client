@@ -70,7 +70,7 @@ const TripCard = ({ trip, handleDelete }) => {
     const end = new Date(endDate);
     const timeDiff = Math.abs(end.getTime() - start.getTime());
     const totalDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    return totalDays;
+    return totalDays + 1;
   };
 
   const totalDays = getTotalDays(trip?.startDate, trip?.endDate);

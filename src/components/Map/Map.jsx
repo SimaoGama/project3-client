@@ -1,38 +1,35 @@
-// import React, { useState } from 'react';
+import React, { useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 import { Paper, Typography, useMediaQuery } from '@mui/material';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import Rating from '@mui/material/Rating';
-// import { makeStyles } from '@mui/styles';
-import useStyles from './styles';
+import { styled } from '@mui/system';
 
-// const useStyles = makeStyles(theme => ({
-//   paper: {
-//     padding: '10px',
-//     display: 'flex',
-//     flexDirection: 'column',
-//     justifyContent: 'center',
-//     width: '100px'
-//   },
-//   mapContainer: {
-//     height: '85vh',
-//     width: '100%'
-//   },
-//   markerContainer: {
-//     position: 'absolute',
-//     transform: 'translate(-50%, -50%)',
-//     zIndex: 1,
-//     '&:hover': { zIndex: 2 }
-//   },
-//   pointer: {
-//     cursor: 'pointer'
-//   },
-//   img: {
-//     width: '100%',
-//     height: 'auto',
-//     objectFit: 'cover'
-//   }
-// }));
+const MapContainer = styled('div')({
+  height: '85vh',
+  width: '100%'
+});
+
+const MarkerContainer = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  transform: 'translate(-50%, -50%)',
+  zIndex: 1,
+  '&:hover': { zIndex: 2 }
+}));
+
+const PaperContainer = styled(Paper)({
+  padding: '10px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  width: '100px'
+});
+
+const Img = styled('img')({
+  width: '100%',
+  height: 'auto',
+  objectFit: 'cover'
+});
 
 const Map = ({
   setCoordinates,
@@ -41,11 +38,10 @@ const Map = ({
   places,
   setChildClicked
 }) => {
-  const classes = useStyles();
   const isDesktop = useMediaQuery('(min-width:600px)');
 
   return (
-    <div className={classes.mapContainer}>
+    <MapContainer>
       <GoogleMapReact
         bootstrapURLKeys={{ key: 'AIzaSyAEmWOChWlh6M9uJ9soJT2q-n86uOQqp9M' }}
         defaultCenter={coordinates}
@@ -62,8 +58,7 @@ const Map = ({
         }}
       >
         {places?.map((place, i) => (
-          <div
-            className={classes.markerContainer}
+          <MarkerContainer
             lat={Number(place.latitude)}
             lng={Number(place.longitude)}
             key={i}
@@ -71,16 +66,11 @@ const Map = ({
             {!isDesktop ? (
               <LocationOnOutlinedIcon color="primary" fontSize="large" />
             ) : (
-              <Paper elevation={3} className={classes.paper}>
-                <Typography
-                  className={classes.typography}
-                  variant="subtitle2"
-                  gutterBottom
-                >
+              <PaperContainer elevation={3}>
+                <Typography variant="subtitle2" gutterBottom>
                   {place.name}
                 </Typography>
-                <img
-                  className={classes.img}
+                <Img
                   src={
                     place.photo
                       ? place.photo.images.large.url
@@ -89,12 +79,12 @@ const Map = ({
                   alt={place.name}
                 />
                 <Rating size="small" value={Number(place.rating)} readOnly />
-              </Paper>
+              </PaperContainer>
             )}
-          </div>
+          </MarkerContainer>
         ))}
       </GoogleMapReact>
-    </div>
+    </MapContainer>
   );
 };
 

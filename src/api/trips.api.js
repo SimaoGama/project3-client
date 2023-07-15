@@ -37,8 +37,8 @@ export const addTrip = (newTrip, userId) => {
   return axios.post(`${baseURL}/trips/new`, tripData);
 };
 
-export const updateTrip = updatedTrip => {
-  return axios.put(`${baseURL}/trips/${updatedTrip._id}`, updatedTrip);
+export const updateTrip = (updatedTrip, tripId) => {
+  return axios.put(`${baseURL}/trip/${tripId}`, updatedTrip); // Use the correct API route with the tripId in the URL
 };
 
 export const deleteTrip = id => {

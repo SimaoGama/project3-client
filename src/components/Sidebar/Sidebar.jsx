@@ -23,6 +23,7 @@ import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
+import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 
 import { AuthContext } from '../../context/auth.context';
 import { ColorModeContext } from '../../context/theme.context';
@@ -175,9 +176,9 @@ const Sidebar = () => {
                 setSelected={setSelected}
               />
               <Item
-                title="Invoices Balances"
-                to="/invoices"
-                icon={<ReceiptOutlinedIcon />}
+                title="Map"
+                to="/map"
+                icon={<PublicOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />

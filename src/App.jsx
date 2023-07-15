@@ -14,6 +14,8 @@ import { AuthContext } from './context/auth.context';
 import TripCard from './components/MyTrips/TripCard';
 import TripList from './components/MyTrips/TripList';
 import EditTrip from './components/EditTrip/EditTrip';
+import Map from './components/Map/Map';
+import Explore from './pages/Map/Explore';
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -52,6 +54,14 @@ function App() {
                 element={
                   <IsPrivate>
                     <Dashboard />
+                  </IsPrivate>
+                }
+              />
+              <Route
+                path="/map"
+                element={
+                  <IsPrivate>
+                    <Explore />
                   </IsPrivate>
                 }
               />

@@ -23,7 +23,7 @@ const EditTrip = () => {
   const [destination, setDestination] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  //   const [days, setDays] = useState([]);
+  const [days, setDays] = useState([]);
 
   const tripId = params.tripId; // Access the tripId from the URL parameters
   console.log(tripId);
@@ -47,6 +47,10 @@ const EditTrip = () => {
   console.log(destination);
 
   const formatDate = dateString => {
+    if (!dateString || !Date.parse(dateString)) {
+      return '';
+    }
+
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
@@ -69,12 +73,12 @@ const EditTrip = () => {
     const updatedTrip = {
       destination,
       startDate,
-      endDate
-      //   days
+      endDate,
+      days
     };
 
     try {
-      const response = await updateTrip(updatedTrip, tripId); // Include the tripId in the API call
+      const response = await updateTrip(updatedTrip, tripId); // Include the tripId as a separate parameter
       console.log('Trip updated:', response.data);
       handleClose();
 
