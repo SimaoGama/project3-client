@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState } from "react";
 import {
   CircularProgress,
   FormControl,
@@ -6,9 +6,9 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography
-} from '@mui/material';
-import PlaceDetails from '../PlaceDetails/PlaceDetails';
+  Typography,
+} from "@mui/material";
+import PlaceDetails from "../PlaceDetails/PlaceDetails";
 
 const PlacesList = ({
   places,
@@ -17,12 +17,12 @@ const PlacesList = ({
   type,
   setType,
   rating,
-  setRating
+  setRating,
 }) => {
   const [elementRef, setElementRef] = useState([]);
 
   useEffect(() => {
-    setElementRef(refs =>
+    setElementRef((refs) =>
       Array(places?.length)
         .fill()
         .map((_, i) => refs[i] || createRef())
@@ -43,7 +43,7 @@ const PlacesList = ({
             <Select
               id="type"
               value={type}
-              onChange={e => setType(e.target.value)}
+              onChange={(e) => setType(e.target.value)}
             >
               <MenuItem value="restaurants">Restaurants</MenuItem>
               <MenuItem value="hotels">Hotels</MenuItem>
@@ -55,7 +55,7 @@ const PlacesList = ({
             <Select
               id="rating"
               value={rating}
-              onChange={e => setRating(e.target.value)}
+              onChange={(e) => setRating(e.target.value)}
             >
               <MenuItem value="">All</MenuItem>
               <MenuItem value="3">Above 3.0</MenuItem>

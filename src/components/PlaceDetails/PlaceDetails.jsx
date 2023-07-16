@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Box,
   Typography,
@@ -7,22 +7,23 @@ import {
   CardMedia,
   CardContent,
   CardActions,
-  Chip
-} from '@mui/material';
-import PhoneIcon from '@mui/icons-material/Phone';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+  Chip,
+} from "@mui/material";
+import PhoneIcon from "@mui/icons-material/Phone";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 const PlaceDetails = ({ place, selected, refProp }) => {
   useEffect(() => {
     if (selected && refProp?.current) {
-      console.log('Scrolling into view');
-      refProp.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      refProp.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [selected, refProp]);
 
   if (selected) {
-    refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    refProp?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  console.log(place);
 
   return (
     <Card elevation={6}>
@@ -31,7 +32,7 @@ const PlaceDetails = ({ place, selected, refProp }) => {
         image={
           place.photo
             ? place.photo.images.large.url
-            : 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg'
+            : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg"
         }
         title={place.name}
       />
@@ -81,20 +82,24 @@ const PlaceDetails = ({ place, selected, refProp }) => {
           </Typography>
         )}
         <CardActions>
-          <Button
-            size="small"
-            color="primary"
-            onClick={() => window.open(place.web_url, '_blank')}
-          >
-            Trip Advisor
-          </Button>
-          <Button
-            size="small"
-            color="primary"
-            onClick={() => window.open(place.website, '_blank')}
-          >
-            Website
-          </Button>
+          {place.web_url && (
+            <Button
+              size="small"
+              color="primary"
+              onClick={() => window.open(place.web_url, "_blank")}
+            >
+              Trip Advisor
+            </Button>
+          )}
+          {place.website && (
+            <Button
+              size="small"
+              color="primary"
+              onClick={() => window.open(place.website, "_blank")}
+            >
+              Website
+            </Button>
+          )}
         </CardActions>
       </CardContent>
     </Card>
