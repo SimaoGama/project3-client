@@ -1,5 +1,8 @@
 import React, { createRef, useEffect, useState } from "react";
 import {
+  Box,
+  Card,
+  CardContent,
   CircularProgress,
   FormControl,
   Grid,
@@ -30,42 +33,58 @@ const PlacesList = ({
   }, [places]);
 
   return (
-    <div>
-      <Typography variant="h4">Food & Dining around you</Typography>
+    <>
+      <Card>
+        <CardContent>
+          <Typography gutterBottom pt={2} pb={2} variant="h3">
+            {`${type.charAt(0).toUpperCase()}${type.slice(1)} around you`}
+          </Typography>
+
+          <Box pb={2}>
+            <FormControl sx={{ minWidth: 120, mr: 2 }}>
+              <InputLabel id="type">Type</InputLabel>
+              <Select
+                id="type"
+                value={type}
+                label={type}
+                onChange={(e) => setType(e.target.value)}
+              >
+                <MenuItem value="restaurants">Restaurants</MenuItem>
+                <MenuItem value="hotels">Hotels</MenuItem>
+                <MenuItem value="attractions">Attractions</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl id="rating" sx={{ minWidth: 120, mr: 2 }}>
+              <InputLabel>Rating</InputLabel>
+              <Select
+                id="rating"
+                value={rating}
+                label="rating"
+                onChange={(e) => setRating(e.target.value)}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="3">Above 3.0</MenuItem>
+                <MenuItem value="4">Above 4.0</MenuItem>
+                <MenuItem value="4.5">Above 4.5</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </CardContent>
+      </Card>
       {isLoading ? (
-        <div>
+        <Box
+          justifyContent="center"
+          alignItems="center"
+          height="100%"
+          display="flex"
+        >
           <CircularProgress size="5rem" />
-        </div>
+        </Box>
       ) : (
-        <>
-          <FormControl>
-            <InputLabel id="type">Type</InputLabel>
-            <Select
-              id="type"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <MenuItem value="restaurants">Restaurants</MenuItem>
-              <MenuItem value="hotels">Hotels</MenuItem>
-              <MenuItem value="attractions">Attractions</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabel id="rating">Rating</InputLabel>
-            <Select
-              id="rating"
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="3">Above 3.0</MenuItem>
-              <MenuItem value="4">Above 4.0</MenuItem>
-              <MenuItem value="4.5">Above 4.5</MenuItem>
-            </Select>
-          </FormControl>
+        <Box style={{ maxHeight: "calc(100vh - 200px)", overflow: "auto" }}>
           <Grid container spacing={3}>
             {places?.map((place, i) => (
-              <Grid ref={elementRef[i]} key={i} item xs={12}>
+              <Grid key={i} item xs={12}>
                 <PlaceDetails
                   selected={Number(childClicked) === i}
                   refProp={elementRef[i]}
@@ -74,9 +93,9 @@ const PlacesList = ({
               </Grid>
             ))}
           </Grid>
-        </>
+        </Box>
       )}
-    </div>
+    </>
   );
 };
 

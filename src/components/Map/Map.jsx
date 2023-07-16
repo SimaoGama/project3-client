@@ -4,6 +4,7 @@ import { Paper, Typography, useMediaQuery } from "@mui/material";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import Rating from "@mui/material/Rating";
 import { styled } from "@mui/system";
+import mapStyles from "./mapStyles";
 
 const MapContainer = styled("div")({
   height: "85vh",
@@ -41,14 +42,18 @@ const Map = ({
   const isDesktop = useMediaQuery("(min-width:600px)");
 
   return (
-    <MapContainer>
+    <div style={{ height: "85vh", width: "100%" }}>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: "AIzaSyD0bY3Ugig1pAmA3pSJfjAiPltS58W4vhI" }}
-        defaultCenter={coordinates}
+        bootstrapURLKeys={{ key: "AIzaSyAEmWOChWlh6M9uJ9soJT2q-n86uOQqp9M" }}
         center={coordinates}
         defaultZoom={14}
         margin={[50, 50, 50, 50]}
-        options={""}
+        options={{
+          disableDefaultUI: true,
+          zoomControl: true,
+          styles: mapStyles,
+          gestureHandling: "greedy",
+        }}
         onChange={(e) => {
           setCoordinates({ lat: e.center.lat, lng: e.center.lng });
           setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
@@ -84,7 +89,7 @@ const Map = ({
           </MarkerContainer>
         ))}
       </GoogleMapReact>
-    </MapContainer>
+    </div>
   );
 };
 

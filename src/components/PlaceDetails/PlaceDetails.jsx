@@ -11,6 +11,29 @@ import {
 } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { styled } from "@mui/system";
+import Rating from "@mui/material/Rating";
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  elevation: 6,
+}));
+
+const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
+  height: 350,
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  marginBottom: "10px",
+}));
+
+const StyledCardActions = styled(CardActions)(({ theme }) => ({
+  justifyContent: "flex-end",
+}));
 
 const PlaceDetails = ({ place, selected, refProp }) => {
   useEffect(() => {
@@ -23,12 +46,9 @@ const PlaceDetails = ({ place, selected, refProp }) => {
     refProp?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  console.log(place);
-
   return (
-    <Card elevation={6}>
-      <CardMedia
-        style={{ height: 350 }}
+    <StyledCard elevation={6}>
+      <StyledCardMedia
         image={
           place.photo
             ? place.photo.images.large.url
@@ -41,17 +61,23 @@ const PlaceDetails = ({ place, selected, refProp }) => {
           {place?.name}
         </Typography>
         <Box display="flex" justifyContent="space-between">
+          <Rating value={Number(place.rating)} readOnly />
+          <Typography gutterBottom variant="subtitle1">
+            out of {place.num_reviews} reviews
+          </Typography>
+        </Box>
+        <StyledBox>
           <Typography variant="subtitle1">Price</Typography>
           <Typography gutterBottom variant="subtitle1">
             {place?.price_level}
           </Typography>
-        </Box>
-        <Box display="flex" justifyContent="space-between">
+        </StyledBox>
+        <StyledBox>
           <Typography variant="subtitle1">Ranking</Typography>
           <Typography gutterBottom variant="subtitle1">
             {place?.ranking}
           </Typography>
-        </Box>
+        </StyledBox>
         {place?.awards?.map((award, index) => (
           <Box
             key={index}
@@ -81,7 +107,7 @@ const PlaceDetails = ({ place, selected, refProp }) => {
             {place.phone}
           </Typography>
         )}
-        <CardActions>
+        <StyledCardActions>
           {place.web_url && (
             <Button
               size="small"
@@ -100,9 +126,9 @@ const PlaceDetails = ({ place, selected, refProp }) => {
               Website
             </Button>
           )}
-        </CardActions>
+        </StyledCardActions>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 };
 
