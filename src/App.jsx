@@ -16,6 +16,7 @@ import TripList from './components/MyTrips/TripList';
 import EditTrip from './components/EditTrip/EditTrip';
 import Map from './components/Map/Map';
 import Explore from './pages/Map/Explore';
+import EditDay from './components/EditDay/EditDay';
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -80,6 +81,14 @@ function App() {
                 element={
                   <IsPrivate>
                     <EditTrip />
+                  </IsPrivate>
+                }
+              />
+              <Route
+                path="/trips/:id/day"
+                element={
+                  <IsPrivate>
+                    <EditDay />
                   </IsPrivate>
                 }
               />
