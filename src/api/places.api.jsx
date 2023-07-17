@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const getPlacesData = async (type, sw, ne) => {
+  // console.log(type);
   try {
     const {
       data: { data },
@@ -20,6 +21,7 @@ export const getPlacesData = async (type, sw, ne) => {
         },
       }
     );
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error);

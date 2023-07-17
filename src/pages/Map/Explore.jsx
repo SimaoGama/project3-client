@@ -1,15 +1,17 @@
-import React from "react";
-import { useEffect, useState } from "react";
-
-import Map from "../../components/Map/Map";
-import { Grid, useMediaQuery } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import { Grid, useMediaQuery, Button } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
+import Map from "../../components/Map/Map";
 import { getPlacesData } from "../../api/places.api";
+import { getAllTrips } from "../../api/trips.api";
 import PlacesList from "../../components/PlaceDetails/PlacesList";
 import SearchHeader from "./SearchHeader";
+import { AuthContext } from "../../context/auth.context";
 
 const Explore = () => {
+  const { user } = useContext(AuthContext);
+
   const [places, setPlaces] = useState([]);
   const [coordinates, setCoordinates] = useState({});
   const [bounds, setBounds] = useState({});
@@ -20,6 +22,20 @@ const Explore = () => {
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const isNotMobile = useMediaQuery("(min-width: 600px)");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showSearchButton, setShowSearchButton] = useState(false); // State to control the visibility of the search button
+  const [userTrips, setUserTrips] = useState([]);
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  useEffect(() => {
+    getAllTrips(user._id)
+      .then((response) => {
+        setUserTrips(response.data);
+      })
+      .catch((error) => {
+        console.log("Error fetching user trips:", error);
+      });
+  }, []);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -38,15 +54,18 @@ const Explore = () => {
   }, [rating]);
 
   useEffect(() => {
-    if (bounds.sw && bounds.ne) {
-      setIsLoading(true);
-      getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
-        setPlaces(data?.filter((place) => place.name && place.num_reviews > 0));
-        setFilteredPlaces([]);
-        setIsLoading(false);
-      });
-    }
-  }, [bounds, type]);
+    setShowSearchButton(true); // Set the visibility of the search button when bounds or type change
+  }, [bounds, type, rating]);
+
+  const handleSearchButtonClick = () => {
+    setIsLoading(true);
+    getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
+      setPlaces(data?.filter((place) => place.name && place.num_reviews > 0));
+      setFilteredPlaces([]);
+      setIsLoading(false);
+      setShowSearchButton(false); // Hide the search button after clicking it
+    });
+  };
 
   return (
     <>
@@ -63,9 +82,16 @@ const Explore = () => {
               setType={setType}
               rating={rating}
               setRating={setRating}
+              userTrips={userTrips}
             />
           </Grid>
+
           <Grid item xs={12} md={8}>
+            {showSearchButton && (
+              <Button variant="contained" onClick={handleSearchButtonClick}>
+                Search this area
+              </Button>
+            )}
             <Map
               setCoordinates={setCoordinates}
               setBounds={setBounds}

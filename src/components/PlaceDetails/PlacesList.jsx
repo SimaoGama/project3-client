@@ -21,6 +21,7 @@ const PlacesList = ({
   setType,
   rating,
   setRating,
+  userTrips,
 }) => {
   const [elementRef, setElementRef] = useState([]);
 
@@ -89,6 +90,7 @@ const PlacesList = ({
                   selected={Number(childClicked) === i}
                   refProp={elementRef[i]}
                   place={place}
+                  userTrips={userTrips}
                 />
               </Grid>
             ))}

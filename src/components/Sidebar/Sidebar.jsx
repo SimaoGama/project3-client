@@ -140,7 +140,7 @@ const Sidebar = () => {
                     {user && `${user.firstName}` + " " + `${user.lastName}`}
                   </Typography>
                   <Typography variant="h5" color={colors.grey[500]}>
-                    VP Fancy Admin
+                    Ironhacker
                   </Typography>
                 </Box>
               </Box>
@@ -213,7 +213,7 @@ const Sidebar = () => {
                 setSelected={setSelected}
               />
 
-              <Typography
+              {/* <Typography
                 variant="h6"
                 color={colors.grey[600]}
                 sx={{ m: "15px 0 5px 20px", fontWeight: "bold" }}
@@ -247,7 +247,7 @@ const Sidebar = () => {
                 icon={<MapOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              />
+              /> */}
             </Box>
           </Menu>
         </ProSidebar>

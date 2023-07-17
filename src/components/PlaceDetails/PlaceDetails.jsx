@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -8,6 +8,10 @@ import {
   CardContent,
   CardActions,
   Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -35,7 +39,10 @@ const StyledCardActions = styled(CardActions)(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-const PlaceDetails = ({ place, selected, refProp }) => {
+const PlaceDetails = ({ place, selected, refProp, userTrips }) => {
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [showTripForm, setShowTripForm] = useState(false);
+
   useEffect(() => {
     if (selected && refProp?.current) {
       refProp.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -45,6 +52,25 @@ const PlaceDetails = ({ place, selected, refProp }) => {
   if (selected) {
     refProp?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  const handleAddToTrip = () => {
+    setShowTripForm(true);
+  };
+
+  const handleTripSelection = (event) => {
+    setSelectedTrip(event.target.value);
+  };
+
+  const handleConfirmAddToTrip = () => {
+    if (selectedTrip) {
+      // Logic to add the place to the selected trip
+      console.log(`Added place to trip: ${selectedTrip}`);
+    } else {
+      console.log("Please select a trip");
+    }
+
+    setShowTripForm(false);
+  };
 
   return (
     <StyledCard elevation={6}>
@@ -125,6 +151,43 @@ const PlaceDetails = ({ place, selected, refProp }) => {
             >
               Website
             </Button>
+          )}
+          {!showTripForm && (
+            <Button size="small" color="primary" onClick={handleAddToTrip}>
+              Add to a trip
+            </Button>
+          )}
+          {showTripForm && (
+            <>
+              <FormControl
+                variant="outlined"
+                size="small"
+                style={{ minWidth: 120 }}
+              >
+                <InputLabel id="trip-select-label">Select Trip</InputLabel>
+                <Select
+                  labelId="trip-select-label"
+                  id="trip-select"
+                  value={selectedTrip}
+                  onChange={handleTripSelection}
+                  label="Select Trip"
+                >
+                  <MenuItem value="">None</MenuItem>
+                  {userTrips.map((trip) => (
+                    <MenuItem key={trip._id} value={trip._id}>
+                      {trip.destination}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleConfirmAddToTrip}
+              >
+                {selectedTrip ? "Confirm" : "Cancel"}
+              </Button>
+            </>
           )}
         </StyledCardActions>
       </CardContent>
