@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Slide,
   TextField,
   Typography
 } from '@mui/material';
@@ -18,6 +19,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { baseURL } from '../../api/trips.api';
 import DayCard from './DayCard';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const EditDay = () => {
   const navigate = useNavigate();
@@ -101,7 +106,12 @@ const EditDay = () => {
   }
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} fullScreen>
+    <Dialog
+      open={isOpen}
+      onClose={handleClose}
+      fullScreen
+      TransitionComponent={Transition}
+    >
       <DialogTitle>Edit Trip</DialogTitle>
       <form onSubmit={handleEditTrip}>
         <DialogContent>
