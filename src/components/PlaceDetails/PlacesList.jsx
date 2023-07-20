@@ -22,6 +22,11 @@ const PlacesList = ({
   rating,
   setRating,
   userTrips,
+  setShowEditDialog,
+  showEditDialog,
+  handleTripSelection,
+  selectedTrip,
+  setSelectedTrip,
 }) => {
   const [elementRef, setElementRef] = useState([]);
 
@@ -91,6 +96,11 @@ const PlacesList = ({
                   refProp={elementRef[i]}
                   place={place}
                   userTrips={userTrips}
+                  showEditDialog={showEditDialog}
+                  setShowEditDialog={setShowEditDialog}
+                  handleTripSelection={handleTripSelection}
+                  selectedTrip={selectedTrip}
+                  setSelectedTrip={setSelectedTrip}
                 />
               </Grid>
             ))}

@@ -8,6 +8,7 @@ import { getAllTrips } from "../../api/trips.api";
 import PlacesList from "../../components/PlaceDetails/PlacesList";
 import SearchHeader from "./SearchHeader";
 import { AuthContext } from "../../context/auth.context";
+import EditDay from "../../components/EditDay/EditDay";
 
 const Explore = () => {
   const { user } = useContext(AuthContext);
@@ -26,6 +27,7 @@ const Explore = () => {
   const [userTrips, setUserTrips] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   useEffect(() => {
     getAllTrips(user._id)
@@ -67,10 +69,19 @@ const Explore = () => {
     });
   };
 
+  // Function to handle the trip selection
+  const handleTripSelection = (tripId) => {
+    setSelectedTrip(tripId);
+    setShowEditDialog(true); // Show the EditDay dialog
+  };
+
+  console.log(showEditDialog);
+
   return (
     <>
       <Grid>
         <CssBaseline />
+
         <SearchHeader setCoordinates={setCoordinates} />
         <Grid container spacing={3} style={{ width: " 100%" }}>
           <Grid item xs={12} md={4}>
@@ -83,6 +94,11 @@ const Explore = () => {
               rating={rating}
               setRating={setRating}
               userTrips={userTrips}
+              showEditDialog={showEditDialog}
+              setShowEditDialog={setShowEditDialog}
+              handleTripSelection={handleTripSelection}
+              selectedTrip={selectedTrip}
+              setSelectedTrip={setSelectedTrip}
             />
           </Grid>
 
@@ -101,6 +117,13 @@ const Explore = () => {
             />
           </Grid>
         </Grid>
+        {showEditDialog && (
+          <EditDay
+            selectedTrip={selectedTrip}
+            setShowEditDialog={setShowEditDialog}
+            places={places}
+          />
+        )}
       </Grid>
     </>
   );

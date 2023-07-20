@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -11,65 +11,75 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Select
-} from '@mui/material';
-import PhoneIcon from '@mui/icons-material/Phone';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import { styled } from '@mui/system';
-import Rating from '@mui/material/Rating';
-import { useNavigate } from 'react-router-dom';
+  Select,
+} from "@mui/material";
+import PhoneIcon from "@mui/icons-material/Phone";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { styled } from "@mui/system";
+import Rating from "@mui/material/Rating";
+import { useNavigate } from "react-router-dom";
+import EditTrip from "../EditTrip/EditTrip";
+import EditDay from "../EditDay/EditDay";
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  elevation: 6
+  elevation: 6,
 }));
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
-  height: 350
+  height: 350,
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between'
+  display: "flex",
+  justifyContent: "space-between",
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  marginBottom: '10px'
+  marginBottom: "10px",
 }));
 
 const StyledCardActions = styled(CardActions)(({ theme }) => ({
-  justifyContent: 'flex-end'
+  justifyContent: "flex-end",
 }));
 
-const PlaceDetails = ({ place, selected, refProp, userTrips }) => {
-  const [selectedTrip, setSelectedTrip] = useState(null);
+const PlaceDetails = ({
+  place,
+  selected,
+  refProp,
+  userTrips,
+  setShowEditDialog,
+  showEditDialog,
+  selectedTrip,
+  setSelectedTrip,
+}) => {
   const [showTripForm, setShowTripForm] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (selected && refProp?.current) {
-      refProp.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      refProp.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [selected, refProp]);
 
   if (selected) {
-    refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    refProp?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   const handleAddToTrip = () => {
     setShowTripForm(true);
   };
 
-  const handleTripSelection = event => {
+  const handleTripSelection = (event) => {
     setSelectedTrip(event.target.value);
   };
 
   const handleConfirmAddToTrip = () => {
     if (selectedTrip) {
-      navigate(`/trips/${selectedTrip}/day`);
+      setShowEditDialog(true);
       console.log(`Added place to trip: ${selectedTrip}`);
     } else {
-      console.log('Please select a trip');
+      console.log("Please select a trip");
     }
 
     setShowTripForm(false);
@@ -81,7 +91,7 @@ const PlaceDetails = ({ place, selected, refProp, userTrips }) => {
         image={
           place.photo
             ? place.photo.images.large.url
-            : 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg'
+            : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg"
         }
         title={place.name}
       />
@@ -141,7 +151,7 @@ const PlaceDetails = ({ place, selected, refProp, userTrips }) => {
             <Button
               size="small"
               color="primary"
-              onClick={() => window.open(place.web_url, '_blank')}
+              onClick={() => window.open(place.web_url, "_blank")}
             >
               Trip Advisor
             </Button>
@@ -150,7 +160,7 @@ const PlaceDetails = ({ place, selected, refProp, userTrips }) => {
             <Button
               size="small"
               color="primary"
-              onClick={() => window.open(place.website, '_blank')}
+              onClick={() => window.open(place.website, "_blank")}
             >
               Website
             </Button>
@@ -176,7 +186,7 @@ const PlaceDetails = ({ place, selected, refProp, userTrips }) => {
                   label="Select Trip"
                 >
                   <MenuItem value="">None</MenuItem>
-                  {userTrips.map(trip => (
+                  {userTrips.map((trip) => (
                     <MenuItem key={trip._id} value={trip._id}>
                       {trip.destination}
                     </MenuItem>
@@ -188,7 +198,7 @@ const PlaceDetails = ({ place, selected, refProp, userTrips }) => {
                 color="primary"
                 onClick={handleConfirmAddToTrip}
               >
-                {selectedTrip ? 'Confirm' : 'Cancel'}
+                {selectedTrip ? "Confirm" : "Cancel"}
               </Button>
             </>
           )}

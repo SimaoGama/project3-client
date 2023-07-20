@@ -1,0 +1,12 @@
+/* EditDay.css */
+
+.days-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow the days to wrap to a new row when necessary */
+  gap: 10px; /* Adjust the spacing between day cards */
+}
+
+/* Style each day card */
+.DayCard {
+  flex: 0 0 calc(33.33% - 20px); /* Make each day card take up one-third of the available width with some spacing */
+}

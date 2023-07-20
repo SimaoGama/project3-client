@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,36 +12,39 @@ import {
   DialogTitle,
   Slide,
   TextField,
-  Typography
-} from '@mui/material';
-import { updateTrip, getTrip } from '../../api/trips.api';
-import { useNavigate, useParams } from 'react-router-dom';
-import useFetch from '../../hooks/useFetch';
-import { baseURL } from '../../api/trips.api';
-import DayCard from './DayCard';
+  Typography,
+} from "@mui/material";
+import { updateTrip, getTrip } from "../../api/trips.api";
+import { useNavigate, useParams } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+import { baseURL } from "../../api/trips.api";
+import DayCard from "./DayCard";
+import PlaceDetails from "../PlaceDetails/PlaceDetails";
+import "./EditDay.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const EditDay = () => {
+const EditDay = ({ selectedTrip, setShowEditDialog, places }) => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const [destination, setDestination] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [destination, setDestination] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [days, setDays] = useState([]);
 
-  const tripId = params.id; // Access the tripId from the URL parameters
+  // const tripId = params.id; // Access the tripId from the URL parameters
 
   const {
     data: tripData,
     isLoading,
-    error
-  } = useFetch(`${baseURL}/trip/${tripId}`);
+    error,
+  } = useFetch(`${baseURL}/trip/${selectedTrip}`);
 
   useEffect(() => {
+    console.log("edit day component");
     if (tripData) {
       setDestination(tripData.destination);
       setStartDate(tripData.startDate);
@@ -50,43 +53,43 @@ const EditDay = () => {
     }
   }, [tripData]);
 
-  const formatDate = dateString => {
+  const formatDate = (dateString) => {
     if (!dateString || !Date.parse(dateString)) {
-      return '';
+      return "";
     }
 
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
 
-  const handleNameChange = event => {
+  const handleNameChange = (event) => {
     setDestination(event.target.value);
   };
 
-  const handleStartDateChange = event => {
+  const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
   };
 
-  const handleEndDateChange = event => {
+  const handleEndDateChange = (event) => {
     setEndDate(event.target.value);
   };
 
-  const handleEditTrip = async e => {
+  const handleEditTrip = async (e) => {
     e.preventDefault();
 
     const updatedTrip = {
       destination,
       startDate,
-      endDate
+      endDate,
     };
 
     try {
-      const response = await updateTrip(updatedTrip, tripId);
-      console.log('Trip updated:', response.data);
+      const response = await updateTrip(updatedTrip, selectedTrip);
+      console.log("Trip updated:", response.data);
       handleClose();
-      navigate('/map');
+      navigate("/map");
     } catch (error) {
-      console.log('Error updating trip:', error);
+      console.log("Error updating trip:", error);
     }
   };
 
@@ -94,7 +97,7 @@ const EditDay = () => {
 
   const handleClose = () => {
     setIsOpen(false);
-    navigate('/map');
+    setShowEditDialog(false);
   };
 
   if (isLoading) {
@@ -161,9 +164,10 @@ const EditDay = () => {
           </Button>
         </DialogActions>
       </form>
-      <Box>
+      {/* <PlaceDetails places={places} /> */}
+      <Box className="days-container">
         {tripData?.days &&
-          tripData.days.map(day => <DayCard key={day._id} day={day} />)}
+          tripData.days.map((day) => <DayCard key={day._id} day={day} />)}
       </Box>
     </Dialog>
   );
