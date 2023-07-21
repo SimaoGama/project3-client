@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { updateTrip, getTrip } from "../../api/trips.api";
+import { updateTrip, getTrip, updateDay } from "../../api/trips.api";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { baseURL } from "../../api/trips.api";
@@ -23,7 +23,7 @@ import "./EditDay.css";
 import PlaceCard from "../PlaceDetails/PlaceCard";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} timeout={700} />;
 });
 
 const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
@@ -104,6 +104,57 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
     setShowEditDialog(false);
   };
 
+  const handleAddPlaceToDay = async (dayId) => {
+    const placeType = selectedPlace.category.key;
+    // Update the day with the selected place information
+    const selectedDay = days.find((day) => day._id === dayId);
+
+    // Check the type of the selected place (assuming you have a 'type' property in the place object)
+    if (placeType === "restaurant") {
+      // If the selected place is a restaurant, update the 'restaurants' array in the day object
+      const updatedDay = {
+        ...selectedDay,
+        restaurants: [...selectedDay.restaurants, selectedPlace._id], // Add the selected place ID to the 'restaurants' array
+      };
+
+      // Update the day in the backend
+      try {
+        const response = await updateDay(updatedDay, dayId);
+        console.log("Day updated:", response.data);
+
+        // Update the local 'days' array with the updated day data returned from the backend
+        const updatedDays = days.map((day) =>
+          day._id === dayId ? response.data : day
+        );
+        setDays(updatedDays);
+      } catch (error) {
+        console.log("Error updating day:", error);
+        // Handle error, e.g., show an error message to the user
+      }
+    } else if (placeType === "hotel") {
+      // If the selected place is a hotel, update the 'accommodation' field in the day object
+      const updatedDay = {
+        ...selectedDay,
+        accommodation: selectedPlace._id, // Set the 'accommodation' field to the selected place ID
+      };
+
+      // Update the day in the backend
+      try {
+        const response = await updateDay(updatedDay, dayId);
+        console.log("Day updated:", response.data);
+
+        // Update the local 'days' array with the updated day data returned from the backend
+        const updatedDays = days.map((day) =>
+          day._id === dayId ? response.data : day
+        );
+        setDays(updatedDays);
+      } catch (error) {
+        console.log("Error updating day:", error);
+        // Handle error, e.g., show an error message to the user
+      }
+    }
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -112,6 +163,16 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
     return <div>Error: {error.message}</div>;
   }
 
+  const titleStyle = {
+    textAlign: "center",
+    fontSize: 20,
+  };
+
+  const highlightStyle = {
+    color: "#1976d2",
+    fontWeight: "bold",
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -119,9 +180,26 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       fullScreen
       TransitionComponent={Transition}
     >
-      <DialogTitle>Edit</DialogTitle>
+      <DialogTitle>
+        Adding to your trip to{" "}
+        <Typography
+          component="span"
+          variant="inherit"
+          color="primary"
+          style={{
+            textDecoration: "underline",
+            cursor: "pointer",
+            transition: "color 0.2s",
+          }}
+          onClick={() => navigate(`/trips/edit/${selectedTrip}`)}
+          onMouseEnter={(e) => (e.target.style.color = "blue")}
+          onMouseLeave={(e) => (e.target.style.color = "inherit")}
+        >
+          {tripData.destination}
+        </Typography>{" "}
+      </DialogTitle>
+
       <Box display="flex" justifyContent="center" mt={2}>
-        {/* Wrap PlaceCard in a Box container to center it */}
         <Box maxWidth={400}>
           <PlaceCard place={selectedPlace} />
         </Box>
@@ -129,16 +207,39 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
           sx={{ backgroundColor: "#f0f0f0", borderRadius: "5px" }}
           onClick={handleClose}
         >
-          Close
+          Back
         </Button>
       </Box>
       {tripInfo && (
         <>
-          <DialogTitle>Chose a day to add to:</DialogTitle>
+          <DialogTitle sx={titleStyle}>
+            Chose a day to add{" "}
+            <Typography component="span" variant="inherit" sx={highlightStyle}>
+              {selectedPlace.name}
+            </Typography>{" "}
+            to your{" "}
+            <Typography
+              component="span"
+              variant="inherit"
+              color="primary"
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => navigate(`/trips/edit/${selectedTrip}`)}
+              sx={highlightStyle}
+            >
+              {destination}
+            </Typography>{" "}
+            trip:
+          </DialogTitle>
           <Box className="days-container">
             {tripData?.days &&
               tripData.days.map((day) => (
-                <DayCard key={day._id} day={day} place={tripInfo.place} />
+                <DayCard
+                  highlightStyle={highlightStyle}
+                  key={day._id}
+                  day={day}
+                  place={tripInfo.place}
+                  onAddPlaceToDay={handleAddPlaceToDay}
+                />
               ))}
           </Box>
         </>

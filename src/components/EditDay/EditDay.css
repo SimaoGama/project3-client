@@ -22,3 +22,20 @@
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+/* CustomTransition.css */
+.MuiSlide-enter {
+  transition: transform 500ms cubic-bezier(0.1, 0.75, 0.3, 1);
+}
+
+.MuiSlide-enterActive {
+  transform: translate3d(0, 0, 0);
+}
+
+.MuiSlide-exit {
+  transition: transform 500ms cubic-bezier(0.1, 0.75, 0.3, 1);
+}
+
+.MuiSlide-exitActive {
+  transform: translate3d(0, 100%, 0);
+}

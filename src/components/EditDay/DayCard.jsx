@@ -1,10 +1,16 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import React from "react";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+} from "@mui/material";
 
-const DayCard = ({ day }) => {
-  const formatDate = dateString => {
+const DayCard = ({ day, highlightStyle }) => {
+  const formatDate = (dateString) => {
     if (!dateString || !Date.parse(dateString)) {
-      return '';
+      return "";
     }
 
     const date = new Date(dateString);
@@ -12,7 +18,7 @@ const DayCard = ({ day }) => {
   };
   return (
     <Card key={day._id}>
-      <CardHeader title={`Day ${formatDate(day?.date)}`} />
+      <CardHeader sx={highlightStyle} title={`Day ${formatDate(day?.date)}`} />
       <CardContent>
         {/* Render the information for each day */}
         <Typography>City: {day?.city}</Typography>
@@ -20,15 +26,28 @@ const DayCard = ({ day }) => {
 
         {/* Render the restaurants */}
         <Typography>Restaurants:</Typography>
-        {day?.restaurants.map(restaurant => (
+        {day?.restaurants.map((restaurant) => (
           <Typography key={restaurant._id}>{restaurant?.name}</Typography>
         ))}
 
         {/* Render the plans */}
         <Typography>Plans:</Typography>
-        {day?.plans.map(plan => (
+        {day?.plans.map((plan) => (
           <Typography key={plan._id}>{plan?.name}</Typography>
         ))}
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            "&:hover": {
+              backgroundColor: "secondary.main",
+              color: "secondary.contrastText",
+            },
+          }}
+          onClick={() => onAddPlaceToDay(day?._id)}
+        >
+          Add Place
+        </Button>
       </CardContent>
     </Card>
   );
