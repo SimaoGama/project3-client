@@ -1,29 +1,30 @@
 // import * as React from 'react';
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
-import { ThemeProvider } from "@mui/material/styles";
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import HowToRegTwoToneIcon from '@mui/icons-material/HowToRegTwoTone';
+import { ThemeProvider } from '@mui/material/styles';
 
-import { tokens } from "../../data/theme";
-import { useContext, useState } from "react";
-import { ColorModeContext } from "../../context/theme.context";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Copyright from "../../components/Footer/Copyright";
-import { signup } from "../../api/auth.api";
+import { tokens } from '../../data/theme';
+import { useContext, useState } from 'react';
+import { ColorModeContext } from '../../context/theme.context';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Copyright from '../../components/Footer/Copyright';
+import { signup } from '../../api/auth.api';
+import PasswordField from '../../components/Password/PasswordField';
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [errorMessage, setErrorMessage] = useState(undefined);
 
   const { handleThemeChange: toggleColorMode, theme } =
@@ -31,22 +32,22 @@ const SignUp = () => {
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
 
-  const handleEmail = (e) => {
+  const handleEmail = e => {
     setEmail(e.target.value);
   };
 
-  const handlePassword = (e) => {
+  const handlePassword = e => {
     setPassword(e.target.value);
   };
 
-  const handleFirstName = (e) => {
+  const handleFirstName = e => {
     setFirstName(e.target.value);
   };
-  const handleLastName = (e) => {
+  const handleLastName = e => {
     setLastName(e.target.value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
     //const data = new FormData(event.currentTarget);
 
@@ -54,17 +55,17 @@ const SignUp = () => {
     try {
       await signup(user);
 
-      navigate("/login");
+      navigate('/login');
     } catch (error) {
       console.log(user);
-      console.log("Error signing up", error);
+      console.log('Error signing up', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
     }
-    setEmail("");
-    setFirstName("");
-    setLastName("");
-    setPassword("");
+    setEmail('');
+    setFirstName('');
+    setLastName('');
+    setPassword('');
   };
 
   const handleToggleTheme = () => {
@@ -78,12 +79,12 @@ const SignUp = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <HowToRegTwoToneIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -108,8 +109,8 @@ const SignUp = () => {
                   InputLabelProps={{
                     style: {
                       color: theme.palette.text.primary, // Set label color for light and dark themes
-                      borderColor: colors.grey[100],
-                    },
+                      borderColor: colors.grey[100]
+                    }
                   }}
                 />
               </Grid>
@@ -125,11 +126,12 @@ const SignUp = () => {
                   InputLabelProps={{
                     style: {
                       color: theme.palette.text.primary,
-                      orderColor: theme.palette.divider,
-                    },
+                      orderColor: theme.palette.divider
+                    }
                   }}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -141,7 +143,12 @@ const SignUp = () => {
                   autoComplete="email"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <PasswordField
+                colors={colors}
+                theme={theme}
+                setPassword={setPassword}
+              />
+              {/* <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -152,7 +159,7 @@ const SignUp = () => {
                   id="password"
                   autoComplete="new-password"
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <FormControlLabel
                   control={
@@ -160,10 +167,10 @@ const SignUp = () => {
                       value="allowExtraEmails"
                       color="primary"
                       sx={{
-                        "&.Mui-checked": {
+                        '&.Mui-checked': {
                           color:
-                            theme.palette.mode === "dark" ? "#fff" : "inherit",
-                        },
+                            theme.palette.mode === 'dark' ? '#fff' : 'inherit'
+                        }
                       }}
                     />
                   }
@@ -171,6 +178,7 @@ const SignUp = () => {
                 />
               </Grid>
             </Grid>
+
             <Button
               type="submit"
               fullWidth
@@ -185,13 +193,13 @@ const SignUp = () => {
                   to="/login"
                   variant="body2"
                   sx={{
-                    color: theme.palette.mode === "dark" ? "#fff" : "inherit",
+                    color: theme.palette.mode === 'dark' ? '#fff' : 'inherit'
                   }}
                 >
                   {errorMessage && (
                     <p className="error-message">{errorMessage}</p>
                   )}
-                  <Typography sx={{ fontSize: "0.7rem" }} variant="h6">
+                  <Typography sx={{ fontSize: '0.7rem' }} variant="h6">
                     Already have an account? Sign in
                   </Typography>
                 </RouterLink>

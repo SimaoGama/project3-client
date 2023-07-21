@@ -1,28 +1,31 @@
 // import * as React from 'react';
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { ThemeProvider } from "@mui/material/styles";
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { ThemeProvider } from '@mui/material/styles';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-import { tokens } from "../../data/theme";
-import { useContext, useState } from "react";
-import { ColorModeContext } from "../../context/theme.context";
-import LoginIcon from "@mui/icons-material/Login";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Copyright from "../../components/Footer/Copyright";
-import { AuthContext } from "../../context/auth.context";
-import { toast } from "react-toastify";
-import { login } from "../../api/auth.api";
+import { tokens } from '../../data/theme';
+import { useContext, useState } from 'react';
+import { ColorModeContext } from '../../context/theme.context';
+import LoginIcon from '@mui/icons-material/Login';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Copyright from '../../components/Footer/Copyright';
+import { AuthContext } from '../../context/auth.context';
+import { toast } from 'react-toastify';
+import { login } from '../../api/auth.api';
+import { IconButton, InputAdornment } from '@mui/material';
 
 const LogIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(undefined);
+  const [showPassword, setShowPassword] = useState(false);
   const { storeToken, authenticateUser } = useContext(AuthContext);
 
   const { handleThemeChange: toggleColorMode, theme } =
@@ -31,33 +34,45 @@ const LogIn = () => {
 
   const navigate = useNavigate();
 
-  const handleEmail = (e) => {
+  const handleEmail = e => {
     setEmail(e.target.value);
   };
 
-  const handlePassword = (e) => {
+  const handlePassword = e => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleClickShowPassword = () => {
+    setShowPassword(prev => !prev);
+  };
+
+  const handleMouseDownPassword = event => {
+    event.preventDefault();
+  };
+
+  const handlePasswordChange = e => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = async e => {
     e.preventDefault();
 
     try {
       const user = { email, password };
       // const response = await login(user);
       const response = await toast.promise(login(user), {
-        pending: "We are hard at work, please wait",
-        error: "Something went wrong, try again later",
+        pending: 'We are hard at work, please wait',
+        error: 'Something went wrong, try again later'
       });
       //login response with token
       storeToken(response.data.authToken);
 
       //verify the token by sending a request to the server
       authenticateUser();
-      console.log("login successful");
-      navigate("/dashboard");
+      console.log('login successful');
+      navigate('/dashboard');
     } catch (error) {
-      console.log("Error Login In", error);
+      console.log('Error Login In', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
     }
@@ -74,12 +89,12 @@ const LogIn = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LoginIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -104,8 +119,8 @@ const LogIn = () => {
                   InputLabelProps={{
                     style: {
                       color: theme.palette.text.primary, // Set label color for light and dark themes
-                      borderColor: colors.grey[100],
-                    },
+                      borderColor: colors.grey[100]
+                    }
                   }}
                 />
               </Grid>
@@ -115,15 +130,28 @@ const LogIn = () => {
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'} // Toggle visibility based on state
                   id="password"
-                  onChange={handlePassword}
+                  onChange={handlePasswordChange}
                   autoComplete="new-password"
                   InputLabelProps={{
                     style: {
-                      color: theme.palette.text.primary, // Set label color for light and dark themes
-                      borderColor: colors.grey[100],
-                    },
+                      color: theme.palette.text.primary,
+                      borderColor: colors.grey[100]
+                    }
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
                   }}
                 />
               </Grid>
@@ -142,10 +170,10 @@ const LogIn = () => {
                   to="/signup"
                   variant="body2"
                   sx={{
-                    color: theme.palette.mode === "dark" ? "#fff" : "inherit",
+                    color: theme.palette.mode === 'dark' ? '#fff' : 'inherit'
                   }}
                 >
-                  <Typography sx={{ fontSize: "0.7rem" }} variant="h6">
+                  <Typography sx={{ fontSize: '0.7rem' }} variant="h6">
                     Don't have an account? Register today.
                   </Typography>
                 </RouterLink>
