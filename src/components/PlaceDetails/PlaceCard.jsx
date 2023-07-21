@@ -2,25 +2,16 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
-  Button,
   Card,
   CardMedia,
   CardContent,
   CardActions,
   Chip,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
 } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { styled } from "@mui/system";
 import Rating from "@mui/material/Rating";
-import { useNavigate } from "react-router-dom";
-import EditTrip from "../EditTrip/EditTrip";
-import EditDay from "../EditDay/EditDay";
-import ActionButtons from "./ActionButtons";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   elevation: 6,
@@ -43,49 +34,7 @@ const StyledCardActions = styled(CardActions)(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-const PlaceDetails = ({
-  place,
-  selected,
-  refProp,
-  userTrips,
-  setShowEditDialog,
-  selectedTrip,
-  setSelectedTrip,
-  setSelectedPlace,
-}) => {
-  const [showTripForm, setShowTripForm] = useState(false);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (selected && refProp?.current) {
-      refProp.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [selected, refProp]);
-
-  if (selected) {
-    refProp?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  const handleAddToTrip = () => {
-    setShowTripForm(true); // Show the form to select a trip
-  };
-
-  const handleTripSelectionChange = (event) => {
-    setSelectedTrip(event.target.value); // Update the selected trip
-  };
-
-  const handleConfirmAddToTrip = () => {
-    if (selectedTrip) {
-      setSelectedPlace(place);
-      setShowEditDialog(true); // Show the EditDay dialog
-    } else {
-      console.log("Please select a trip");
-    }
-
-    setShowTripForm(false); // Hide the form to select a trip
-  };
-
+const PlaceCard = ({ place }) => {
   return (
     <StyledCard elevation={6}>
       <StyledCardMedia
@@ -147,18 +96,9 @@ const PlaceDetails = ({
             {place.phone}
           </Typography>
         )}
-        <ActionButtons
-          place={place}
-          showTripForm={showTripForm}
-          selectedTrip={selectedTrip}
-          handleTripSelectionChange={handleTripSelectionChange}
-          userTrips={userTrips}
-          handleAddToTrip={handleAddToTrip}
-          handleConfirmAddToTrip={handleConfirmAddToTrip}
-        />
       </CardContent>
     </StyledCard>
   );
 };
 
-export default PlaceDetails;
+export default PlaceCard;

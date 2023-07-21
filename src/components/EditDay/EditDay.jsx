@@ -19,14 +19,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { baseURL } from "../../api/trips.api";
 import DayCard from "./DayCard";
-import PlaceDetails from "../PlaceDetails/PlaceDetails";
 import "./EditDay.css";
+import PlaceCard from "../PlaceDetails/PlaceCard";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const EditDay = ({ selectedTrip, setShowEditDialog, places }) => {
+const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const navigate = useNavigate();
   const params = useParams();
 
@@ -34,6 +34,11 @@ const EditDay = ({ selectedTrip, setShowEditDialog, places }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [days, setDays] = useState([]);
+  const [tripInfo, setTripInfo] = useState(null);
+
+  useEffect(() => {
+    setTripInfo(selectedTrip); // Set the tripInfo state when selectedTrip changes
+  }, [selectedTrip]);
 
   // const tripId = params.id; // Access the tripId from the URL parameters
 
@@ -44,7 +49,6 @@ const EditDay = ({ selectedTrip, setShowEditDialog, places }) => {
   } = useFetch(`${baseURL}/trip/${selectedTrip}`);
 
   useEffect(() => {
-    console.log("edit day component");
     if (tripData) {
       setDestination(tripData.destination);
       setStartDate(tripData.startDate);
@@ -115,60 +119,30 @@ const EditDay = ({ selectedTrip, setShowEditDialog, places }) => {
       fullScreen
       TransitionComponent={Transition}
     >
-      <DialogTitle>Edit Trip</DialogTitle>
-      <form onSubmit={handleEditTrip}>
-        <DialogContent>
-          <DialogContentText>Edit this trip</DialogContentText>
-          <Box mb={2}>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="destination"
-              label="Destination"
-              type="text"
-              value={destination}
-              onChange={handleNameChange}
-              fullWidth
-              variant="standard"
-            />
-          </Box>
-          <Box mb={2}>
-            <DialogContentText>Start Date</DialogContentText>
-            <TextField
-              margin="dense"
-              id="startDate"
-              type="date"
-              value={formatDate(startDate)}
-              onChange={handleStartDateChange}
-              fullWidth
-              variant="standard"
-            />
-          </Box>
-          <Box>
-            <DialogContentText>End Date</DialogContentText>
-            <TextField
-              margin="dense"
-              id="endDate"
-              type="date"
-              value={formatDate(endDate)}
-              onChange={handleEndDateChange}
-              fullWidth
-              variant="standard"
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          <Button type="submit" color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </form>
-      {/* <PlaceDetails places={places} /> */}
-      <Box className="days-container">
-        {tripData?.days &&
-          tripData.days.map((day) => <DayCard key={day._id} day={day} />)}
+      <DialogTitle>Edit</DialogTitle>
+      <Box display="flex" justifyContent="center" mt={2}>
+        {/* Wrap PlaceCard in a Box container to center it */}
+        <Box maxWidth={400}>
+          <PlaceCard place={selectedPlace} />
+        </Box>
+        <Button
+          sx={{ backgroundColor: "#f0f0f0", borderRadius: "5px" }}
+          onClick={handleClose}
+        >
+          Close
+        </Button>
       </Box>
+      {tripInfo && (
+        <>
+          <DialogTitle>Chose a day to add to:</DialogTitle>
+          <Box className="days-container">
+            {tripData?.days &&
+              tripData.days.map((day) => (
+                <DayCard key={day._id} day={day} place={tripInfo.place} />
+              ))}
+          </Box>
+        </>
+      )}
     </Dialog>
   );
 };

@@ -27,6 +27,7 @@ const PlacesList = ({
   handleTripSelection,
   selectedTrip,
   setSelectedTrip,
+  setSelectedPlace,
 }) => {
   const [elementRef, setElementRef] = useState([]);
 
@@ -98,9 +99,12 @@ const PlacesList = ({
                   userTrips={userTrips}
                   showEditDialog={showEditDialog}
                   setShowEditDialog={setShowEditDialog}
-                  handleTripSelection={handleTripSelection}
+                  handleTripSelection={(tripId) =>
+                    handleTripSelection(tripId, place)
+                  }
                   selectedTrip={selectedTrip}
                   setSelectedTrip={setSelectedTrip}
+                  setSelectedPlace={setSelectedPlace}
                 />
               </Grid>
             ))}

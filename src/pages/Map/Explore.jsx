@@ -28,6 +28,7 @@ const Explore = () => {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState({});
 
   useEffect(() => {
     getAllTrips(user._id)
@@ -70,12 +71,17 @@ const Explore = () => {
   };
 
   // Function to handle the trip selection
-  const handleTripSelection = (tripId) => {
-    setSelectedTrip(tripId);
+  const handleTripSelection = (eventOrTripId, place) => {
+    if (place) {
+      // If place is provided, it means the function is called with tripId and place details
+      setSelectedTrip({ tripId: eventOrTripId, place }); // Set the selected tripId and place details as an object
+    } else {
+      // If no place is provided, it means the function is called with an event object
+      setSelectedTrip({ tripId: eventOrTripId.target.value }); // Set the selected tripId from the event object
+    }
+    setSelectedPlace(place); // Set the selectedPlace
     setShowEditDialog(true); // Show the EditDay dialog
   };
-
-  console.log(showEditDialog);
 
   return (
     <>
@@ -99,6 +105,7 @@ const Explore = () => {
               handleTripSelection={handleTripSelection}
               selectedTrip={selectedTrip}
               setSelectedTrip={setSelectedTrip}
+              setSelectedPlace={setSelectedPlace}
             />
           </Grid>
 
@@ -120,8 +127,8 @@ const Explore = () => {
         {showEditDialog && (
           <EditDay
             selectedTrip={selectedTrip}
+            selectedPlace={selectedPlace}
             setShowEditDialog={setShowEditDialog}
-            places={places}
           />
         )}
       </Grid>

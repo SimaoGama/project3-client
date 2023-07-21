@@ -1,12 +1,24 @@
 /* EditDay.css */
 
+/* Center the day cards within the container */
 .days-container {
   display: flex;
-  flex-wrap: wrap; /* Allow the days to wrap to a new row when necessary */
-  gap: 10px; /* Adjust the spacing between day cards */
+  flex-wrap: wrap;
+  justify-content: center; /* Center the day cards horizontally */
+  gap: 10px;
 }
 
 /* Style each day card */
 .DayCard {
-  flex: 0 0 calc(33.33% - 20px); /* Make each day card take up one-third of the available width with some spacing */
+  flex: 0 0 calc(33.33% - 20px);
+  /* Make each day card take up one-third of the available width with some spacing */
+  /* Add additional styles to center the day card content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Add some padding to give space around the day card content */
+  padding: 10px;
+  /* Add a border and border-radius to make it visually appealing */
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
