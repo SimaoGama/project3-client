@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -12,15 +12,15 @@ import {
   DialogTitle,
   Slide,
   TextField,
-  Typography,
-} from "@mui/material";
-import { updateTrip, getTrip, updateDay } from "../../api/trips.api";
-import { useNavigate, useParams } from "react-router-dom";
-import useFetch from "../../hooks/useFetch";
-import { baseURL } from "../../api/trips.api";
-import DayCard from "./DayCard";
-import "./EditDay.css";
-import PlaceCard from "../PlaceDetails/PlaceCard";
+  Typography
+} from '@mui/material';
+import { updateTrip, getTrip, updateDay } from '../../api/trips.api';
+import { useNavigate, useParams } from 'react-router-dom';
+import useFetch from '../../hooks/useFetch';
+import { baseURL } from '../../api/trips.api';
+import DayCard from './DayCard';
+import './EditDay.css';
+import PlaceCard from '../PlaceDetails/PlaceCard';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} timeout={700} />;
@@ -30,9 +30,9 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const [destination, setDestination] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [destination, setDestination] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [days, setDays] = useState([]);
   const [tripInfo, setTripInfo] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
@@ -44,7 +44,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const {
     data: tripData,
     isLoading,
-    error,
+    error
   } = useFetch(`${baseURL}/trip/${selectedTrip}`);
 
   useEffect(() => {
@@ -56,43 +56,43 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
     }
   }, [tripData]);
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     if (!dateString || !Date.parse(dateString)) {
-      return "";
+      return '';
     }
 
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
 
-  const handleNameChange = (event) => {
+  const handleNameChange = event => {
     setDestination(event.target.value);
   };
 
-  const handleStartDateChange = (event) => {
+  const handleStartDateChange = event => {
     setStartDate(event.target.value);
   };
 
-  const handleEndDateChange = (event) => {
+  const handleEndDateChange = event => {
     setEndDate(event.target.value);
   };
 
-  const handleEditTrip = async (e) => {
+  const handleEditTrip = async e => {
     e.preventDefault();
 
     const updatedTrip = {
       destination,
       startDate,
-      endDate,
+      endDate
     };
 
     try {
       const response = await updateTrip(updatedTrip, selectedTrip);
-      console.log("Trip updated:", response.data);
+      console.log('Trip updated:', response.data);
       handleClose();
-      navigate("/map");
+      navigate('/map');
     } catch (error) {
-      console.log("Error updating trip:", error);
+      console.log('Error updating trip:', error);
     }
   };
 
@@ -104,15 +104,15 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const handleAddPlaceToDay = async (dayId, place) => {
     try {
       const response = await updateDay(dayId, place);
-      console.log("Day updated:", response.data);
+      console.log('Day updated:', response.data);
 
       // Update the local 'days' array with the updated day data returned from the backend
-      const updatedDays = days.map((day) =>
+      const updatedDays = days.map(day =>
         day._id === dayId ? response.data : day
       );
       setDays(updatedDays);
     } catch (error) {
-      console.log("Error updating day:", error);
+      console.log('Error updating day:', error);
       // Handle error, e.g., show an error message to the user
     }
   };
@@ -126,13 +126,13 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   }
 
   const titleStyle = {
-    textAlign: "center",
-    fontSize: 20,
+    textAlign: 'center',
+    fontSize: 20
   };
 
   const highlightStyle = {
-    color: "#1976d2",
-    fontWeight: "bold",
+    color: '#1976d2',
+    fontWeight: 'bold'
   };
 
   return (
@@ -143,22 +143,22 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       TransitionComponent={Transition}
     >
       <DialogTitle>
-        Adding to your trip to{" "}
+        Adding to your trip to{' '}
         <Typography
           component="span"
           variant="inherit"
           color="primary"
           style={{
-            textDecoration: "underline",
-            cursor: "pointer",
-            transition: "color 0.2s",
+            textDecoration: 'underline',
+            cursor: 'pointer',
+            transition: 'color 0.2s'
           }}
           onClick={() => navigate(`/trips/edit/${selectedTrip}`)}
-          onMouseEnter={(e) => (e.target.style.color = "blue")}
-          onMouseLeave={(e) => (e.target.style.color = "inherit")}
+          onMouseEnter={e => (e.target.style.color = 'blue')}
+          onMouseLeave={e => (e.target.style.color = 'inherit')}
         >
           {tripData.destination}
-        </Typography>{" "}
+        </Typography>{' '}
       </DialogTitle>
 
       <Box display="flex" justifyContent="center" mt={2}>
@@ -166,7 +166,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
           <PlaceCard place={selectedPlace} />
         </Box>
         <Button
-          sx={{ backgroundColor: "#f0f0f0", borderRadius: "5px" }}
+          sx={{ backgroundColor: '#f0f0f0', borderRadius: '5px' }}
           onClick={handleClose}
         >
           Back
@@ -175,26 +175,26 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       {tripInfo && (
         <>
           <DialogTitle sx={titleStyle}>
-            Chose a day to add{" "}
+            Chose a day to add{' '}
             <Typography component="span" variant="inherit" sx={highlightStyle}>
               {selectedPlace.name.toUpperCase()}
-            </Typography>{" "}
-            to your{" "}
+            </Typography>{' '}
+            to your{' '}
             <Typography
               component="span"
               variant="inherit"
               color="primary"
-              style={{ textDecoration: "underline", cursor: "pointer" }}
+              style={{ textDecoration: 'underline', cursor: 'pointer' }}
               onClick={() => navigate(`/trips/edit/${selectedTrip}`)}
               sx={highlightStyle}
             >
               {destination}
-            </Typography>{" "}
-            trip:
+            </Typography>{' '}
+            trip to:
           </DialogTitle>
           <Box className="days-container">
             {tripData?.days &&
-              tripData.days.map((day) => {
+              tripData.days.map(day => {
                 return (
                   <DayCard
                     highlightStyle={highlightStyle}

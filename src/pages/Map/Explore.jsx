@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Grid, useMediaQuery, Button } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
+import React, { useContext, useEffect, useState } from 'react';
+import { Grid, useMediaQuery, Button } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import Map from "../../components/Map/Map";
-import { getPlacesData } from "../../api/places.api";
-import { getAllTrips } from "../../api/trips.api";
-import PlacesList from "../../components/PlaceDetails/PlacesList";
-import SearchHeader from "./SearchHeader";
-import { AuthContext } from "../../context/auth.context";
-import EditDay from "../../components/EditDay/EditDay";
+import Map from '../../components/Map/Map';
+import { getPlacesData } from '../../api/places.api';
+import { getAllTrips } from '../../api/trips.api';
+import PlacesList from '../../components/PlaceDetails/PlacesList';
+import SearchHeader from './SearchHeader';
+import { AuthContext } from '../../context/auth.context';
+import EditDay from '../../components/EditDay/EditDay';
 
 const Explore = () => {
   const { user } = useContext(AuthContext);
@@ -18,10 +18,10 @@ const Explore = () => {
   const [bounds, setBounds] = useState({});
   const [childClicked, setChildClicked] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [type, setType] = useState("restaurants");
+  const [type, setType] = useState('restaurants');
   const [rating, setRating] = useState(3);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
-  const isNotMobile = useMediaQuery("(min-width: 600px)");
+  const isNotMobile = useMediaQuery('(min-width: 600px)');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showSearchButton, setShowSearchButton] = useState(false); // State to control the visibility of the search button
   const [userTrips, setUserTrips] = useState([]);
@@ -32,11 +32,11 @@ const Explore = () => {
 
   useEffect(() => {
     getAllTrips(user._id)
-      .then((response) => {
+      .then(response => {
         setUserTrips(response.data);
       })
-      .catch((error) => {
-        console.log("Error fetching user trips:", error);
+      .catch(error => {
+        console.log('Error fetching user trips:', error);
       });
   }, []);
 
@@ -50,7 +50,7 @@ const Explore = () => {
 
   useEffect(() => {
     if (places) {
-      const filteredPlaces = places.filter((place) => place.rating > rating);
+      const filteredPlaces = places.filter(place => place.rating > rating);
 
       setFilteredPlaces(filteredPlaces);
     }
@@ -62,8 +62,8 @@ const Explore = () => {
 
   const handleSearchButtonClick = () => {
     setIsLoading(true);
-    getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
-      setPlaces(data?.filter((place) => place.name && place.num_reviews > 0));
+    getPlacesData(type, bounds.sw, bounds.ne).then(data => {
+      setPlaces(data?.filter(place => place.name && place.num_reviews > 0));
       setFilteredPlaces([]);
       setIsLoading(false);
       setShowSearchButton(false); // Hide the search button after clicking it
@@ -89,7 +89,7 @@ const Explore = () => {
         <CssBaseline />
 
         <SearchHeader setCoordinates={setCoordinates} />
-        <Grid container spacing={3} style={{ width: " 100%" }}>
+        <Grid container spacing={3} style={{ width: ' 100%' }}>
           <Grid item xs={12} md={4}>
             <PlacesList
               places={filteredPlaces.length ? filteredPlaces : places}

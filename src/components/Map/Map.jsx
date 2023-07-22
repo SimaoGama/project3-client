@@ -44,7 +44,7 @@ const Map = ({
   return (
     <div style={{ height: '85vh', width: '100%' }}>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: 'AIzaSyAEmWOChWlh6M9uJ9soJT2q-n86uOQqp9M' }}
+        bootstrapURLKeys={{ key: import.meta.env.VITE_GOOGLE_MAPS_API }}
         center={coordinates}
         defaultZoom={14}
         margin={[50, 50, 50, 50]}
