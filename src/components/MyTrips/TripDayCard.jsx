@@ -50,10 +50,7 @@ const TripDayCard = ({ day, formatDate }) => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5" component="div">
-          {logDate}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="h6" fontWeight="bold">
           City: {day.city}
         </Typography>
         <Typography variant="h6" fontWeight="bold">
@@ -62,11 +59,15 @@ const TripDayCard = ({ day, formatDate }) => {
         <Typography sx={{ flexGrow: 1 }}>
           {accommodation ? accommodation.name : 'Loading...'}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="h6" fontWeight="bold">
           Restaurants:
-          {restaurants.map(restaurant => (
-            <span key={restaurant?._id}>{restaurant?.name}</span>
-          ))}
+        </Typography>
+        <Typography sx={{ flexGrow: 1 }}>
+          {restaurants
+            ? restaurants.map(restaurant => (
+                <span key={restaurant?._id}>{restaurant?.name}</span>
+              ))
+            : 'Loading...'}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Plans: {day.plans.join(', ')}

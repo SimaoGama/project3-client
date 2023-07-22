@@ -117,6 +117,31 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
     }
   };
 
+  const handleRemovePlaceFromDay = (dayId, type, placeId) => {
+    // Find the day in the days array based on the dayId
+    const updatedDays = days.map(day => {
+      if (day._id === dayId) {
+        // Create a copy of the day to modify
+        const updatedDay = { ...day };
+
+        // Remove the place from the day based on its type (accommodation or restaurant)
+        if (type === 'accommodation') {
+          updatedDay.accommodation = null;
+        } else if (type === 'restaurant') {
+          updatedDay.restaurants = updatedDay.restaurants.filter(
+            restaurantId => restaurantId !== placeId
+          );
+        }
+
+        return updatedDay;
+      }
+      return day;
+    });
+
+    // Update the state with the modified days array
+    setDays(updatedDays);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -202,6 +227,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
                     day={day}
                     place={selectedPlace}
                     onAddPlaceToDay={handleAddPlaceToDay}
+                    onRemovePlaceFromDay={handleRemovePlaceFromDay}
                   />
                 );
               })}

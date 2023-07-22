@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Typography,
   Box,
-  Pagination,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import TripDayCard from "./TripDayCard";
+  Pagination
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import TripDayCard from './TripDayCard';
 
 const DayList = ({ days }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,22 +23,23 @@ const DayList = ({ days }) => {
   const endIndex = startIndex + itemsPerPage;
   const displayedDays = days.slice(startIndex, endIndex);
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
 
   return (
     <div>
-      {displayedDays.map((day) => (
+      {displayedDays.map(day => (
         <Accordion key={day._id}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
           >
-            <Typography>
-              {formatDate(day.date)} {day.city || ""}
+            <Typography>{formatDate(day?.date)}&nbsp;</Typography>
+            <Typography variant="h6" fontWeight="bold">
+              {day?.city || ''}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>

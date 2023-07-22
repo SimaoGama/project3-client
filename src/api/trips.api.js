@@ -64,11 +64,19 @@ export const getRestaurant = restaurantId => {
   return axios.get(`${baseURL}/restaurant/${restaurantId}`);
 };
 
-export const getAccommodation = accommodationId => {
-  return axios
-    .get(`${baseURL}/accommodation/${accommodationId}`)
-    .catch(error => {
-      console.error('Error fetching accommodation data:', error);
-      throw error; // Rethrow the error to handle it in the component
-    });
+export const getAccommodation = async accommodationId => {
+  try {
+    return await axios.get(`${baseURL}/accommodation/${accommodationId}`);
+  } catch (error) {
+    console.error('Error fetching accommodation data:', error);
+    throw error; // Rethrow the error to handle it in the component
+  }
+};
+
+export const deletedRestaurant = id => {
+  return axios.delete(`${baseURL}/restaurant/${id}`);
+};
+
+export const deletedAccommodation = id => {
+  return axios.delete(`${baseURL}/accommodation/${id}`);
 };
