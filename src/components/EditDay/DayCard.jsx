@@ -11,14 +11,14 @@ import useFetch from '../../hooks/useFetch';
 import { getAccommodation, getRestaurant } from '../../api/trips.api';
 
 const DayCard = ({ day, highlightStyle, onAddPlaceToDay, place }) => {
-  const [accommodation, setAccommodation] = useState(null);
+  const [accommodation, setAccommodation] = useState({});
   const [restaurants, setRestaurants] = useState([]);
 
   const fetchAccommodationData = async () => {
     try {
-      if (day?.accommodation?._id) {
-        const response = await getAccommodation(day.accommodation._id);
-        console.log('Response from API:', response.data); // Add this log to check the API response
+      if (day?.accommodation) {
+        const response = await getAccommodation(day.accommodation);
+
         setAccommodation(response.data);
       }
     } catch (error) {
@@ -73,6 +73,8 @@ const DayCard = ({ day, highlightStyle, onAddPlaceToDay, place }) => {
 
     onAddPlaceToDay(day?._id, place);
   };
+
+  //   console.log('HOTEL NAME', accommodation?.name);
 
   return (
     <Card key={day._id} sx={{ width: 300, height: '130%' }}>

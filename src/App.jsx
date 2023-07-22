@@ -9,6 +9,7 @@ import IsAnon from './components/Validation/isAnon';
 import IsPrivate from './components/Validation/isPrivate';
 import Dashboard from './pages/Dashboard/Dashboard';
 import { ThemeProvider } from '@mui/material';
+import { Helmet } from 'react-helmet';
 import NewTrip from './components/CreateTrip/NewTrip';
 import { AuthContext } from './context/auth.context';
 import TripCard from './components/MyTrips/TripCard';
