@@ -52,10 +52,18 @@ export const upload = (uploadData) => {
 
 //handle days
 
-export const getDay = (dayId) => {
+export const getDayInformation = (dayId) => {
   return axios.get(`${baseURL}/day/${dayId}`);
 };
 
-export const updateDay = (updatedDay, dayId) => {
-  return axios.put(`${baseURL}/day/${dayId}`, updatedDay); // Use the correct API route with the tripId in the URL
+export const updateDay = (dayId, selectedPlace) => {
+  return axios.put(`${baseURL}/${dayId}`, { selectedPlace });
+};
+
+export const getRestaurant = (restaurantId) => {
+  return axios.get(`${baseURL}/restaurant/${restaurantId}`);
+};
+
+export const getAccommodation = (accommodationId) => {
+  return axios.get(`${baseURL}/accommodation/${accommodationId}`);
 };

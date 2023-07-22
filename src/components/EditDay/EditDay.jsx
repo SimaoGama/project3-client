@@ -35,12 +35,11 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const [endDate, setEndDate] = useState("");
   const [days, setDays] = useState([]);
   const [tripInfo, setTripInfo] = useState(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     setTripInfo(selectedTrip); // Set the tripInfo state when selectedTrip changes
   }, [selectedTrip]);
-
-  // const tripId = params.id; // Access the tripId from the URL parameters
 
   const {
     data: tripData,
@@ -97,61 +96,24 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
     }
   };
 
-  const [isOpen, setIsOpen] = useState(true);
-
   const handleClose = () => {
     setIsOpen(false);
     setShowEditDialog(false);
   };
 
-  const handleAddPlaceToDay = async (dayId) => {
-    const placeType = selectedPlace.category.key;
-    // Update the day with the selected place information
-    const selectedDay = days.find((day) => day._id === dayId);
+  const handleAddPlaceToDay = async (dayId, place) => {
+    try {
+      const response = await updateDay(dayId, place);
+      console.log("Day updated:", response.data);
 
-    // Check the type of the selected place (assuming you have a 'type' property in the place object)
-    if (placeType === "restaurant") {
-      // If the selected place is a restaurant, update the 'restaurants' array in the day object
-      const updatedDay = {
-        ...selectedDay,
-        restaurants: [...selectedDay.restaurants, selectedPlace._id], // Add the selected place ID to the 'restaurants' array
-      };
-
-      // Update the day in the backend
-      try {
-        const response = await updateDay(updatedDay, dayId);
-        console.log("Day updated:", response.data);
-
-        // Update the local 'days' array with the updated day data returned from the backend
-        const updatedDays = days.map((day) =>
-          day._id === dayId ? response.data : day
-        );
-        setDays(updatedDays);
-      } catch (error) {
-        console.log("Error updating day:", error);
-        // Handle error, e.g., show an error message to the user
-      }
-    } else if (placeType === "hotel") {
-      // If the selected place is a hotel, update the 'accommodation' field in the day object
-      const updatedDay = {
-        ...selectedDay,
-        accommodation: selectedPlace._id, // Set the 'accommodation' field to the selected place ID
-      };
-
-      // Update the day in the backend
-      try {
-        const response = await updateDay(updatedDay, dayId);
-        console.log("Day updated:", response.data);
-
-        // Update the local 'days' array with the updated day data returned from the backend
-        const updatedDays = days.map((day) =>
-          day._id === dayId ? response.data : day
-        );
-        setDays(updatedDays);
-      } catch (error) {
-        console.log("Error updating day:", error);
-        // Handle error, e.g., show an error message to the user
-      }
+      // Update the local 'days' array with the updated day data returned from the backend
+      const updatedDays = days.map((day) =>
+        day._id === dayId ? response.data : day
+      );
+      setDays(updatedDays);
+    } catch (error) {
+      console.log("Error updating day:", error);
+      // Handle error, e.g., show an error message to the user
     }
   };
 
@@ -215,7 +177,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
           <DialogTitle sx={titleStyle}>
             Chose a day to add{" "}
             <Typography component="span" variant="inherit" sx={highlightStyle}>
-              {selectedPlace.name}
+              {selectedPlace.name.toUpperCase()}
             </Typography>{" "}
             to your{" "}
             <Typography
@@ -232,15 +194,17 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
           </DialogTitle>
           <Box className="days-container">
             {tripData?.days &&
-              tripData.days.map((day) => (
-                <DayCard
-                  highlightStyle={highlightStyle}
-                  key={day._id}
-                  day={day}
-                  place={tripInfo.place}
-                  onAddPlaceToDay={handleAddPlaceToDay}
-                />
-              ))}
+              tripData.days.map((day) => {
+                return (
+                  <DayCard
+                    highlightStyle={highlightStyle}
+                    key={day._id}
+                    day={day}
+                    place={selectedPlace}
+                    onAddPlaceToDay={handleAddPlaceToDay}
+                  />
+                );
+              })}
           </Box>
         </>
       )}

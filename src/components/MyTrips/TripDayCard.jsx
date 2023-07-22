@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 
-const DayCard = ({ day, formatDate }) => {
+const TripDayCard = ({ day, formatDate }) => {
   const logDate = formatDate(day.date);
 
   return (
@@ -27,4 +27,4 @@ const DayCard = ({ day, formatDate }) => {
   );
 };
 
-export default DayCard;
+export default TripDayCard;

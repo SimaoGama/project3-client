@@ -8,7 +8,7 @@ import {
   Pagination,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DayCard from "./DayCard";
+import TripDayCard from "./TripDayCard";
 
 const DayList = ({ days }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,7 +42,7 @@ const DayList = ({ days }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <DayCard formatDate={formatDate} day={day} />
+            <TripDayCard formatDate={formatDate} day={day} />
           </AccordionDetails>
         </Accordion>
       ))}
