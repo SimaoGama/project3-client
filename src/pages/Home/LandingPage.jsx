@@ -12,13 +12,9 @@ const LandingPage = () => {
 
   return (
     <Box
-    // sx={{
-    //   backgroundColor: theme.palette.background.default,
-    //   height: "100vh",
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    // }}
+      sx={{
+        backgroundColor: theme.palette.background.default,
+      }}
     >
       <HeroSection />
       <Cards />

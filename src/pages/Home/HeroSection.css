@@ -7,8 +7,7 @@
 } */
 
 .hero-container {
-  background: url("../../../public/images/img-home.jpg") center center/cover
-    no-repeat;
+  background: url("/images/img-home.jpg") center center/cover no-repeat;
   height: 100vh;
   width: 100%;
   display: flex;
@@ -69,4 +68,37 @@
   .btn {
     width: 100%;
   }
+}
+
+.typewriter-text {
+  color: #4cceac;
+  font-size: 100px;
+  margin-top: -100px;
+  text-align: center;
+}
+
+@media screen and (max-width: 960px) {
+  .typewriter-text {
+    font-size: 70px;
+    margin-top: -150px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .typewriter-text {
+    font-size: 50px;
+    margin-top: -100px;
+  }
+}
+
+.hero-btns {
+  margin-top: 32px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.hero-btns.show {
+  opacity: 1;
+  transform: translateY(0);
 }

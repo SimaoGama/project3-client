@@ -30,6 +30,7 @@ import { baseURL } from "../../api/trips.api";
 import DayCard from "./DayCard";
 import "./EditDay.css";
 import PlaceCard from "../PlaceDetails/PlaceCard";
+import DeleteModal from "../Modal/DeleteModal";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} timeout={700} />;
@@ -45,6 +46,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const [days, setDays] = useState([]);
   const [tripInfo, setTripInfo] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [place, setPlace] = useState({});
 
   useEffect(() => {
@@ -117,6 +119,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       return;
     }
     console.log("place", place);
+    setIsConfirmationOpen(true);
     try {
       if (type === "accommodation") {
         await deleteAccommodation(place);
@@ -238,12 +241,19 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
                     place={place}
                     onAddPlaceToDay={handleAddPlaceToDay}
                     onRemovePlaceFromDay={handleRemovePlaceFromDay}
+                    isConfirmationOpen={isConfirmationOpen}
+                    setIsConfirmationOpen={setIsConfirmationOpen}
                   />
                 );
               })}
           </Box>
         </>
       )}
+      {/* <DeleteModal
+        isConfirmationOpen={isConfirmationOpen}
+        setIsConfirmationOpen={setIsConfirmationOpen}
+        handleDeleteClick={handleRemovePlaceFromDay}
+      /> */}
     </Dialog>
   );
 };

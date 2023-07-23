@@ -11,6 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import { getAccommodation, getRestaurant } from "../../api/trips.api";
+import DeleteModal from "../Modal/DeleteModal";
 
 const DayCard = ({
   day,
@@ -208,8 +209,9 @@ const DayCard = ({
                     {restaurantHover[restaurant?._id] ? (
                       <CloseOutlinedIcon
                         style={{ cursor: "pointer" }}
-                        onClick={() =>
-                          handleRemovePlace("restaurant", restaurant?._id)
+                        onClick={
+                          () => setConfir
+                          // handleRemovePlace("restaurant", restaurant?._id)
                         }
                         onMouseLeave={() =>
                           setRestaurantHover((prevState) => ({
