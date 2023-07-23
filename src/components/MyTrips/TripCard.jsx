@@ -1,39 +1,65 @@
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import { useState } from 'react';
-import { deleteTrip } from '../../api/trips.api';
-import DeleteModal from '../Modal/DeleteModal';
-import DayList from './DayList';
-import { Menu, MenuItem } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import { useNavigate } from 'react-router-dom';
+import { styled } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Collapse from "@mui/material/Collapse";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import { red } from "@mui/material/colors";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import { useState } from "react";
+import { deleteTrip } from "../../api/trips.api";
+import DeleteModal from "../Modal/DeleteModal";
+import DayList from "./DayList";
+import { Menu, MenuItem } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate } from "react-router-dom";
 
 const IMG_URL =
-  'https://www.gtitravel.com/wp-content/uploads/2017/06/Do-Travel-Agents-get-free-trips.jpg';
+  "https://www.gtitravel.com/wp-content/uploads/2017/06/Do-Travel-Agents-get-free-trips.jpg";
 
-const ExpandMore = styled(props => {
+const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest
-  })
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
+const CardContainer = styled(Card)(({ theme }) => ({
+  maxWidth: 345,
+  marginBottom: "2rem", // Add margin between cards for mobile
+  boxShadow: "0 6px 20px rgba(56, 125, 255, 0.17)", // Add boxShadow for mobile
+}));
+
+const CardImage = styled(CardMedia)(({ theme }) => ({
+  height: "194px", // Set a fixed height for the card image on mobile
+}));
+
+const CardInfo = styled(CardContent)(({ theme }) => ({
+  padding: "20px 30px 30px",
+}));
+
+const CardText = styled(Typography)(({ theme }) => ({
+  color: "#252e48",
+  fontSize: "18px",
+  lineHeight: "24px",
+}));
+
+const CardActionsWrapper = styled(CardActions)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between", // Align actions to the sides for mobile
+  paddingTop: 0, // Remove padding at the top for mobile
 }));
 
 const TripCard = ({ trip, handleDelete }) => {
@@ -51,16 +77,16 @@ const TripCard = ({ trip, handleDelete }) => {
     setAnchorEl(null);
   };
 
-  const handleEditClick = id => {
+  const handleEditClick = (id) => {
     navigate(`/trips/edit/${id}`);
     handleCloseMenu();
   };
 
-  const handleMenuClick = event => {
+  const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const formatDate = dateString => {
+  const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
@@ -80,12 +106,12 @@ const TripCard = ({ trip, handleDelete }) => {
       await deleteTrip(trip._id);
       handleDelete(trip._id); // Call the parent component's handleDelete function to remove the deleted trip from the UI
     } catch (error) {
-      console.log('Error deleting trip:', error);
+      console.log("Error deleting trip:", error);
     }
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <CardContainer>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -126,18 +152,17 @@ const TripCard = ({ trip, handleDelete }) => {
           trip?.endDate
         )}`}
       />
-      <CardMedia
+      <CardImage
         component="img"
-        height="194"
         image={trip.img ? trip.img : IMG_URL}
         alt="Destination img"
       />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
+      <CardInfo>
+        <CardText>
           {`My ${totalDays}-day trip to ${trip?.destination}`}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
+        </CardText>
+      </CardInfo>
+      <CardActionsWrapper disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
@@ -155,21 +180,21 @@ const TripCard = ({ trip, handleDelete }) => {
           setIsConfirmationOpen={setIsConfirmationOpen}
           handleDeleteClick={handleDeleteClick}
         />
-        <IconButton
+        <ExpandMore
           onClick={handleExpandClick}
-          aria-expanded={expanded}
+          expand={expanded}
           aria-label="show more"
         >
           <ExpandMoreIcon />
-        </IconButton>
-      </CardActions>
+        </ExpandMore>
+      </CardActionsWrapper>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Overview:</Typography>
           <DayList days={trip.days} />
         </CardContent>
       </Collapse>
-    </Card>
+    </CardContainer>
   );
 };
 

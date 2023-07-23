@@ -1,0 +1,16 @@
+/* Custom CSS for mobile compatibility */
+
+/* Center the container on mobile */
+.hero-container {
+  align-items: center;
+}
+
+/* Set max-width to adjust the width of trip cards on mobile */
+.hero-container .MuiContainer-maxWidthLg {
+  max-width: 100%;
+}
+
+/* Adjust the width of the trip cards to occupy full width on mobile */
+.MuiGrid-item {
+  flex-basis: 100%;
+}

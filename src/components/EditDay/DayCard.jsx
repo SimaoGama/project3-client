@@ -1,241 +1,255 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
   Card,
   CardContent,
   CardHeader,
-  Typography
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
-import {
-  getAccommodation,
-  getRestaurant,
-  deletedRestaurant,
-  deletedAccommodation
-} from '../../api/trips.api';
+  Typography,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
+import { getAccommodation, getRestaurant } from "../../api/trips.api";
 
 const DayCard = ({
   day,
   highlightStyle,
   onAddPlaceToDay,
   onRemovePlaceFromDay,
-  place
+  place,
 }) => {
-  const [accommodation, setAccommodation] = useState({});
+  const [accommodation, setAccommodation] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
   const [restaurantHover, setRestaurantHover] = useState({});
   const [accommodationHover, setAccommodationHover] = useState(false);
   const [hoveredDay, setHoveredDay] = useState(null);
-
-  const fetchAccommodationData = async () => {
-    try {
-      if (day?.accommodation) {
-        const response = await getAccommodation(day.accommodation);
-
-        setAccommodation(response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching accommodation data:', error);
-    }
-  };
+  const [loading, setLoading] = useState(true);
 
   // Fetch accommodation data when the component mounts or when 'day.accommodation._id' changes
   useEffect(() => {
+    const fetchAccommodationData = async () => {
+      try {
+        if (day?.accommodation) {
+          const response = await getAccommodation(day.accommodation);
+          setAccommodation(response.data);
+        } else {
+          setAccommodation(null);
+        }
+      } catch (error) {
+        console.error("Error fetching accommodation data:", error);
+      } finally {
+        setLoading(false); // Set loading to false once the data fetching is done
+      }
+    };
+
     fetchAccommodationData();
-  }, [day?.accommodation?._id]);
+  }, [day]);
 
-  // Effect to fetch accommodation data on component mount
+  // Effect to fetch restaurants data on component mount
   useEffect(() => {
-    fetchAccommodationData();
-  }, []);
+    const fetchRestaurantData = async () => {
+      try {
+        if (day?.restaurants && day.restaurants.length > 0) {
+          const restaurantPromises = day.restaurants.map((restaurant) =>
+            getRestaurant(restaurant)
+          );
+          const restaurantDataList = await Promise.all(restaurantPromises);
+          setRestaurants(restaurantDataList.map((response) => response.data));
+        } else {
+          setRestaurants([]);
+        }
+      } catch (error) {
+        console.error("Error fetching restaurant data:", error);
+      } finally {
+        setLoading(false); // Set loading to false once the data fetching is done
+      }
+    };
 
-  const fetchRestaurantData = async () => {
-    try {
-      const restaurantPromises = day?.restaurants.map(restaurant =>
-        getRestaurant(restaurant)
-      );
-      const restaurantDataList = await Promise.all(restaurantPromises);
-      setRestaurants(restaurantDataList.map(response => response.data));
-    } catch (error) {
-      console.error('Error fetching restaurant data:', error);
-    }
-  };
-
-  // Fetch restaurant data for the selected day when the component mounts or when 'day.restaurants' changes
-  useEffect(() => {
     fetchRestaurantData();
-  }, [day?.restaurants]);
+  }, [day.restaurants]);
 
-  const formatDate = dateString => {
+  const formatDate = (dateString) => {
     if (!dateString || !Date.parse(dateString)) {
-      return '';
+      return "";
     }
 
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
 
-  const handleAddPlace = () => {
+  const handleAddPlace = async () => {
     if (!place) {
-      console.error('Invalid place:', place);
+      console.error("Invalid place:", place);
       return;
     }
 
-    if ('price_level' in place && 'cuisine' in place) {
-      setRestaurants(prevRestaurants => [...prevRestaurants, place]);
-    } else if ('hotel_class' in place && 'special_offers' in place) {
+    if ("price_level" in place && "cuisine" in place) {
+      setRestaurants((prevRestaurants) => [...prevRestaurants, place]);
+    } else if ("hotel_class" in place && "special_offers" in place) {
       setAccommodation(place);
     } else {
-      console.error('Invalid place type:', place);
+      console.error("Invalid place type:", place);
       return;
     }
 
-    onAddPlaceToDay(day?._id, place);
-    setHoveredDay(formatDate(day?.date));
+    try {
+      await onAddPlaceToDay(day?._id, place);
+
+      const placeId = place._id;
+
+      setHoveredDay(formatDate(day?.date));
+    } catch (error) {
+      console.error("Error adding place to day:", error);
+      // Handle any errors that occurred during adding the place
+    }
   };
 
-  const handleRemovePlace = async (type, place) => {
-    console.log('place', place);
-    console.log('type', type);
+  const handleRemovePlace = async (type, placeId) => {
+    console.log("placeID and type", type, placeId);
     try {
-      if (type === 'accommodation') {
-        // Call the backend API to delete the accommodation
-        await deletedAccommodation(place);
-        setAccommodation({});
-      } else if (type === 'restaurant') {
-        // Call the backend API to delete the restaurant
-        await deletedRestaurant(place);
-        setRestaurants(prevRestaurants =>
-          prevRestaurants.filter(restaurant => restaurant?._id !== place)
-        );
-      } else {
-        console.error('Invalid place type:', type);
-        return;
-      }
+      // Perform the deletion action directly based on the type and ID
+      await onRemovePlaceFromDay(day?._id, type, placeId);
 
-      // Call the function to remove the place from the day as well
-      onRemovePlaceFromDay(day?._id, type, place);
+      // Update the component state to reflect the changes after the successful deletion
+      if (type === "accommodation") {
+        setAccommodation(null); // <-- This is setting the place to null
+      } else if (type === "restaurant") {
+        setRestaurants((prevRestaurants) =>
+          prevRestaurants.filter((restaurant) => restaurant?._id !== placeId)
+        );
+        setRestaurantHover((prevState) => ({
+          ...prevState,
+          [placeId]: false,
+        }));
+      }
     } catch (error) {
-      console.error('Error deleting place:', error);
+      console.error("Error deleting place:", error);
       // Handle any errors that occurred during deletion
     }
   };
 
-  //   console.log('HOTEL NAME', accommodation?.name);
-
   return (
-    <Card key={day._id} sx={{ width: 300, height: '130%' }}>
+    <Card key={day._id} sx={{ width: 300, height: "130%" }}>
       <CardContent
-        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+        sx={{ height: "100%", display: "flex", flexDirection: "column" }}
       >
-        <Button
-          onMouseEnter={() => setHoveredDay(formatDate(day?.date))}
-          onMouseLeave={() => setHoveredDay(null)}
-          variant="contained"
-          color="primary"
-          sx={{
-            '&:hover': {
-              backgroundColor: 'secondary.main',
-              color: 'secondary.contrastText'
-            }
-          }}
-          onClick={handleAddPlace}
-        >
-          <Typography variant="h6">
-            {hoveredDay ? `Add place to ${hoveredDay}` : 'Add Place'}
-          </Typography>
-        </Button>
-        <CardHeader
-          sx={highlightStyle}
-          title={`Day ${formatDate(day?.date)}`}
-        />
-        {/* Render the information for each day */}
-        <Typography variant="h6" fontWeight="bold">
-          City: {day?.city}
-        </Typography>
-
-        {accommodation ? (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography>{accommodation?.name}</Typography>
-            {accommodationHover ? (
-              <CloseOutlinedIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() =>
-                  handleRemovePlace('accommodation', accommodation?._id)
-                }
-                onMouseLeave={() => setAccommodationHover(false)}
-              />
-            ) : (
-              <RemoveOutlinedIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleRemovePlace('accommodation')}
-                onMouseEnter={() => setAccommodationHover(true)}
-              />
-            )}
-          </Box>
+        {loading ? ( // Display loading state when data is being fetched
+          <Typography>Loading...</Typography>
         ) : (
-          <Typography>No accommodation for tonight</Typography>
-        )}
+          <>
+            <Button
+              onMouseEnter={() => setHoveredDay(formatDate(day?.date))}
+              onMouseLeave={() => setHoveredDay(null)}
+              variant="contained"
+              color="primary"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "secondary.main",
+                  color: "secondary.contrastText",
+                },
+              }}
+              onClick={handleAddPlace}
+            >
+              <Typography variant="h6">
+                {hoveredDay ? `Add place to ${hoveredDay}` : "Add Place"}
+              </Typography>
+            </Button>
+            <CardHeader
+              sx={highlightStyle}
+              title={`Day ${formatDate(day?.date)}`}
+            />
+            {/* Render the information for each day */}
+            <Typography variant="h6" fontWeight="bold">
+              City: {day?.city}
+            </Typography>
 
-        {/* Render the restaurants */}
-        <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
-          Restaurants:
-        </Typography>
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-          {restaurants.length > 0 ? (
-            restaurants.map(restaurant => (
-              <Box
-                key={restaurant?._id}
-                sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
-              >
-                <Typography>{restaurant?.name}</Typography>
-
-                {restaurantHover[restaurant?._id] ? (
+            <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
+              Accommodation:
+            </Typography>
+            {accommodation ? (
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography>{accommodation?.name}</Typography>
+                {accommodationHover ? (
                   <CloseOutlinedIcon
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: "pointer" }}
                     onClick={() =>
-                      handleRemovePlace('restaurant', restaurant?._id)
+                      handleRemovePlace("accommodation", accommodation?._id)
                     }
-                    onMouseLeave={() =>
-                      setRestaurantHover(prevState => ({
-                        ...prevState,
-                        [restaurant?._id]: false
-                      }))
-                    }
+                    onMouseLeave={() => setAccommodationHover(false)}
                   />
                 ) : (
                   <RemoveOutlinedIcon
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: "pointer" }}
                     onClick={() =>
-                      handleRemovePlace('restaurant', restaurant?._id)
+                      handleRemovePlace("accommodation", accommodation?._id)
                     }
-                    onMouseEnter={() =>
-                      setRestaurantHover(prevState => ({
-                        ...prevState,
-                        [restaurant?._id]: true
-                      }))
-                    }
+                    onMouseEnter={() => setAccommodationHover(true)}
                   />
                 )}
               </Box>
-            ))
-          ) : (
-            <Typography>No restaurants today</Typography>
-          )}
-        </Box>
+            ) : (
+              <Typography>No accommodation for tonight</Typography>
+            )}
 
-        {/* Render the plans */}
-        <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
-          Plans:
-        </Typography>
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-          {day?.plans.map(plan => (
-            <Typography key={plan?._id}>{plan?.name}</Typography>
-          ))}
-        </Box>
+            {/* Render the restaurants */}
+            <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
+              Restaurants:
+            </Typography>
+            <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+              {restaurants.length > 0 ? (
+                restaurants.map((restaurant) => (
+                  <Box
+                    key={restaurant?._id}
+                    sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                  >
+                    <Typography>{restaurant?.name}</Typography>
+
+                    {restaurantHover[restaurant?._id] ? (
+                      <CloseOutlinedIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          handleRemovePlace("restaurant", restaurant?._id)
+                        }
+                        onMouseLeave={() =>
+                          setRestaurantHover((prevState) => ({
+                            ...prevState,
+                            [restaurant?._id]: false,
+                          }))
+                        }
+                      />
+                    ) : (
+                      <RemoveOutlinedIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          handleRemovePlace("restaurant", restaurant?._id)
+                        }
+                        onMouseEnter={() =>
+                          setRestaurantHover((prevState) => ({
+                            ...prevState,
+                            [restaurant?._id]: true,
+                          }))
+                        }
+                      />
+                    )}
+                  </Box>
+                ))
+              ) : (
+                <Typography>No restaurants today</Typography>
+              )}
+            </Box>
+
+            {/* Render the plans */}
+            <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
+              Plans:
+            </Typography>
+            <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+              {day?.plans.map((plan) => (
+                <Typography key={plan?._id}>{plan?.name}</Typography>
+              ))}
+            </Box>
+          </>
+        )}
       </CardContent>
     </Card>
   );

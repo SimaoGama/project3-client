@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import { ColorModeContext, tokens } from "../../context/theme.context";
 import AddNewTripCard from "./AddNewTripCard";
+import CardItem from "../../pages/Home/CardItem";
+import "./TripList.css";
 
 const TripList = () => {
   const { user } = useContext(AuthContext);
@@ -55,7 +57,7 @@ const TripList = () => {
     );
   };
 
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   const applyFilter = () => {
     if (trips && filter === "recent") {
@@ -88,7 +90,7 @@ const TripList = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  const itemsPerRow = isMobile ? 2 : 4; // Display 2 trips per row on mobile, 4 trips per row on larger screens
+  const itemsPerRow = isMobile ? 1 : 3; // Display 2 trips per row on mobile, 4 trips per row on larger screens
   const itemsPerPage = itemsPerRow; // Display itemsPerRow * 2 trips per page
   const totalPages = Math.ceil(displayedTrips.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -115,11 +117,22 @@ const TripList = () => {
         </Box>
         <Grid container spacing={2} justifyContent="center">
           {tripsToDisplay.map((trip) => (
-            <Grid item key={trip._id} xs={6} sm={6} md={3}>
+            <Grid
+              item
+              key={trip._id}
+              xs={12} // Change the grid size to occupy full width on mobile
+              sm={6} // Adjust the grid size for tablets and larger screens
+              md={4} // Adjust the grid size for laptops and larger screens
+            >
               <TripCard trip={trip} handleDelete={handleDelete} />
             </Grid>
           ))}
-          <Grid item xs={6} sm={6} md={3}>
+          <Grid
+            item
+            xs={12} // Change the grid size to occupy full width on mobile
+            sm={6} // Adjust the grid size for tablets and larger screens
+            md={4} // Adjust the grid size for laptops and larger screens
+          >
             <AddNewTripCard />
           </Grid>
         </Grid>

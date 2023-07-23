@@ -47,7 +47,7 @@ const Navbar = () => {
                 {isClicked ? <FaTimes /> : <FaBars />}
               </div>
               <ul className={isClicked ? "nav-menu active" : "nav-menu"}>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <NavLink
                     to="/"
                     className={({ isActive }) =>
@@ -59,8 +59,8 @@ const Navbar = () => {
                       Home
                     </Typography>
                   </NavLink>
-                </li>
-                <li className="nav-item">
+                </li> */}
+                {/* <li className="nav-item">
                   <NavLink
                     to="/about"
                     className={({ isActive }) =>
@@ -72,7 +72,7 @@ const Navbar = () => {
                       About
                     </Typography>
                   </NavLink>
-                </li>
+                </li> */}
 
                 {/* //HANDLE USER PRIVATE OPTIONS */}
 
