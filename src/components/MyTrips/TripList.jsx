@@ -17,6 +17,7 @@ import { ColorModeContext, tokens } from "../../context/theme.context";
 import AddNewTripCard from "./AddNewTripCard";
 import CardItem from "../../pages/Home/CardItem";
 import "./TripList.css";
+import { Link } from "react-router-dom";
 
 const TripList = () => {
   const { user } = useContext(AuthContext);

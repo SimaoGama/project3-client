@@ -20,7 +20,7 @@ import DeleteModal from "../Modal/DeleteModal";
 import DayList from "./DayList";
 import { Menu, MenuItem } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const IMG_URL =
   "https://www.gtitravel.com/wp-content/uploads/2017/06/Do-Travel-Agents-get-free-trips.jpg";
@@ -60,6 +60,18 @@ const CardActionsWrapper = styled(CardActions)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between", // Align actions to the sides for mobile
   paddingTop: 0, // Remove padding at the top for mobile
+}));
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none", // Remove underline from the link
+}));
+
+// Define a custom styled Card component with border glow on hover
+const GlowCard = styled(Card)(({ theme }) => ({
+  transition: "box-shadow 0.3s ease-in-out",
+  "&:hover": {
+    boxShadow: "0 0 20px rgba(76, 206, 172, 0.5)",
+  },
 }));
 
 const TripCard = ({ trip, handleDelete }) => {
@@ -111,7 +123,7 @@ const TripCard = ({ trip, handleDelete }) => {
   };
 
   return (
-    <CardContainer>
+    <GlowCard>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -144,9 +156,11 @@ const TripCard = ({ trip, handleDelete }) => {
           </>
         }
         title={
-          <Typography variant="h4" component="div">
-            {trip?.destination}
-          </Typography>
+          <StyledLink to={`/trip/${trip._id}`}>
+            <Typography variant="h4" component="div">
+              {trip?.destination}
+            </Typography>
+          </StyledLink>
         }
         subheader={`From: ${formatDate(trip?.startDate)} to ${formatDate(
           trip?.endDate
@@ -194,7 +208,7 @@ const TripCard = ({ trip, handleDelete }) => {
           <DayList days={trip.days} />
         </CardContent>
       </Collapse>
-    </CardContainer>
+    </GlowCard>
   );
 };
 
