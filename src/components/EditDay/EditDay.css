@@ -5,7 +5,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center; /* Center the day cards horizontally */
-  gap: 10px;
+  /* gap: 10px; */
 }
 
 /* Style each day card */

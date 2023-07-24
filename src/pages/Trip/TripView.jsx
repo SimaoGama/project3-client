@@ -62,10 +62,12 @@ const TripView = () => {
     <Box>
       {trip ? (
         <>
-          <Typography variant="h4">{trip.destination}</Typography>
-          <Typography variant="subtitle1">
-            From: {formatDate(trip.startDate)} to {formatDate(trip.endDate)}
-          </Typography>
+          <Box textAlign="center" mt={3} mb={4}>
+            <Typography variant="h1">{trip.destination}</Typography>
+            <Typography variant="subtitle1">
+              From: {formatDate(trip.startDate)} to {formatDate(trip.endDate)}
+            </Typography>
+          </Box>
           {/* Display other trip details here */}
           <Grid container spacing={2} justifyContent="center">
             {trip.days.map((day) => (

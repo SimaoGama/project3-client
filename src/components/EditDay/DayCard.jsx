@@ -10,7 +10,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import { getAccommodation, getRestaurant } from "../../api/trips.api";
+import { getAccommodation, getRestaurant, getPlan } from "../../api/trips.api";
 import DeleteModal from "../Modal/DeleteModal";
 
 const DayCard = ({
@@ -22,7 +22,10 @@ const DayCard = ({
 }) => {
   const [accommodation, setAccommodation] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
+  const [plans, setPlans] = useState([]);
   const [restaurantHover, setRestaurantHover] = useState({});
+  const [plansHover, setPlansHover] = useState({});
+  const [planHover, setPlanHover] = useState({});
   const [accommodationHover, setAccommodationHover] = useState(false);
   const [hoveredDay, setHoveredDay] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,6 +73,26 @@ const DayCard = ({
     fetchRestaurantData();
   }, [day.restaurants]);
 
+  useEffect(() => {
+    const fetchPlansData = async () => {
+      try {
+        if (day?.plans && day.plans.length > 0) {
+          const planPromises = day.plans.map((plan) => getPlan(plan));
+          const planDataList = await Promise.all(planPromises);
+          setPlans(planDataList.map((response) => response.data));
+        } else {
+          setPlans([]);
+        }
+      } catch (error) {
+        console.error("Error fetching plans data:", error);
+      } finally {
+        setLoading(false); // Set loading to false once the data fetching is done
+      }
+    };
+
+    fetchPlansData();
+  }, [day.plans]);
+
   const formatDate = (dateString) => {
     if (!dateString || !Date.parse(dateString)) {
       return "";
@@ -85,10 +108,14 @@ const DayCard = ({
       return;
     }
 
+    console.log(place);
+
     if ("price_level" in place && "cuisine" in place) {
       setRestaurants((prevRestaurants) => [...prevRestaurants, place]);
     } else if ("hotel_class" in place && "special_offers" in place) {
       setAccommodation(place);
+    } else if (place.category.key === "attraction") {
+      setPlans((prevPlans) => [...prevPlans, place]);
     } else {
       console.error("Invalid place type:", place);
       return;
@@ -97,7 +124,7 @@ const DayCard = ({
     try {
       await onAddPlaceToDay(day?._id, place);
 
-      const placeId = place._id;
+      // const placeId = place._id;
 
       setHoveredDay(formatDate(day?.date));
     } catch (error) {
@@ -120,6 +147,14 @@ const DayCard = ({
           prevRestaurants.filter((restaurant) => restaurant?._id !== placeId)
         );
         setRestaurantHover((prevState) => ({
+          ...prevState,
+          [placeId]: false,
+        }));
+      } else if (type === "plan") {
+        setRestaurants((prevPlan) =>
+          prevPlan.filter((plan) => plan?._id !== placeId)
+        );
+        setPlansHover((prevState) => ({
           ...prevState,
           [placeId]: false,
         }));
@@ -165,6 +200,7 @@ const DayCard = ({
               City: {day?.city}
             </Typography>
 
+            {/* Render the Accommodation */}
             <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
               Accommodation:
             </Typography>
@@ -245,9 +281,42 @@ const DayCard = ({
               Plans:
             </Typography>
             <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
-              {day?.plans.map((plan) => (
-                <Typography key={plan?._id}>{plan?.name}</Typography>
-              ))}
+              {plans.length > 0 ? (
+                plans.map((plan) => (
+                  <Box
+                    key={plan?._id}
+                    sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                  >
+                    <Typography>{plan?.name}</Typography>
+
+                    {planHover[plan?._id] ? (
+                      <CloseOutlinedIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleRemovePlace("plans", plan?._id)}
+                        onMouseLeave={() =>
+                          setPlanHover((prevState) => ({
+                            ...prevState,
+                            [plan?._id]: false,
+                          }))
+                        }
+                      />
+                    ) : (
+                      <RemoveOutlinedIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleRemovePlace("plans", plan?._id)}
+                        onMouseEnter={() =>
+                          setPlanHover((prevState) => ({
+                            ...prevState,
+                            [plan?._id]: true,
+                          }))
+                        }
+                      />
+                    )}
+                  </Box>
+                ))
+              ) : (
+                <Typography>No plans for today</Typography>
+              )}
             </Box>
           </>
         )}

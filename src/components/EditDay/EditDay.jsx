@@ -22,6 +22,7 @@ import {
   deleteAccommodation,
   getRestaurant,
   getAccommodation,
+  deletePlan,
 } from "../../api/trips.api";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -50,6 +51,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const [place, setPlace] = useState({});
   const [accommodation, setAccommodation] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
+  const [plans, setPlans] = useState([]);
 
   useEffect(() => {
     setTripInfo(selectedTrip); // Set the tripInfo state when selectedTrip changes
@@ -78,16 +80,19 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       const extractedRestaurants = tripData.days.flatMap(
         (day) => day.restaurants || []
       );
+      const extractedPlans = tripData.days.flatMap((day) => day.plans || []);
       const extractedAccommodation = tripData.days
         .map((day) => day.accommodation)
         .filter((acc) => acc !== null);
 
       setRestaurants(extractedRestaurants);
+      setPlans(extractedPlans);
       setAccommodation(extractedAccommodation[0] || null); // If there's no accommodation, set it to null
 
       tripData.days.forEach((day) => {
         console.log("Day ID:", day._id);
         console.log("Restaurants:", day.restaurants);
+        console.log("Plans:", day.plans);
         console.log("Accommodation:", day.accommodation);
       });
     }
@@ -117,6 +122,14 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       // Check if the place is a restaurant and has a valid _id
       if ("price_level" in place && "cuisine" in place && place._id) {
         // Find the index of the day in the updatedDays array
+        const dayIndex = updatedDays.findIndex((day) => day._id === dayId);
+        if (dayIndex !== -1) {
+          const updatedDay = { ...updatedDays[dayIndex] };
+
+          // updatedDay.restaurants.push(response.data._id);
+          updatedDays[dayIndex] = updatedDay;
+        }
+      } else if (place.category.key === "attraction") {
         const dayIndex = updatedDays.findIndex((day) => day._id === dayId);
         if (dayIndex !== -1) {
           const updatedDay = { ...updatedDays[dayIndex] };
@@ -175,6 +188,21 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
           });
           return updatedDays;
         });
+      } else if (type === "plans") {
+        await deletePlan(place);
+        // If the API call is successful, update the local state with the deleted restaurant
+        setDays((prevDays) => {
+          const updatedDays = prevDays.map((day) => {
+            if (day._id === dayId) {
+              return {
+                ...day,
+                plans: day.plans.filter((r) => r !== place),
+              };
+            }
+            return day;
+          });
+          return updatedDays;
+        });
       }
     } catch (error) {
       console.error("Error deleting place:", error);
@@ -213,6 +241,10 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   // Callback function to update the 'accommodation' state in EditDay
   const updateAccommodationState = (updatedAccommodation) => {
     setAccommodation(updatedAccommodation);
+  };
+  // Callback function to update the 'accommodation' state in EditDay
+  const updatePlansState = (updatedPlans) => {
+    setPlans(updatedPlans);
   };
 
   return (
@@ -288,6 +320,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
                     updateDaysState={updateDaysState}
                     updateRestaurantsState={updateRestaurantsState}
                     updateAccommodationState={updateAccommodationState}
+                    updatePlanState={updatePlansState}
                   />
                 );
               })}
