@@ -1,33 +1,50 @@
-import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/Home/LandingPage";
-import SignUp from "./pages/Signup/Signup";
-import Navbar from "./components/Header/Navbar/Navbar";
-import { useContext } from "react";
-import { ColorModeContext, tokens } from "./context/theme.context";
-import LogIn from "./pages/Login/Login";
-import IsAnon from "./components/Validation/isAnon";
-import IsPrivate from "./components/Validation/isPrivate";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import { ThemeProvider } from "@mui/material";
-import { Helmet } from "react-helmet";
-import NewTrip from "./components/CreateTrip/NewTrip";
-import { AuthContext } from "./context/auth.context";
-import TripCard from "./components/MyTrips/TripCard";
-import TripList from "./components/MyTrips/TripList";
-import EditTrip from "./components/EditTrip/EditTrip";
-import Map from "./components/Map/Map";
-import Explore from "./pages/Map/Explore";
-import EditDay from "./components/EditDay/EditDay";
-import TripView from "./pages/Trip/TripView";
+import { Routes, Route } from 'react-router-dom';
+import LandingPage from './pages/Home/LandingPage';
+import SignUp from './pages/Signup/Signup';
+import Navbar from './components/Header/Navbar/Navbar';
+import { useContext, useEffect, useState } from 'react';
+import { ColorModeContext, tokens } from './context/theme.context';
+import LogIn from './pages/Login/Login';
+import IsAnon from './components/Validation/isAnon';
+import IsPrivate from './components/Validation/isPrivate';
+import Dashboard from './pages/Dashboard/Dashboard';
+import { ThemeProvider } from '@mui/material';
+import { Helmet } from 'react-helmet';
+import NewTrip from './components/CreateTrip/NewTrip';
+import { AuthContext } from './context/auth.context';
+import TripCard from './components/MyTrips/TripCard';
+import TripList from './components/MyTrips/TripList';
+import EditTrip from './components/EditTrip/EditTrip';
+import Map from './components/Map/Map';
+import Explore from './pages/Map/Explore';
+import EditDay from './components/EditDay/EditDay';
+import TripView from './pages/Trip/TripView';
+import { useLocation } from 'react-router-dom';
+import './main.css';
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
     useContext(ColorModeContext);
   const colors = tokens(theme.palette.mode);
   const { isLoggedIn, user } = useContext(AuthContext);
+  const { pathname } = useLocation();
+  const [background, setBackground] = useState(null);
+
+  useEffect(() => {
+    if (pathname === '/login') {
+      setBackground('/images/img-9.jpg');
+    } else if (pathname === '/signup') {
+      setBackground('/images/img-6.jpg');
+    } else {
+      setBackground('white');
+    }
+  }, [pathname]);
 
   return (
-    <>
+    <div
+      className="backgroundStyle"
+      style={{ background: `url(${background}) center center/cover no-repeat` }}
+    >
       <ThemeProvider theme={theme}>
         <Navbar />
         <div className="app">
@@ -115,7 +132,7 @@ function App() {
           </main>
         </div>
       </ThemeProvider>
-    </>
+    </div>
   );
 }
 

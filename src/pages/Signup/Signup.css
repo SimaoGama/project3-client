@@ -1,7 +1,6 @@
-body {
-  /* background: url("/images/img-9.jpg") center center/cover no-repeat; */
+/* body {
+  background: url("/images/img-8.jpg") center center/cover no-repeat;
   /* You can also set additional background styles, e.g., background-color */
-}
 .custom-container {
   background-color: rgba(255, 255, 255, 0.8); /* White with 50% transparency */
   /* padding: 20px; */

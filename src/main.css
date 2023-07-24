@@ -11,3 +11,10 @@ root,
   display: flex;
   position: relative;
 }
+
+.backgroundStyle {
+  min-height: 100vh; /* Set minimum height to fill the entire screen */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
