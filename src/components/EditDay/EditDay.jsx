@@ -48,6 +48,8 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [place, setPlace] = useState({});
+  const [accommodation, setAccommodation] = useState(null);
+  const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
     setTripInfo(selectedTrip); // Set the tripInfo state when selectedTrip changes
@@ -57,16 +59,40 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
     data: tripData,
     isLoading,
     error,
+    reFetch,
   } = useFetch(`${baseURL}/trip/${selectedTrip}`);
 
+  // tripData.days.forEach((day) => {
+  //   console.log("Day ID:", day._id);
+  //   console.log("Restaurants:", day.restaurants);
+  // });
+
   useEffect(() => {
-    if (tripData) {
+    if (tripData && tripData.days) {
       setDestination(tripData.destination);
       setStartDate(tripData.startDate);
       setEndDate(tripData.endDate);
       setDays(tripData.days);
+
+      // Extract restaurants and accommodation from each day in the tripData.days array
+      const extractedRestaurants = tripData.days.flatMap(
+        (day) => day.restaurants || []
+      );
+      const extractedAccommodation = tripData.days
+        .map((day) => day.accommodation)
+        .filter((acc) => acc !== null);
+
+      setRestaurants(extractedRestaurants);
+      setAccommodation(extractedAccommodation[0] || null); // If there's no accommodation, set it to null
+
+      tripData.days.forEach((day) => {
+        console.log("Day ID:", day._id);
+        console.log("Restaurants:", day.restaurants);
+        console.log("Accommodation:", day.accommodation);
+      });
     }
   }, [tripData]);
+
   useEffect(() => {
     if (selectedPlace) {
       setPlace(selectedPlace);
@@ -104,6 +130,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       }
 
       setDays(updatedDays); // Update the local state with the updated day
+      reFetch();
 
       // console.log("Restaurant Id", updatedDays);
       // console.log("Day ID", response.data._id);
@@ -173,6 +200,21 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
     fontWeight: "bold",
   };
 
+  // Callback function to update the 'days' state in EditDay
+  const updateDaysState = (updatedDays) => {
+    setDays(updatedDays);
+  };
+
+  // Callback function to update the 'restaurants' state in EditDay
+  const updateRestaurantsState = (updatedRestaurants) => {
+    setRestaurants(updatedRestaurants);
+  };
+
+  // Callback function to update the 'accommodation' state in EditDay
+  const updateAccommodationState = (updatedAccommodation) => {
+    setAccommodation(updatedAccommodation);
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -239,10 +281,13 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
                     key={day._id}
                     day={day}
                     place={place}
-                    onAddPlaceToDay={handleAddPlaceToDay}
-                    onRemovePlaceFromDay={handleRemovePlaceFromDay}
                     isConfirmationOpen={isConfirmationOpen}
                     setIsConfirmationOpen={setIsConfirmationOpen}
+                    onAddPlaceToDay={handleAddPlaceToDay}
+                    onRemovePlaceFromDay={handleRemovePlaceFromDay}
+                    updateDaysState={updateDaysState}
+                    updateRestaurantsState={updateRestaurantsState}
+                    updateAccommodationState={updateAccommodationState}
                   />
                 );
               })}
