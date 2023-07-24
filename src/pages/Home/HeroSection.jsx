@@ -47,6 +47,7 @@ const HeroSection = () => {
           className="btns"
           buttonStyle="btn--primary"
           buttonSize="btn--large"
+          to={"/signup"}
         >
           GET STARTED
         </ButtonComponent>
@@ -54,8 +55,9 @@ const HeroSection = () => {
           className="btns"
           buttonStyle="btn--outline"
           buttonSize="btn--large"
+          to={"/login"}
         >
-          WATCH TRAILER <i className="far fa-play-circle" />
+          LOG IN <i className="far fa-play-circle" />
         </ButtonComponent>
       </div>
     </div>

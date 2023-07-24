@@ -130,7 +130,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       }
 
       setDays(updatedDays); // Update the local state with the updated day
-      reFetch();
+      reFetch(); // need to reFetch() to trigger the useEffect and get the tripData into the state
 
       // console.log("Restaurant Id", updatedDays);
       // console.log("Day ID", response.data._id);
@@ -223,7 +223,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       TransitionComponent={Transition}
     >
       <DialogTitle>
-        Adding to your trip to{" "}
+        Edit your trip to{" "}
         <Typography
           component="span"
           variant="inherit"
@@ -265,7 +265,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
               variant="inherit"
               color="primary"
               style={{ textDecoration: "underline", cursor: "pointer" }}
-              onClick={() => navigate(`/trips/edit/${selectedTrip}`)}
+              onClick={() => navigate(`/trip/${selectedTrip}`)}
               sx={highlightStyle}
             >
               {destination}

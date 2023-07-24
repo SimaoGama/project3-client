@@ -209,9 +209,8 @@ const DayCard = ({
                     {restaurantHover[restaurant?._id] ? (
                       <CloseOutlinedIcon
                         style={{ cursor: "pointer" }}
-                        onClick={
-                          () => setConfir
-                          // handleRemovePlace("restaurant", restaurant?._id)
+                        onClick={() =>
+                          handleRemovePlace("restaurant", restaurant?._id)
                         }
                         onMouseLeave={() =>
                           setRestaurantHover((prevState) => ({
