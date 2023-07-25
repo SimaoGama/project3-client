@@ -11,7 +11,7 @@ import { addTrip } from "../../api/trips.api";
 import { AuthContext } from "../../context/auth.context";
 import { useNavigate } from "react-router-dom";
 
-const NewTrip = () => {
+const NewTrip = ({ handleClose }) => {
   const [destination, setDestination] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -65,14 +65,14 @@ const NewTrip = () => {
     setDays([]);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-    navigate("/trips");
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  //   navigate("/trips");
+  // };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" sx={{}}>
