@@ -24,6 +24,7 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 
 import { AuthContext } from "../../context/auth.context";
 import { ColorModeContext } from "../../context/theme.context";
@@ -206,9 +207,9 @@ const Sidebar = () => {
                 setSelected={setSelected}
               />
               <Item
-                title="FAQ Page"
-                to="/faq"
-                icon={<HelpOutlineOutlinedIcon />}
+                title="Calendar"
+                to="/calendar"
+                icon={<CalendarMonthOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />

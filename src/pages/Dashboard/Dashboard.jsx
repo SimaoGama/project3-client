@@ -6,6 +6,7 @@ import { ColorModeContext, tokens } from "../../context/theme.context";
 import NewTrip from "../../components/CreateTrip/NewTrip";
 import { Route, Routes } from "react-router-dom";
 import IsPrivate from "../../components/Validation/isPrivate";
+// import Calendar from "../Calendar";
 
 const Dashboard = () => {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -21,6 +22,7 @@ const Dashboard = () => {
         }}
       >
         <Sidebar />
+        {/* <Calendar /> */}
       </Box>
     </>
   );
