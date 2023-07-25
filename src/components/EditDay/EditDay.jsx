@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,8 +12,8 @@ import {
   DialogTitle,
   Slide,
   TextField,
-  Typography
-} from '@mui/material';
+  Typography,
+} from "@mui/material";
 import {
   updateTrip,
   getTrip,
@@ -22,28 +22,33 @@ import {
   deleteAccommodation,
   getRestaurant,
   getAccommodation,
-  deletePlan
-} from '../../api/trips.api';
+  deletePlan,
+} from "../../api/trips.api";
 
-import { useNavigate, useParams } from 'react-router-dom';
-import useFetch from '../../hooks/useFetch';
-import { baseURL } from '../../api/trips.api';
-import DayCard from './DayCard';
-import './EditDay.css';
-import PlaceCard from '../PlaceDetails/PlaceCard';
-import DeleteModal from '../Modal/DeleteModal';
+import { useNavigate, useParams } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+import { baseURL } from "../../api/trips.api";
+import DayCard from "./DayCard";
+import "./EditDay.css";
+import PlaceCard from "../PlaceDetails/PlaceCard";
+import DeleteModal from "../Modal/DeleteModal";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} timeout={700} />;
 });
 
-const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
+const EditDay = ({
+  selectedPlace,
+  setShowEditDialog,
+  selectedTrip,
+  setCoordinates,
+}) => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const [destination, setDestination] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [destination, setDestination] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [days, setDays] = useState([]);
   const [tripInfo, setTripInfo] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
@@ -61,7 +66,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
     data: tripData,
     isLoading,
     error,
-    reFetch
+    reFetch,
   } = useFetch(`${baseURL}/trip/${selectedTrip}`);
 
   // tripData.days.forEach((day) => {
@@ -78,23 +83,23 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
 
       // Extract restaurants and accommodation from each day in the tripData.days array
       const extractedRestaurants = tripData.days.flatMap(
-        day => day.restaurants || []
+        (day) => day.restaurants || []
       );
-      const extractedPlans = tripData.days.flatMap(day => day.plans || []);
+      const extractedPlans = tripData.days.flatMap((day) => day.plans || []);
 
       const extractedAccommodation = tripData.days
-        .map(day => day.accommodation)
-        .filter(acc => acc !== null);
+        .map((day) => day.accommodation)
+        .filter((acc) => acc !== null);
 
       setRestaurants(extractedRestaurants);
       setPlans(extractedPlans);
       setAccommodation(extractedAccommodation[0] || null); // If there's no accommodation, set it to null
 
-      tripData.days.forEach(day => {
-        console.log('Day ID:', day._id);
-        console.log('Restaurants:', day.restaurants);
-        console.log('Plans:', day.plans);
-        console.log('Accommodation:', day.accommodation);
+      tripData.days.forEach((day) => {
+        console.log("Day ID:", day._id);
+        console.log("Restaurants:", day.restaurants);
+        console.log("Plans:", day.plans);
+        console.log("Accommodation:", day.accommodation);
       });
     }
   }, [tripData]);
@@ -113,58 +118,57 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   const handleAddPlaceToDay = async (dayId, place) => {
     try {
       const response = await updateDay(dayId, place);
-      console.log('Day updated:', response);
+      console.log("Day updated:", response);
 
       // Update the local 'days' array with the updated day data returned from the backend
-      const updatedDays = days.map(day => (day._id === dayId ? response : day));
+      const updatedDays = days.map((day) =>
+        day._id === dayId ? response : day
+      );
 
       // Check if the place is a restaurant and has a valid _id
-      if ('price_level' in place && 'cuisine' in place && place._id) {
+      if ("price_level" in place && "cuisine" in place && place._id) {
         // Find the index of the day in the updatedDays array
-        const dayIndex = updatedDays.findIndex(day => day._id === dayId);
+        const dayIndex = updatedDays.findIndex((day) => day._id === dayId);
         if (dayIndex !== -1) {
           const updatedDay = { ...updatedDays[dayIndex] };
 
           // updatedDay.restaurants.push(response.data._id);
           updatedDays[dayIndex] = updatedDay;
         }
-      } else if (place.category.key === 'attraction') {
-        const dayIndex = updatedDays.findIndex(day => day._id === dayId);
-        if (dayIndex !== -1) {
-          const updatedDay = { ...updatedDays[dayIndex] };
-
-          // updatedDay.restaurants.push(response.data._id);
-          updatedDays[dayIndex] = updatedDay;
-        }
-      } else if ('hotel_class' in place && 'special_offers' in place) {
+      } else if ("hotel_class" in place && "special_offers" in place) {
         // Handle adding accommodation to the day, if needed
         // No need to update place._id here, as it should already be present in response.data
+      } else if (place.category.key === "attraction") {
+        const dayIndex = updatedDays.findIndex((day) => day._id === dayId);
+        if (dayIndex !== -1) {
+          const updatedDay = { ...updatedDays[dayIndex] };
+
+          // updatedDay.restaurants.push(response.data._id);
+          updatedDays[dayIndex] = updatedDay;
+        }
       }
 
       setDays(updatedDays); // Update the local state with the updated day
       reFetch(); // need to reFetch() to trigger the useEffect and get the tripData into the state
-
-      // console.log("Restaurant Id", updatedDays);
-      // console.log("Day ID", response.data._id);
     } catch (error) {
-      console.log('Error updating day:', error);
+      console.log("Error updating day:", error);
       // Handle error, e.g., show an error message to the user
     }
   };
 
   const handleRemovePlaceFromDay = async (dayId, type, place) => {
     if (!place) {
-      console.error('Invalid place:', place);
+      console.error("Invalid place:", place);
       return;
     }
-    console.log('place', place);
+    console.log("place", place);
     setIsConfirmationOpen(true);
     try {
-      if (type === 'accommodation') {
+      if (type === "accommodation") {
         await deleteAccommodation(place);
         // If the API call is successful, update the local state with the deleted accommodation
-        setDays(prevDays => {
-          const updatedDays = prevDays.map(day => {
+        setDays((prevDays) => {
+          const updatedDays = prevDays.map((day) => {
             if (day._id === dayId) {
               return { ...day, accommodation: null };
             }
@@ -172,30 +176,30 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
           });
           return updatedDays;
         });
-      } else if (type === 'restaurant') {
+      } else if (type === "restaurant") {
         await deleteRestaurant(place);
         // If the API call is successful, update the local state with the deleted restaurant
-        setDays(prevDays => {
-          const updatedDays = prevDays.map(day => {
+        setDays((prevDays) => {
+          const updatedDays = prevDays.map((day) => {
             if (day._id === dayId) {
               return {
                 ...day,
-                restaurants: day.restaurants.filter(r => r !== place)
+                restaurants: day.restaurants.filter((r) => r !== place),
               };
             }
             return day;
           });
           return updatedDays;
         });
-      } else if (type === 'plan') {
+      } else if (type === "plan") {
         await deletePlan(place);
         // If the API call is successful, update the local state with the deleted restaurant
-        setDays(prevDays => {
-          const updatedDays = prevDays.map(day => {
+        setDays((prevDays) => {
+          const updatedDays = prevDays.map((day) => {
             if (day._id === dayId) {
               return {
                 ...day,
-                plans: day.plans.filter(r => r !== place)
+                plans: day.plans.filter((r) => r !== place),
               };
             }
             return day;
@@ -204,7 +208,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
         });
       }
     } catch (error) {
-      console.error('Error deleting place:', error);
+      console.error("Error deleting place:", error);
       // Handle error, e.g., show an error message to the user
     }
   };
@@ -218,31 +222,31 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
   }
 
   const titleStyle = {
-    textAlign: 'center',
-    fontSize: 20
+    textAlign: "center",
+    fontSize: 20,
   };
 
   const highlightStyle = {
-    color: '#1976d2',
-    fontWeight: 'bold'
+    color: "#1976d2",
+    fontWeight: "bold",
   };
 
   // Callback function to update the 'days' state in EditDay
-  const updateDaysState = updatedDays => {
+  const updateDaysState = (updatedDays) => {
     setDays(updatedDays);
   };
 
   // Callback function to update the 'restaurants' state in EditDay
-  const updateRestaurantsState = updatedRestaurants => {
+  const updateRestaurantsState = (updatedRestaurants) => {
     setRestaurants(updatedRestaurants);
   };
 
   // Callback function to update the 'accommodation' state in EditDay
-  const updateAccommodationState = updatedAccommodation => {
+  const updateAccommodationState = (updatedAccommodation) => {
     setAccommodation(updatedAccommodation);
   };
   // Callback function to update the 'plan' state in EditDay
-  const updatePlansState = updatedPlans => {
+  const updatePlansState = (updatedPlans) => {
     setPlans(updatedPlans);
   };
 
@@ -254,22 +258,22 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       TransitionComponent={Transition}
     >
       <DialogTitle>
-        Edit your trip to{' '}
+        Edit your trip to{" "}
         <Typography
           component="span"
           variant="inherit"
           color="primary"
           style={{
-            textDecoration: 'underline',
-            cursor: 'pointer',
-            transition: 'color 0.2s'
+            textDecoration: "underline",
+            cursor: "pointer",
+            transition: "color 0.2s",
           }}
           onClick={() => navigate(`/trips/edit/${selectedTrip}`)}
-          onMouseEnter={e => (e.target.style.color = 'blue')}
-          onMouseLeave={e => (e.target.style.color = 'inherit')}
+          onMouseEnter={(e) => (e.target.style.color = "blue")}
+          onMouseLeave={(e) => (e.target.style.color = "inherit")}
         >
           {tripData.destination}
-        </Typography>{' '}
+        </Typography>{" "}
       </DialogTitle>
 
       <Box display="flex" justifyContent="center" mt={2}>
@@ -277,7 +281,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
           <PlaceCard place={selectedPlace} />
         </Box>
         <Button
-          sx={{ backgroundColor: '#f0f0f0', borderRadius: '5px' }}
+          sx={{ backgroundColor: "#f0f0f0", borderRadius: "5px" }}
           onClick={handleClose}
         >
           Back
@@ -286,26 +290,26 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
       {tripInfo && (
         <>
           <DialogTitle sx={titleStyle}>
-            Chose a day to add{' '}
+            Chose a day to add{" "}
             <Typography component="span" variant="inherit" sx={highlightStyle}>
               {selectedPlace.name.toUpperCase()}
-            </Typography>{' '}
-            to your{' '}
+            </Typography>{" "}
+            to your{" "}
             <Typography
               component="span"
               variant="inherit"
               color="primary"
-              style={{ textDecoration: 'underline', cursor: 'pointer' }}
+              style={{ textDecoration: "underline", cursor: "pointer" }}
               onClick={() => navigate(`/trip/${selectedTrip}`)}
               sx={highlightStyle}
             >
               {destination}
-            </Typography>{' '}
+            </Typography>{" "}
             trip to:
           </DialogTitle>
           <Box className="days-container">
             {tripData?.days &&
-              tripData.days.map(day => {
+              tripData.days.map((day) => {
                 return (
                   <DayCard
                     highlightStyle={highlightStyle}
@@ -320,6 +324,7 @@ const EditDay = ({ selectedPlace, setShowEditDialog, selectedTrip }) => {
                     updateRestaurantsState={updateRestaurantsState}
                     updateAccommodationState={updateAccommodationState}
                     updatePlanState={updatePlansState}
+                    setCoordinates={setCoordinates}
                   />
                 );
               })}

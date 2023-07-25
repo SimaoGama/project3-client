@@ -129,6 +129,7 @@ const Explore = () => {
             selectedTrip={selectedTrip}
             selectedPlace={selectedPlace}
             setShowEditDialog={setShowEditDialog}
+            setCoordinates={setCoordinates}
           />
         )}
       </Grid>
