@@ -10,21 +10,32 @@ import { Box } from "@mui/material";
 import { addTrip } from "../../api/trips.api";
 import { AuthContext } from "../../context/auth.context";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-const NewTrip = ({ handleClose }) => {
+const NewTrip = ({ handleClose, reFetch }) => {
   const [destination, setDestination] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [days, setDays] = useState([]);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const { user, authenticateUser } = useContext(AuthContext);
+  const [open, setOpen] = useState(true);
 
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate("/trips");
-  };
-
-  const [open, setOpen] = useState(true);
+  useEffect(() => {
+    // Close the dialog when form submission is successful and navigation is complete
+    if (isFormSubmitted && open) {
+      setOpen(false);
+      // If handleClose prop is provided, call it
+      if (handleClose) {
+        handleClose();
+      } else {
+        // If handleClose prop is not provided, navigate back
+        navigate(-1); // Go back to the previous page
+      }
+    }
+  }, [isFormSubmitted, open, handleClose, navigate]);
 
   const handleNameChange = (event) => {
     setDestination(event.target.value);
@@ -51,10 +62,10 @@ const NewTrip = ({ handleClose }) => {
     try {
       const response = await addTrip(newTrip, userId);
       console.log("New trip created:", response.data);
-      handleClose();
+      setIsFormSubmitted(true); // Set the form submission status to true
       // Fetch updated user data to include the new trip
       authenticateUser(true);
-      handleNavigate(); // Navigate to "/trips"
+      reFetch();
     } catch (error) {
       console.log("Error creating new trip:", error);
     }
@@ -65,17 +76,20 @@ const NewTrip = ({ handleClose }) => {
     setDays([]);
   };
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
+  const handleComponentClose = () => {
+    setOpen(false); // Close the dialog
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  //   navigate("/trips");
-  // };
+    // If handleClose prop is provided, call it
+    if (handleClose) {
+      handleClose();
+    } else {
+      // If handleClose prop is not provided, navigate back
+      navigate(-1); // Go back to the previous page
+    }
+  };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" sx={{}}>
+    <Dialog open={open} onClose={handleComponentClose} maxWidth="md" sx={{}}>
       <DialogTitle>Create new trip</DialogTitle>
       <form onSubmit={handleCreateNewTrip}>
         <DialogContent sx={{ width: 600 }}>
@@ -126,7 +140,10 @@ const NewTrip = ({ handleClose }) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button sx={{ color: "text.secondary" }} onClick={handleClose}>
+          <Button
+            sx={{ color: "text.secondary" }}
+            onClick={handleComponentClose}
+          >
             Close
           </Button>
           <Button sx={{ color: "text.secondary" }} type="submit">

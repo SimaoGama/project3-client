@@ -12,16 +12,19 @@ import {
   Typography,
   Modal,
   Button,
+  ThemeProvider,
 } from "@mui/material";
 import ColorLensTwoToneIcon from "@mui/icons-material/ColorLensTwoTone";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
 import useFetch from "../../hooks/useFetch";
-import { baseURL } from "../../api/trips.api";
+import { addTrip, baseURL } from "../../api/trips.api";
 import { CompactPicker } from "react-color";
 import { TripColorsContext } from "../../context/tripColors.context";
 import NewTrip from "../../components/CreateTrip/NewTrip";
+import { tokens } from "../../context/theme.context";
+import { Link } from "react-router-dom";
 
 const SidebarBox = styled(Box)(({ theme }) => ({
   flex: "1 1 20%",
@@ -38,6 +41,7 @@ const SidebarTitle = styled(Typography)({
 const ListItemStyled = styled(ListItem)(({ theme }) => ({
   backgroundColor: "rgba(26,37,46)",
   margin: "10px 0",
+  //   justifyContent: "center",
   borderRadius: "2px",
   "&:hover": {
     backgroundColor: "rgb(44,62,80)",
@@ -45,6 +49,9 @@ const ListItemStyled = styled(ListItem)(({ theme }) => ({
 }));
 
 function Calendar() {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   const [currentEvents, setCurrentEvents] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
@@ -61,18 +68,25 @@ function Calendar() {
     reFetch,
   } = useFetch(`${baseURL}/trips?userId=${user._id}`);
 
+  console.log(allTrips);
+
   // When allTrips data changes, update the currentEvents based on it
   useEffect(() => {
     // Convert the fetched trips to events and set them to currentEvents
     const tripsAsEvents = allTrips
       ? allTrips.map((trip) => {
           const savedColor = tripColors[trip._id];
-          console.log(savedColor);
+          const days = trip.days.length; // Get the number of days for the trip
+
+          // Adjust the end date to visually display the event one day longer
+          const endDate = new Date(trip.endDate);
+          endDate.setDate(endDate.getDate() + 1);
+
           return {
             id: trip._id,
             title: trip.destination,
             start: formatDateToISO(trip.startDate),
-            end: formatDateToISO(trip.endDate),
+            end: formatDateToISO(endDate),
             backgroundColor: savedColor || "#4cceac",
             borderColor: savedColor || "#4cceac",
           };
@@ -95,18 +109,40 @@ function Calendar() {
   }, [tripColors]);
 
   const handleDateClick = (selected) => {
-    const title = prompt("Please enter a new title for your event");
-    const calendarApi = selected.view.calendar;
-    calendarApi.unselect();
+    // Prompt to get the title and number of days for the new trip
+    const title = prompt("Please enter a title for your trip");
 
+    // Validate input for title
     if (title) {
-      calendarApi.addEvent({
-        id: `${selected.dateStr}-${title}`,
-        title,
-        start: selected.startStr,
-        end: selected.endStr,
-        allDay: selected.allDay,
-      });
+      // Create the new trip object
+      const newTrip = {
+        destination: title,
+        startDate: selected.startStr,
+        endDate: selected.endStr,
+      };
+
+      // Add the new trip to the database using the addTrip function
+      addTrip(newTrip, user._id)
+        .then((response) => {
+          // If the trip was successfully added to the database, update the calendar view
+          const { data: newTripData } = response;
+          const savedColor = tripColors[newTripData._id] || "#4cceac";
+
+          const event = {
+            id: newTripData._id,
+            title: newTripData.destination,
+            start: newTripData.startDate,
+            end: new Date(newTripData.endDate), // Use a Date object for the end date
+            backgroundColor: savedColor,
+            borderColor: savedColor,
+          };
+
+          setCurrentEvents((prevEvents) => [...prevEvents, event]);
+          reFetch();
+        })
+        .catch((error) => {
+          console.error("Error adding trip:", error);
+        });
     }
   };
 
@@ -117,6 +153,7 @@ function Calendar() {
   };
 
   function formatDate(date, options) {
+    // Format and return the date using Intl.DateTimeFormat
     return new Intl.DateTimeFormat("en-US", options).format(new Date(date));
   }
 
@@ -166,100 +203,114 @@ function Calendar() {
   };
 
   return (
-    <Box p={5}>
-      <Box display="flex" justifyContent="space-between">
-        {/* CALENDAR SIDEBAR */}
-        <SidebarBox>
-          <SidebarTitle variant="h5">MY TRIPS</SidebarTitle>
-          <List>
-            <ListItemStyled
-              onClick={handleShowNewTripForm}
-              sx={{
-                "&:hover, &.Mui-focusVisible": {
-                  backgroundColor: "#2da883", // Customize this color as needed
-                  cursor: "pointer",
-                },
-              }}
-            >
-              <ListItemText primary="Add New Trip" />
-            </ListItemStyled>
-            {currentEvents.map((event) => (
+    <ThemeProvider theme={theme}>
+      <Box p={5}>
+        <Box display="flex" justifyContent="space-between">
+          {/* CALENDAR SIDEBAR */}
+          <SidebarBox>
+            <SidebarTitle variant="h5">MY TRIPS</SidebarTitle>
+            <List>
               <ListItemStyled
-                key={event.id}
-                style={{ background: event.backgroundColor }}
+                onClick={handleShowNewTripForm}
+                sx={{
+                  "&:hover, &.Mui-focusVisible": {
+                    backgroundColor: "#2da883", // Customize this color as needed
+                    cursor: "pointer",
+                  },
+                }}
               >
-                <ListItemText
-                  primary={event.title}
-                  secondary={
-                    <Typography>
-                      {formatDate(event.start, {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </Typography>
-                  }
-                />
-                {/* Color picker input for each trip */}
-                <Button onClick={() => handleOpenColorPicker(event.id)}>
+                <ListItemText primary="Add New Trip" />
+              </ListItemStyled>
+              {currentEvents.map((event) => (
+                <ListItemStyled
+                  key={event.id}
+                  style={{ background: event.backgroundColor }}
+                >
+                  <Link
+                    to={`/trip/${event.id}`}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <ListItemText
+                      primary={event.title}
+                      secondary={
+                        <Typography>
+                          {formatDate(event.start, {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </Typography>
+                      }
+                    />
+                  </Link>
+                  {/* Color picker input for each trip */}
+
                   <ColorLensTwoToneIcon
+                    onClick={() => handleOpenColorPicker(event.id)}
                     sx={{
-                      backgroundColor: "#fff",
-                      borderRadius: "50%",
-                      fontSize: "1.5rem",
+                      color: "rgba(25,25,26,0.8)",
+                      fontSize: "2rem", // Adjust the size as needed
+                      marginLeft: "3rem", // Adjust the margin as needed
+                      cursor: "pointer",
+                      transition: "transform 0.2s ease-in-out", // Add a transition for zooming effect
+                      "&:hover": {
+                        transform: "scale(1.2)", // Apply a scale transformation on hover
+                      },
                     }}
                   />
-                </Button>
-              </ListItemStyled>
-            ))}
-          </List>
-        </SidebarBox>
+                </ListItemStyled>
+              ))}
+            </List>
+          </SidebarBox>
 
-        {/* CALENDAR */}
-        <Box flex="1 1 100%" ml="15px">
-          <FullCalendar
-            height="75vh"
-            plugins={[
-              dayGridPlugin,
-              timeGridPlugin,
-              interactionPlugin,
-              listPlugin,
-            ]}
-            headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
+          {/* CALENDAR */}
+          <Box flex="1 1 100%" ml="15px">
+            <FullCalendar
+              height="75vh"
+              plugins={[
+                dayGridPlugin,
+                timeGridPlugin,
+                interactionPlugin,
+                listPlugin,
+              ]}
+              headerToolbar={{
+                left: "prev,next today",
+                center: "title",
+                right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
+              }}
+              initialView="dayGridMonth"
+              editable={true}
+              selectable={true}
+              selectMirror={true}
+              dayMaxEvents={false}
+              select={handleDateClick}
+              eventClick={handleEventClick}
+              events={currentEvents}
+              eventColor={(info) => tripColors[info.event.id] || "#4cceac"}
+            />
+          </Box>
+        </Box>
+        {/* Modal for Color Picker */}
+        <Modal open={colorPickerVisible} onClose={handleCloseColorPicker}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
             }}
-            initialView="dayGridMonth"
-            editable={true}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={true}
-            select={handleDateClick}
-            eventClick={handleEventClick}
-            events={currentEvents}
-            eventColor={(info) => tripColors[info.event.id] || "#4cceac"}
-          />
-        </Box>
+          >
+            <CompactPicker
+              color={tripColors[selectedTrip] || "#ffffff"}
+              onChange={(color) => handleColorChange(selectedTrip, color)}
+            />
+          </Box>
+        </Modal>
+        {showNewTripForm && (
+          <NewTrip handleClose={handleShowNewTripForm} reFetch={reFetch} />
+        )}
       </Box>
-      {/* Modal for Color Picker */}
-      <Modal open={colorPickerVisible} onClose={handleCloseColorPicker}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <CompactPicker
-            color={tripColors[selectedTrip] || "#ffffff"}
-            onChange={(color) => handleColorChange(selectedTrip, color)}
-          />
-        </Box>
-      </Modal>
-      {showNewTripForm && <NewTrip handleClose={handleShowNewTripForm} />}
-    </Box>
+    </ThemeProvider>
   );
 }
 
