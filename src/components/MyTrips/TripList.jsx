@@ -12,12 +12,16 @@ import {
   useMediaQuery,
   Select,
   MenuItem,
+  Input,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import { ColorModeContext, tokens } from "../../context/theme.context";
 import AddNewTripCard from "./AddNewTripCard";
 import CardItem from "../../pages/Home/CardItem";
 import "./TripList.css";
 import { Link } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
 
 const TripList = () => {
   const { user } = useContext(AuthContext);
@@ -37,6 +41,18 @@ const TripList = () => {
   const [displayedTrips, setDisplayedTrips] = useState(null);
   const [filter, setFilter] = useState("recent"); // Default filter: most recent
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredTrips, setFilteredTrips] = useState(null);
+
+  useEffect(() => {
+    if (trips) {
+      const filtered = trips.filter((trip) =>
+        trip.destination.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredTrips(filtered);
+    }
+  }, [searchQuery, trips]);
+
   useEffect(() => {
     if (trips) {
       setDisplayedTrips(trips); // Update displayedTrips when trips are fetched
@@ -53,28 +69,34 @@ const TripList = () => {
   };
 
   const handleDelete = (deletedTripId) => {
+    // Remove the trip from displayedTrips if it exists there
     setDisplayedTrips((prevTrips) =>
       prevTrips.filter((trip) => trip._id !== deletedTripId)
     );
+
+    // Remove the trip from filteredTrips if it exists there
+    setFilteredTrips((prevTrips) =>
+      prevTrips ? prevTrips.filter((trip) => trip._id !== deletedTripId) : null
+    );
+
+    reFetch();
   };
 
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   const applyFilter = () => {
-    if (trips && filter === "recent") {
-      // Sort trips by most recent created
-      const sortedTrips = [...trips].sort((a, b) => {
+    if (filteredTrips && filter === "recent") {
+      // Sort filteredTrips by most recent created
+      const sortedTrips = [...filteredTrips].sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
-      console.log(sortedTrips);
-      setDisplayedTrips(sortedTrips);
-    } else if (trips && filter === "chronological") {
-      // Sort trips by chronological date
-      const sortedTrips = [...trips].sort((a, b) => {
+      setFilteredTrips(sortedTrips);
+    } else if (filteredTrips && filter === "chronological") {
+      // Sort filteredTrips by chronological date
+      const sortedTrips = [...filteredTrips].sort((a, b) => {
         return new Date(a.startDate) - new Date(b.startDate);
       });
-      console.log(sortedTrips);
-      setDisplayedTrips(sortedTrips);
+      setFilteredTrips(sortedTrips);
     }
   };
 
@@ -91,12 +113,12 @@ const TripList = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  const itemsPerRow = isMobile ? 1 : 3; // Display 2 trips per row on mobile, 4 trips per row on larger screens
-  const itemsPerPage = itemsPerRow; // Display itemsPerRow * 2 trips per page
-  const totalPages = Math.ceil(displayedTrips.length / itemsPerPage);
+  const itemsPerRow = isMobile ? 1 : 3;
+  const itemsPerPage = itemsPerRow;
+  const totalPages = Math.ceil(filteredTrips.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const tripsToDisplay = displayedTrips.slice(startIndex, endIndex);
+  const tripsToDisplay = filteredTrips.slice(startIndex, endIndex);
 
   return (
     <Box
@@ -110,30 +132,54 @@ const TripList = () => {
       }}
     >
       <Container maxWidth="lg" spacing={4}>
-        <Box sx={{ mb: 4 }}>
-          <Select value={filter} onChange={handleFilterChange}>
-            <MenuItem value="recent">Most Recent</MenuItem>
-            <MenuItem value="chronological">Chronological</MenuItem>
-          </Select>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row", // Set flexDirection to "row" to display items next to each other
+            alignItems: "center", // Align items in the center along the vertical axis
+            justifyContent: "flex-start", // Distribute items evenly along the horizontal axis
+            mb: 4, // Add margin-bottom to the container
+          }}
+        >
+          <Box>
+            <Select value={filter} onChange={handleFilterChange}>
+              <MenuItem value="recent">Most Recent</MenuItem>
+              <MenuItem value="chronological">Chronological</MenuItem>
+            </Select>
+          </Box>
+          <Box ml={2}>
+            <TextField
+              id="filled-basic"
+              label="Find a trip"
+              variant="outlined"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Name of your trip ..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
         </Box>
         <Grid container spacing={2} justifyContent="center">
-          {tripsToDisplay.map((trip) => (
-            <Grid
-              item
-              key={trip._id}
-              xs={12} // Change the grid size to occupy full width on mobile
-              sm={6} // Adjust the grid size for tablets and larger screens
-              md={4} // Adjust the grid size for laptops and larger screens
-            >
+          {/* Step 3: Display the filtered trips */}
+          {tripsToDisplay?.map((trip) => (
+            <Grid item key={trip._id} xs={12} sm={6} md={4}>
               <TripCard trip={trip} handleDelete={handleDelete} />
             </Grid>
           ))}
-          <Grid
-            item
-            xs={12} // Change the grid size to occupy full width on mobile
-            sm={6} // Adjust the grid size for tablets and larger screens
-            md={4} // Adjust the grid size for laptops and larger screens
-          >
+          {/* Step 3: Display the filtered trips */}
+          {tripsToDisplay?.length === 0 && (
+            <Box textAlign="center" width="100%">
+              No trips found.
+            </Box>
+          )}
+          <Grid item xs={12} sm={6} md={4}>
             <AddNewTripCard />
           </Grid>
         </Grid>

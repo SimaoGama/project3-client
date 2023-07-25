@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
-import { getAccommodation, getRestaurant } from '../../api/trips.api';
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, Typography } from "@mui/material";
+import { getAccommodation, getPlan, getRestaurant } from "../../api/trips.api";
 
 const TripDayCard = ({ day, formatDate }) => {
   const logDate = formatDate(day.date);
-  const [accommodation, setAccommodation] = useState('');
+  const [accommodation, setAccommodation] = useState("");
   const [restaurants, setRestaurants] = useState([]);
+  const [plans, setPlans] = useState([]);
 
   const fetchAccommodationData = async () => {
     if (day?.accommodation) {
-      console.log('Accommodation ID:', day.accommodation); // Log the accommodation ID
+      // console.log("Accommodation ID:", day.accommodation); // Log the accommodation ID
       try {
         const response = await getAccommodation(day.accommodation);
-        console.log('Response from API:', response.data); // Log the API response
+        // console.log("Response from API:", response.data); // Log the API response
         setAccommodation(response.data);
       } catch (error) {
-        console.error('Error fetching accommodation data:', error);
+        console.error("Error fetching accommodation data:", error);
       }
     }
   };
@@ -32,13 +33,13 @@ const TripDayCard = ({ day, formatDate }) => {
 
   const fetchRestaurantData = async () => {
     try {
-      const restaurantPromises = day?.restaurants.map(restaurant =>
+      const restaurantPromises = day?.restaurants.map((restaurant) =>
         getRestaurant(restaurant)
       );
       const restaurantDataList = await Promise.all(restaurantPromises);
-      setRestaurants(restaurantDataList.map(response => response.data));
+      setRestaurants(restaurantDataList.map((response) => response.data));
     } catch (error) {
-      console.error('Error fetching restaurant data:', error);
+      console.error("Error fetching restaurant data:", error);
     }
   };
 
@@ -46,6 +47,21 @@ const TripDayCard = ({ day, formatDate }) => {
   useEffect(() => {
     fetchRestaurantData();
   }, [day?.restaurants]);
+
+  const fetchPlanData = async () => {
+    try {
+      const planPromises = day?.plans.map((plan) => getPlan(plan));
+      const planDataList = await Promise.all(planPromises);
+      setPlans(planDataList.map((response) => response.data));
+    } catch (error) {
+      console.error("Error fetching plan data:", error);
+    }
+  };
+
+  // Fetch restaurant data for the selected day when the component mounts or when 'day.restaurants' changes
+  useEffect(() => {
+    fetchPlanData();
+  }, [day?.plans]);
 
   return (
     <Card>
@@ -57,20 +73,25 @@ const TripDayCard = ({ day, formatDate }) => {
           Accommodation:
         </Typography>
         <Typography sx={{ flexGrow: 1 }}>
-          {accommodation ? accommodation.name : 'Loading...'}
+          {accommodation ? accommodation.name : "N/A"}
         </Typography>
         <Typography variant="h6" fontWeight="bold">
           Restaurants:
         </Typography>
         <Typography sx={{ flexGrow: 1 }}>
           {restaurants
-            ? restaurants.map(restaurant => (
+            ? restaurants.map((restaurant) => (
                 <span key={restaurant?._id}>{restaurant?.name}</span>
               ))
-            : 'Loading...'}
+            : "N/A"}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Plans: {day.plans.join(', ')}
+        <Typography variant="h6" fontWeight="bold">
+          Plans:
+        </Typography>
+        <Typography sx={{ flexGrow: 1 }}>
+          {plans
+            ? plans.map((plan) => <span key={plan?._id}>{plan?.name}</span>)
+            : "N/A"}
         </Typography>
       </CardContent>
     </Card>
