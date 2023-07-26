@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from "react";
 import {
   Box,
   Button,
@@ -7,22 +7,22 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  TextField
-} from '@mui/material';
-import { updateTrip, getTrip } from '../../api/trips.api';
-import { AuthContext } from '../../context/auth.context';
-import { useNavigate, useParams } from 'react-router-dom';
-import useFetch from '../../hooks/useFetch';
-import { baseURL } from '../../api/trips.api';
+  TextField,
+} from "@mui/material";
+import { updateTrip, getTrip } from "../../api/trips.api";
+import { AuthContext } from "../../context/auth.context";
+import { useNavigate, useParams } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+import { baseURL } from "../../api/trips.api";
 
-const EditTrip = () => {
+const EditTrip = ({ onClose }) => {
   const { user, authenticateUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const params = useParams();
 
-  const [destination, setDestination] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [destination, setDestination] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [days, setDays] = useState([]);
 
   const tripId = params.tripId; // Access the tripId from the URL parameters
@@ -31,7 +31,7 @@ const EditTrip = () => {
   const {
     data: tripData,
     isLoading,
-    error
+    error,
   } = useFetch(`${baseURL}/trip/${tripId}`);
 
   useEffect(() => {
@@ -45,55 +45,57 @@ const EditTrip = () => {
 
   console.log(destination);
 
-  const formatDate = dateString => {
+  const formatDate = (dateString) => {
     if (!dateString || !Date.parse(dateString)) {
-      return '';
+      return "";
     }
 
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
 
-  const handleNameChange = event => {
+  const handleNameChange = (event) => {
     setDestination(event.target.value);
   };
 
-  const handleStartDateChange = event => {
+  const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
   };
 
-  const handleEndDateChange = event => {
+  const handleEndDateChange = (event) => {
     setEndDate(event.target.value);
   };
 
-  const handleEditTrip = async e => {
+  const handleEditTrip = async (e) => {
     e.preventDefault();
     const userId = user._id;
     const updatedTrip = {
       destination,
       startDate,
       endDate,
-      days
+      days,
     };
 
     try {
       const response = await updateTrip(updatedTrip, tripId); // Include the tripId as a separate parameter
-      console.log('Trip updated:', response.data);
+      console.log("Trip updated:", response.data);
       handleClose();
 
       authenticateUser(true);
-      navigate('/trips');
+      navigate("/trips");
     } catch (error) {
-      console.log('Error updating trip:', error);
+      console.log("Error updating trip:", error);
     }
   };
 
   const [isOpen, setIsOpen] = useState(true);
 
-  const handleClose = () => {
-    setIsOpen(false);
-    navigate('/trips');
-  };
+  const handleClose = onClose
+    ? onClose
+    : () => {
+        setIsOpen(false);
+        navigate("/trips");
+      };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -114,7 +116,7 @@ const EditTrip = () => {
               autoFocus
               margin="dense"
               id="destination"
-              label={'My trip to ...'}
+              label={"My trip to ..."}
               type="text"
               value={destination}
               onChange={handleNameChange}
@@ -148,17 +150,17 @@ const EditTrip = () => {
               variant="standard"
               InputLabelProps={{
                 style: {
-                  color: 'text.secondary'
-                }
+                  color: "text.secondary",
+                },
               }}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button sx={{ color: 'text.secondary' }} onClick={handleClose}>
+          <Button sx={{ color: "text.secondary" }} onClick={handleClose}>
             Close
           </Button>
-          <Button sx={{ color: 'text.secondary' }} type="submit">
+          <Button sx={{ color: "text.secondary" }} type="submit">
             Submit updated trip
           </Button>
         </DialogActions>
