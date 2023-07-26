@@ -1,22 +1,9 @@
 import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-// import { eventDrop } from "@fullcalendar/interaction";
 
 import listPlugin from "@fullcalendar/list";
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-  Modal,
-  Button,
-  ThemeProvider,
-} from "@mui/material";
-import ColorLensTwoToneIcon from "@mui/icons-material/ColorLensTwoTone";
+import { Box, Modal, ThemeProvider } from "@mui/material";
+
 import { styled, useTheme } from "@mui/material/styles";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
@@ -29,28 +16,6 @@ import { tokens } from "../../context/theme.context";
 import { Link, useNavigate } from "react-router-dom";
 import EventOptionsModal from "../../components/Modal/MultiSelectModal";
 import EditTrip from "../../components/EditTrip/EditTrip";
-
-const SidebarBox = styled(Box)(({ theme }) => ({
-  flex: "1 1 20%",
-  backgroundColor: theme.palette.primary.secondary,
-  color: theme.palette.primary.contrastText,
-  padding: "15px",
-  borderRadius: "4px",
-}));
-
-const SidebarTitle = styled(Typography)({
-  marginBottom: "10px",
-});
-
-const ListItemStyled = styled(ListItem)(({ theme }) => ({
-  backgroundColor: "rgba(26,37,46)",
-  margin: "10px 0",
-  //   justifyContent: "center",
-  borderRadius: "2px",
-  "&:hover": {
-    backgroundColor: "rgb(44,62,80)",
-  },
-}));
 
 function SimpleCalendar() {
   const theme = useTheme();
@@ -321,12 +286,12 @@ function SimpleCalendar() {
                 right: "listMonth",
               }}
               initialView="listMonth"
-              editable={true}
-              selectable={true}
+              editable={false}
+              selectable={false}
               selectMirror={true}
               dayMaxEvents={false}
-              select={handleDateClick}
-              eventClick={handleEventClick}
+              //   select={handleDateClick}
+              //   eventClick={handleEventClick}
               events={currentEvents}
               eventColor={(info) => tripColors[info.event.id] || "#4cceac"}
               eventDrop={handleEventDrop}

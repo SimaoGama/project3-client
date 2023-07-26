@@ -15,7 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { baseURL } from "../../api/trips.api";
 
-const EditTrip = ({ onClose }) => {
+const EditTrip = ({ onClose, handleClose }) => {
   const { user, authenticateUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const params = useParams();
@@ -24,6 +24,8 @@ const EditTrip = ({ onClose }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [days, setDays] = useState([]);
+  const [open, setOpen] = useState(true);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const tripId = params.tripId; // Access the tripId from the URL parameters
   console.log(tripId);
@@ -33,6 +35,20 @@ const EditTrip = ({ onClose }) => {
     isLoading,
     error,
   } = useFetch(`${baseURL}/trip/${tripId}`);
+
+  useEffect(() => {
+    // Close the dialog when form submission is successful and navigation is complete
+    if (isFormSubmitted && open) {
+      setOpen(false);
+      // If handleClose prop is provided, call it
+      if (handleClose) {
+        handleClose();
+      } else {
+        // If handleClose prop is not provided, navigate back
+        navigate(-1); // Go back to the previous page
+      }
+    }
+  }, [isFormSubmitted, open, handleClose, navigate]);
 
   useEffect(() => {
     if (tripData) {
@@ -88,14 +104,17 @@ const EditTrip = ({ onClose }) => {
     }
   };
 
-  const [isOpen, setIsOpen] = useState(true);
+  const handleComponentClose = () => {
+    setOpen(false); // Close the dialog
 
-  const handleClose = onClose
-    ? onClose
-    : () => {
-        setIsOpen(false);
-        navigate("/trips");
-      };
+    // If handleClose prop is provided, call it
+    if (handleClose) {
+      handleClose();
+    } else {
+      // If handleClose prop is not provided, navigate back
+      navigate(-1); // Go back to the previous page
+    }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -106,7 +125,7 @@ const EditTrip = ({ onClose }) => {
   }
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} maxWidth="md" sx={{}}>
+    <Dialog open={open} onClose={handleComponentClose} maxWidth="md" sx={{}}>
       <DialogTitle>Edit trip</DialogTitle>
       <form onSubmit={handleEditTrip}>
         <DialogContent sx={{ width: 600 }}>
