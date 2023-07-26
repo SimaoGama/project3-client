@@ -49,7 +49,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Navbar />
         <div className="app">
-          {isLoggedIn && <Dashboard />}
+          {/* {isLoggedIn && <Dashboard />} */}
           <main className="content">
             <Routes>
               <Route path="/" element={<LandingPage />} />
