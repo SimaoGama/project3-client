@@ -56,33 +56,6 @@ const Navbar = () => {
                 {isClicked ? <FaTimes /> : <FaBars />}
               </div>
               <ul className={isClicked ? "nav-menu active" : "nav-menu"}>
-                {/* <li className="nav-item">
-                  <NavLink
-                    to="/"
-                    className={({ isActive }) =>
-                      "nav-links" + (isActive ? " activated" : "")
-                    }
-                    onClick={closeMobileMenu}
-                  >
-                    <Typography component="h1" variant="h4">
-                      Home
-                    </Typography>
-                  </NavLink>
-                </li> */}
-                {/* <li className="nav-item">
-                  <NavLink
-                    to="/about"
-                    className={({ isActive }) =>
-                      "nav-links" + (isActive ? " activated" : "")
-                    }
-                    onClick={closeMobileMenu}
-                  >
-                    <Typography component="h1" variant="h4">
-                      About
-                    </Typography>
-                  </NavLink>
-                </li> */}
-
                 {/* //HANDLE USER PRIVATE OPTIONS */}
 
                 {isLoggedIn && (
@@ -138,12 +111,14 @@ const Navbar = () => {
                         }
                         onClick={closeMobileMenu}
                       >
-                        <MenuItem className="menu-item">
+                        <div className="menu-item">
+                          {" "}
+                          {/* Change the wrapping element to div */}
                           <span className="icon-container">
                             <HowToRegTwoToneIcon className="fade-icon" />
                           </span>
                           <Typography className="menu-text">Signup</Typography>
-                        </MenuItem>
+                        </div>
                       </NavLink>
                     </li>
                     <li className="nav-item">
@@ -154,12 +129,14 @@ const Navbar = () => {
                         }
                         onClick={closeMobileMenu}
                       >
-                        <MenuItem className="menu-item">
+                        <div className="menu-item">
+                          {" "}
+                          {/* Change the wrapping element to div */}
                           <span className="icon-container">
                             <LoginIcon className="fade-icon" />
                           </span>
                           <Typography className="menu-text">Login</Typography>
-                        </MenuItem>
+                        </div>
                       </NavLink>
                     </li>
 

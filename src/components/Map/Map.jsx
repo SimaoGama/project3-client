@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
-import GoogleMapReact from 'google-map-react';
-import { Paper, Typography, useMediaQuery } from '@mui/material';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import Rating from '@mui/material/Rating';
-import { styled } from '@mui/system';
-import mapStyles from './mapStyles';
+import React, { useState } from "react";
+import GoogleMapReact from "google-map-react";
+import { Paper, Typography, useMediaQuery } from "@mui/material";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import Rating from "@mui/material/Rating";
+import { styled } from "@mui/system";
+import mapStyles from "./mapStyles";
 
-const MapContainer = styled('div')({
-  height: '85vh',
-  width: '100%'
+const MapContainer = styled("div")({
+  height: "85vh",
+  width: "100%",
 });
 
-const MarkerContainer = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  transform: 'translate(-50%, -50%)',
+const MarkerContainer = styled("div")(({ theme }) => ({
+  position: "absolute",
+  transform: "translate(-50%, -50%)",
   zIndex: 1,
-  '&:hover': { zIndex: 2 }
+  "&:hover": { zIndex: 2 },
 }));
 
 const PaperContainer = styled(Paper)({
-  padding: '10px',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  width: '100px'
+  padding: "10px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  width: "100px",
 });
 
-const Img = styled('img')({
-  width: '100%',
-  height: 'auto',
-  objectFit: 'cover'
+const Img = styled("img")({
+  width: "100%",
+  height: "auto",
+  objectFit: "cover",
 });
 
 const Map = ({
@@ -37,12 +37,12 @@ const Map = ({
   setBounds,
   coordinates,
   places,
-  setChildClicked
+  setChildClicked,
 }) => {
-  const isDesktop = useMediaQuery('(min-width:600px)');
+  const isDesktop = useMediaQuery("(min-width:600px)");
 
   return (
-    <div style={{ height: '85vh', width: '100%' }}>
+    <div style={{ height: "82vh", width: "100%" }}>
       <GoogleMapReact
         bootstrapURLKeys={{ key: import.meta.env.VITE_GOOGLE_MAPS_API }}
         center={coordinates}
@@ -52,13 +52,13 @@ const Map = ({
           disableDefaultUI: true,
           zoomControl: true,
           styles: mapStyles,
-          gestureHandling: 'greedy'
+          gestureHandling: "greedy",
         }}
-        onChange={e => {
+        onChange={(e) => {
           setCoordinates({ lat: e.center.lat, lng: e.center.lng });
           setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
         }}
-        onChildClick={child => {
+        onChildClick={(child) => {
           setChildClicked(child);
         }}
       >
@@ -79,7 +79,7 @@ const Map = ({
                   src={
                     place.photo
                       ? place.photo.images.large.url
-                      : 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg'
+                      : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg"
                   }
                   alt={place.name}
                 />

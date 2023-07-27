@@ -14,6 +14,8 @@ import EmailIcon from "@mui/icons-material/Email";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
 import FlightTakeoffRoundedIcon from "@mui/icons-material/FlightTakeoffRounded";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import StatBox from "./StatBox";
 import Calendar from "../Calendar/Calendar";
 import { AuthContext } from "../../context/auth.context";
@@ -24,6 +26,7 @@ import useFetch from "../../hooks/useFetch";
 import { baseURL } from "../../api/trips.api";
 import { useNavigate } from "react-router-dom";
 import { CalculateOutlined, CalendarMonthOutlined } from "@mui/icons-material";
+import UserTag from "../../components/UserTag";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -82,11 +85,14 @@ const Dashboard = () => {
           <StatBox
             title="Hello"
             subtitle={`${user?.firstName} ${user?.lastName}`}
-            // progress="0.75"
+            progress={<UserTag userTrips={userTrips} />}
             increase={`${userTrips?.length} trips created!`}
             icon={
-              <EmailIcon
-                sx={{ color: colors.primary[500], fontSize: "32px" }}
+              <VerifiedOutlinedIcon
+                sx={{
+                  fontSize: "32px",
+                  color: colors.primary[500],
+                }}
               />
             }
           />
@@ -110,7 +116,6 @@ const Dashboard = () => {
           <StatBox
             title="Edit"
             subtitle="Account"
-            // progress="0.30"
             increase={`${user?.email}`}
             icon={
               <AccountCircleRoundedIcon
@@ -141,8 +146,6 @@ const Dashboard = () => {
           <StatBox
             title="Change"
             subtitle="Settings"
-            progress="0.80"
-            // increase="+43%"
             icon={
               <SettingsSuggestRoundedIcon
                 sx={{
@@ -184,6 +187,7 @@ const Dashboard = () => {
           }}
         >
           <Box
+            onClick={() => navigate("/calendar")}
             display="flex"
             justifyContent="center"
             alignItems="center"
@@ -201,8 +205,6 @@ const Dashboard = () => {
             <StatBox
               title="Check"
               subtitle="Calendar"
-              // progress="0.80"
-              // increase="+43%"
               icon={
                 <CalendarMonthOutlined
                   sx={{
@@ -234,9 +236,8 @@ const Dashboard = () => {
           <StatBox
             title="Explore"
             subtitle="New Places"
-            progress="0.80"
             icon={
-              <FlightTakeoffRoundedIcon
+              <TravelExploreIcon
                 sx={{
                   cursor: "pointer",
                   color: colors.primary[500], // Set the icon color to primary
@@ -268,9 +269,8 @@ const Dashboard = () => {
           }}
         >
           <StatBox
-            title="My"
-            subtitle="Trips"
-            progress="0.80"
+            title="Browse"
+            subtitle="My Trips"
             icon={
               <FlightTakeoffRoundedIcon
                 sx={{

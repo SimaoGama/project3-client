@@ -28,6 +28,7 @@ const PlacesList = ({
   selectedTrip,
   setSelectedTrip,
   setSelectedPlace,
+  colors,
 }) => {
   const [elementRef, setElementRef] = useState([]);
 
@@ -84,11 +85,12 @@ const PlacesList = ({
           alignItems="center"
           height="100%"
           display="flex"
+          // sx={{ height: "20vh", width: "100%" }}
         >
           <CircularProgress size="5rem" />
         </Box>
       ) : (
-        <Box style={{ maxHeight: "calc(100vh - 200px)", overflow: "auto" }}>
+        <Box sx={{ height: "65vh", width: "100%", overflow: "auto" }}>
           <Grid container spacing={3}>
             {places?.map((place, i) => (
               <Grid key={i} item xs={12}>
@@ -105,6 +107,7 @@ const PlacesList = ({
                   selectedTrip={selectedTrip}
                   setSelectedTrip={setSelectedTrip}
                   setSelectedPlace={setSelectedPlace}
+                  colors={colors}
                 />
               </Grid>
             ))}

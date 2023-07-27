@@ -121,9 +121,10 @@ const TripList = () => {
   return (
     <Box
       p={10}
+      gridTemplateColumns={isMobile ? "1fr" : "repeat(12, 1fr)"}
       sx={{
         backgroundColor: theme.palette.background.default,
-        height: "100vh",
+        height: "90vh",
         display: "flex",
         justifyContent: "center",
         overflowY: isMobile ? "auto" : "visible",
@@ -133,19 +134,22 @@ const TripList = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row", // Set flexDirection to "row" to display items next to each other
+            flexDirection: isMobile ? "column" : "row", // Set flexDirection to "column" for mobile
             alignItems: "center", // Align items in the center along the vertical axis
             justifyContent: "flex-start", // Distribute items evenly along the horizontal axis
             mb: 4, // Add margin-bottom to the container
           }}
         >
-          <Box>
+          <Box
+            mr={isMobile ? 0 : 2} // Add margin-right for spacing on mobile
+            mb={isMobile ? 2 : 0} // Add margin-bottom for spacing on mobile
+          >
             <Select value={filter} onChange={handleFilterChange}>
               <MenuItem value="recent">Most Recent</MenuItem>
               <MenuItem value="chronological">Chronological</MenuItem>
             </Select>
           </Box>
-          <Box ml={2}>
+          <Box>
             <TextField
               id="filled-basic"
               label="Find a trip"

@@ -52,6 +52,7 @@ const PlaceDetails = ({
   selectedTrip,
   setSelectedTrip,
   setSelectedPlace,
+  colors,
 }) => {
   const [showTripForm, setShowTripForm] = useState(false);
 
@@ -87,7 +88,15 @@ const PlaceDetails = ({
   };
 
   return (
-    <StyledCard elevation={6}>
+    <StyledCard
+      elevation={6}
+      sx={{
+        transition: "background-color 0.3s ease",
+        "&:hover": {
+          backgroundColor: `${colors.greenAccent[700]}`,
+        },
+      }}
+    >
       <StyledCardMedia
         image={
           place.photo

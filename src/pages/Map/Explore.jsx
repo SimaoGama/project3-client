@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Grid, useMediaQuery, Button } from "@mui/material";
+import { Grid, useMediaQuery, Button, Box, useTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import Map from "../../components/Map/Map";
@@ -9,9 +9,14 @@ import PlacesList from "../../components/PlaceDetails/PlacesList";
 import SearchHeader from "./SearchHeader";
 import { AuthContext } from "../../context/auth.context";
 import EditDay from "../../components/EditDay/EditDay";
+import { colorModeContext, tokens } from "../../data/theme";
 
 const Explore = () => {
   const { user } = useContext(AuthContext);
+
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [places, setPlaces] = useState([]);
   const [coordinates, setCoordinates] = useState({});
@@ -57,7 +62,7 @@ const Explore = () => {
   }, [rating]);
 
   useEffect(() => {
-    setShowSearchButton(true); // Set the visibility of the search button when bounds or type change
+    setShowSearchButton(true);
   }, [bounds, type, rating]);
 
   const handleSearchButtonClick = () => {
@@ -66,31 +71,38 @@ const Explore = () => {
       setPlaces(data?.filter((place) => place.name && place.num_reviews > 0));
       setFilteredPlaces([]);
       setIsLoading(false);
-      setShowSearchButton(false); // Hide the search button after clicking it
+      setShowSearchButton(false);
     });
   };
 
   // Function to handle the trip selection
   const handleTripSelection = (eventOrTripId, place) => {
     if (place) {
-      // If place is provided, it means the function is called with tripId and place details
-      setSelectedTrip({ tripId: eventOrTripId, place }); // Set the selected tripId and place details as an object
+      setSelectedTrip({ tripId: eventOrTripId, place });
     } else {
-      // If no place is provided, it means the function is called with an event object
-      setSelectedTrip({ tripId: eventOrTripId.target.value }); // Set the selected tripId from the event object
+      setSelectedTrip({ tripId: eventOrTripId.target.value });
     }
-    setSelectedPlace(place); // Set the selectedPlace
-    setShowEditDialog(true); // Show the EditDay dialog
+    setSelectedPlace(place);
+    setShowEditDialog(true);
   };
 
   return (
     <>
-      <Grid>
-        <CssBaseline />
-
-        <SearchHeader setCoordinates={setCoordinates} />
-        <Grid container spacing={3} style={{ width: " 100%" }}>
+      <Box
+        p={isMobile ? 2 : 2}
+        // pl={isMobile ? 2 : 5}
+        sx={{
+          backgroundColor: theme.palette.background.default,
+          height: "90vh",
+          overflowY: isMobile ? "auto" : "visible",
+        }}
+      >
+        <Grid container spacing={isMobile ? 1 : 2}>
           <Grid item xs={12} md={4}>
+            {/* SearchHeader */}
+            <SearchHeader setCoordinates={setCoordinates} />
+
+            {/* PlacesList */}
             <PlacesList
               places={filteredPlaces.length ? filteredPlaces : places}
               childClicked={childClicked}
@@ -106,15 +118,30 @@ const Explore = () => {
               selectedTrip={selectedTrip}
               setSelectedTrip={setSelectedTrip}
               setSelectedPlace={setSelectedPlace}
+              colors={colors}
             />
           </Grid>
 
           <Grid item xs={12} md={8}>
+            {/* "Search this area" Button */}
             {showSearchButton && (
-              <Button variant="contained" onClick={handleSearchButtonClick}>
-                Search this area
-              </Button>
+              <Box pb={2} textAlign="center">
+                <Button
+                  onClick={handleSearchButtonClick}
+                  sx={{
+                    backgroundColor: colors.greenAccent[700],
+                    color: colors.grey[100],
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    padding: "10px 20px",
+                  }}
+                >
+                  {isMobile ? "Search" : "Search this area"}
+                </Button>
+              </Box>
             )}
+
+            {/* Map */}
             <Map
               setCoordinates={setCoordinates}
               setBounds={setBounds}
@@ -124,6 +151,8 @@ const Explore = () => {
             />
           </Grid>
         </Grid>
+
+        {/* EditDay Dialog */}
         {showEditDialog && (
           <EditDay
             selectedTrip={selectedTrip}
@@ -132,7 +161,7 @@ const Explore = () => {
             setCoordinates={setCoordinates}
           />
         )}
-      </Grid>
+      </Box>
     </>
   );
 };
