@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import { ButtonComponent } from "./ButtonComponent";
 import TypeWriterEffect from "react-typewriter-effect";
 import React, { useState, useEffect } from "react";
@@ -6,13 +6,27 @@ import "./HeroSection.css";
 
 const HeroSection = () => {
   const [showButtons, setShowButtons] = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(false);
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
+  const textFontSize = isMobile ? "0.8em" : "1.2em";
 
   // Function to handle the completion of the typing effect
   useEffect(() => {
     // Delay the appearance of the buttons after 10 seconds
     const timer = setTimeout(() => {
       setShowButtons(true);
-    }, 10000);
+    }, 10500);
+
+    // Clear the timer when the component unmounts
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    // Delay the appearance of the buttons after 10 seconds
+    const timer = setTimeout(() => {
+      setShowSubtitle(true);
+    }, 9000);
 
     // Clear the timer when the component unmounts
     return () => clearTimeout(timer);
@@ -28,7 +42,7 @@ const HeroSection = () => {
           <TypeWriterEffect
             textStyle={{
               color: "#4cceac",
-              fontSize: "1.2em",
+              fontSize: textFontSize,
               textAlign: "center",
             }}
             startDelay={100}
@@ -40,7 +54,9 @@ const HeroSection = () => {
           />
         </span>{" "}
       </h1>
-      <p>Start your journey now</p>
+      <p className={`subtitle-text ${showSubtitle ? "show" : ""}`}>
+        Start your journey now
+      </p>
       <div className={`hero-btns ${showButtons ? "show" : ""}`}>
         {/* Add 'show' class when showButtons is true */}
         <ButtonComponent
