@@ -178,7 +178,10 @@ const EditTrip = ({ onClose, handleClose }) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button sx={{ color: "text.secondary" }} onClick={handleClose}>
+          <Button
+            sx={{ color: "text.secondary" }}
+            onClick={handleComponentClose}
+          >
             Close
           </Button>
           <Button sx={{ color: "text.secondary" }} type="submit">

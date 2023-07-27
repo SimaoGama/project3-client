@@ -35,6 +35,8 @@ const StyledCardActions = styled(CardActions)(({ theme }) => ({
 }));
 
 const PlaceCard = ({ place }) => {
+
+  console.log("PLACE", place);
   return (
     <StyledCard elevation={6}>
       <StyledCardMedia

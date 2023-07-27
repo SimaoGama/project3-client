@@ -147,7 +147,7 @@ const DayView = () => {
               backgroundColor: `${colors.greenAccent[500]}`,
             },
           }}
-          onClick={() => navigate("#")}
+          onClick={() => setShowRestaurants(true)}
         >
           <StatBox
             title="My"
@@ -213,6 +213,14 @@ const DayView = () => {
           handleClose={handleCloseAccommodation}
           colors={colors}
           selectedPlace={accommodation}
+        />
+      )}
+      {showRestaurants && (
+        <DayInfoDialog
+          isOpen={showRestaurants}
+          handleClose={handleCloseRestaurants}
+          colors={colors}
+          selectedPlace={restaurants}
         />
       )}
       {showPlans && (
