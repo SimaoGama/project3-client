@@ -22,6 +22,7 @@ import EditDay from "./components/EditDay/EditDay";
 import TripView from "./pages/Trip/TripView";
 import { useLocation } from "react-router-dom";
 import "./main.css";
+import DayView from "./pages/Day/DayView";
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -117,6 +118,15 @@ function App() {
                 element={
                   <IsPrivate>
                     <EditDay />
+                  </IsPrivate>
+                }
+              />
+
+              <Route
+                path="/day/:dayId"
+                element={
+                  <IsPrivate>
+                    <DayView />
                   </IsPrivate>
                 }
               />

@@ -10,6 +10,7 @@ import SearchHeader from "./SearchHeader";
 import { AuthContext } from "../../context/auth.context";
 import EditDay from "../../components/EditDay/EditDay";
 import { colorModeContext, tokens } from "../../data/theme";
+import SearchButton from "./SearchButton";
 
 const Explore = () => {
   const { user } = useContext(AuthContext);
@@ -86,6 +87,8 @@ const Explore = () => {
     setShowEditDialog(true);
   };
 
+  // console.log("ismobile?", isMobile);
+
   return (
     <>
       <Box
@@ -103,6 +106,7 @@ const Explore = () => {
             <SearchHeader setCoordinates={setCoordinates} />
 
             {/* PlacesList */}
+
             <PlacesList
               places={filteredPlaces.length ? filteredPlaces : places}
               childClicked={childClicked}
@@ -119,26 +123,19 @@ const Explore = () => {
               setSelectedTrip={setSelectedTrip}
               setSelectedPlace={setSelectedPlace}
               colors={colors}
+              isMobile={isMobile}
+              handleSearchButtonClick={handleSearchButtonClick}
+              showSearchButton={showSearchButton}
             />
           </Grid>
 
           <Grid item xs={12} md={8}>
-            {/* "Search this area" Button */}
-            {showSearchButton && (
-              <Box pb={2} textAlign="center">
-                <Button
-                  onClick={handleSearchButtonClick}
-                  sx={{
-                    backgroundColor: colors.greenAccent[700],
-                    color: colors.grey[100],
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    padding: "10px 20px",
-                  }}
-                >
-                  {isMobile ? "Search" : "Search this area"}
-                </Button>
-              </Box>
+            {!isMobile && showSearchButton && (
+              <SearchButton
+                colors={colors}
+                isMobile={isMobile}
+                handleSearchButtonClick={handleSearchButtonClick}
+              />
             )}
 
             {/* Map */}

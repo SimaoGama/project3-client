@@ -56,8 +56,15 @@ export const upload = (uploadData) => {
 
 //handle days
 
-export const getDayInformation = (dayId) => {
-  return axios.get(`${baseURL}/day/${dayId}`);
+export const getDayInformation = async (dayId) => {
+  try {
+    const response = await axios.get(`${baseURL}/day/${dayId}`);
+    return response.data;
+  } catch (error) {
+    // Handle the error
+    console.log("Error fetching day information:", error);
+    throw error; // Rethrow the error to be caught by the calling code
+  }
 };
 
 export const updateDay = (dayId, selectedPlace) => {

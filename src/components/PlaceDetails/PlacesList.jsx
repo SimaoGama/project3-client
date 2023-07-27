@@ -10,8 +10,11 @@ import {
   MenuItem,
   Select,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
+import SearchButton from "../../pages/Map/SearchButton";
 
 const PlacesList = ({
   places,
@@ -29,6 +32,9 @@ const PlacesList = ({
   setSelectedTrip,
   setSelectedPlace,
   colors,
+  isMobile,
+  handleSearchButtonClick,
+  showSearchButton,
 }) => {
   const [elementRef, setElementRef] = useState([]);
 
@@ -40,6 +46,8 @@ const PlacesList = ({
     );
   }, [places]);
 
+  console.log("ismobile?", isMobile);
+
   return (
     <>
       <Card>
@@ -49,7 +57,7 @@ const PlacesList = ({
           </Typography>
 
           <Box pb={2}>
-            <FormControl sx={{ minWidth: 120, mr: 2 }}>
+            <FormControl sx={{ minWidth: 120, mr: 2, pb: 2 }}>
               <InputLabel id="type">Type</InputLabel>
               <Select
                 id="type"
@@ -62,7 +70,7 @@ const PlacesList = ({
                 <MenuItem value="attractions">Attractions</MenuItem>
               </Select>
             </FormControl>
-            <FormControl id="rating" sx={{ minWidth: 120, mr: 2 }}>
+            <FormControl id="rating" sx={{ minWidth: 80, mr: 2 }}>
               <InputLabel>Rating</InputLabel>
               <Select
                 id="rating"
@@ -75,6 +83,16 @@ const PlacesList = ({
                 <MenuItem value="4">Above 4.0</MenuItem>
                 <MenuItem value="4.5">Above 4.5</MenuItem>
               </Select>
+
+              <Box sx={{ minWidth: 120, mr: 2, pb: 2 }}>
+                {isMobile && showSearchButton && (
+                  <SearchButton
+                    colors={colors}
+                    isMobile={isMobile}
+                    handleSearchButtonClick={handleSearchButtonClick}
+                  />
+                )}
+              </Box>
             </FormControl>
           </Box>
         </CardContent>
