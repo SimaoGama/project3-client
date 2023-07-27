@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Typography,
   Box,
-  Pagination
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TripDayCard from './TripDayCard';
+  Pagination,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TripDayCard from "./TripDayCard";
 
 const DayList = ({ days }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,18 +19,21 @@ const DayList = ({ days }) => {
     setCurrentPage(newPage);
   };
 
+  // console.log("DayListDays:", days);
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const displayedDays = days.slice(startIndex, endIndex);
 
-  const formatDate = dateString => {
+  const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
 
+  console.log("DisplaydDays:", displayedDays);
   return (
     <div>
-      {displayedDays.map(day => (
+      {displayedDays.map((day) => (
         <Accordion key={day._id}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -39,7 +42,7 @@ const DayList = ({ days }) => {
           >
             <Typography>{formatDate(day?.date)}&nbsp;</Typography>
             <Typography variant="h6" fontWeight="bold">
-              {day?.city || ''}
+              {day?.city || ""}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>

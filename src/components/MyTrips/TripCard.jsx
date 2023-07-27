@@ -229,7 +229,7 @@ const TripCard = ({ trip, handleDelete }) => {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Overview:</Typography>
-          <DayList days={trip.days} />
+          <DayList days={trip?.days} />
         </CardContent>
       </Collapse>
     </Box>

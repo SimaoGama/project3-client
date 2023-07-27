@@ -13,8 +13,7 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import TrafficIcon from "@mui/icons-material/Traffic";
+import FlightTakeoffRoundedIcon from "@mui/icons-material/FlightTakeoffRounded";
 import StatBox from "./StatBox";
 import Calendar from "../Calendar/Calendar";
 import { AuthContext } from "../../context/auth.context";
@@ -24,6 +23,7 @@ import SimpleCalendar from "./SimpleCalendar";
 import useFetch from "../../hooks/useFetch";
 import { baseURL } from "../../api/trips.api";
 import { useNavigate } from "react-router-dom";
+import { CalculateOutlined, CalendarMonthOutlined } from "@mui/icons-material";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -109,7 +109,7 @@ const Dashboard = () => {
         >
           <StatBox
             title="Edit"
-            subtitle="Your account"
+            subtitle="Account"
             // progress="0.30"
             increase={`${user?.email}`}
             icon={
@@ -175,6 +175,13 @@ const Dashboard = () => {
           gridRow="span 4"
           backgroundColor={colors.primary[400]}
           overflow="auto"
+          sx={{
+            cursor: "pointer",
+            transition: "background-color 0.3s ease",
+            // "&:hover": {
+            //   backgroundColor: `${colors.greenAccent[500]}`,
+            // },
+          }}
         >
           <Box
             display="flex"
@@ -182,7 +189,7 @@ const Dashboard = () => {
             alignItems="center"
             borderBottom={`4px solid ${colors.primary[500]}`}
             colors={colors.grey[100]}
-            p="10px"
+            p="10px 0 0 0px"
             sx={{
               cursor: "pointer",
               transition: "background-color 0.3s ease",
@@ -191,68 +198,95 @@ const Dashboard = () => {
               },
             }}
           >
-            <Typography
-              onClick={() => navigate("/calendar")}
-              color={colors.grey[100]}
-              variant="h3"
-              fontWeight="600"
-            >
-              Upcoming Trips | Calendar
-            </Typography>
+            <StatBox
+              title="Check"
+              subtitle="Calendar"
+              // progress="0.80"
+              // increase="+43%"
+              icon={
+                <CalendarMonthOutlined
+                  sx={{
+                    color: colors.primary[500], // Set the icon color to primary
+                    fontSize: "32px",
+                  }}
+                />
+              }
+            />
           </Box>
           <SimpleCalendar />
         </Box>
 
         {/* ROW 3 */}
         <Box
+          onClick={() => navigate("/map")}
           gridColumn={isMobile ? "1" : "span 4"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           p="30px"
+          sx={{
+            cursor: "pointer",
+            transition: "background-color 0.3s ease",
+            "&:hover": {
+              backgroundColor: `${colors.greenAccent[500]}`,
+            },
+          }}
         >
-          <Typography variant="h4" fontWeight="600">
-            Calendar
-          </Typography>
+          <StatBox
+            title="Explore"
+            subtitle="New Places"
+            progress="0.80"
+            icon={
+              <FlightTakeoffRoundedIcon
+                sx={{
+                  cursor: "pointer",
+                  color: colors.primary[500], // Set the icon color to primary
+                  fontSize: "32px",
+                }}
+              />
+            }
+          />
           <Box
             display="flex"
             flexDirection="column"
             alignItems="center"
             mt="25px"
-          >
-            {/* <ProgressCircle size="125" /> */}
-          </Box>
+          ></Box>
         </Box>
+
         <Box
+          onClick={() => navigate("/trips")}
           gridColumn={isMobile ? "1" : "span 4"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
+          p="30px"
+          sx={{
+            cursor: "pointer",
+            transition: "background-color 0.3s ease",
+            "&:hover": {
+              backgroundColor: `${colors.greenAccent[500]}`,
+            },
+          }}
         >
+          <StatBox
+            title="My"
+            subtitle="Trips"
+            progress="0.80"
+            icon={
+              <FlightTakeoffRoundedIcon
+                sx={{
+                  cursor: "pointer",
+                  color: colors.primary[500], // Set the icon color to primary
+                  fontSize: "32px",
+                }}
+              />
+            }
+          />
           <Box
-            onClick={() => navigate("/trips")}
-            gridColumn="span 4"
-            gridRow="span 2"
-            backgroundColor={colors.primary[400]}
-            p="30px"
-            sx={{
-              cursor: "pointer",
-              ":hover": {
-                textDecoration: "underline",
-                color: `${colors.greenAccent[400]}`,
-              },
-            }}
-          >
-            <Typography variant="h4" fontWeight="600">
-              My Trips
-            </Typography>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              mt="25px"
-            >
-              {/* <ProgressCircle size="125" /> */}
-            </Box>
-          </Box>
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            mt="25px"
+          ></Box>
         </Box>
       </Box>
     </Box>

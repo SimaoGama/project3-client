@@ -8,11 +8,13 @@ const TripDayCard = ({ day, formatDate }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [plans, setPlans] = useState([]);
 
+  // console.log("TRIPDAYCARD DAY", day);
+
   const fetchAccommodationData = async () => {
     if (day?.accommodation) {
-      // console.log("Accommodation ID:", day.accommodation); // Log the accommodation ID
+      console.log("Accommodation ID:", day.accommodation); // Log the accommodation ID
       try {
-        const response = await getAccommodation(day.accommodation);
+        const response = await getAccommodation(day?.accommodation._id);
         // console.log("Response from API:", response.data); // Log the API response
         setAccommodation(response.data);
       } catch (error) {
@@ -34,10 +36,10 @@ const TripDayCard = ({ day, formatDate }) => {
   const fetchRestaurantData = async () => {
     try {
       const restaurantPromises = day?.restaurants.map((restaurant) =>
-        getRestaurant(restaurant)
+        getRestaurant(restaurant?._id)
       );
       const restaurantDataList = await Promise.all(restaurantPromises);
-      setRestaurants(restaurantDataList.map((response) => response.data));
+      setRestaurants(restaurantDataList.map((response) => response?.data));
     } catch (error) {
       console.error("Error fetching restaurant data:", error);
     }
@@ -46,11 +48,11 @@ const TripDayCard = ({ day, formatDate }) => {
   // Fetch restaurant data for the selected day when the component mounts or when 'day.restaurants' changes
   useEffect(() => {
     fetchRestaurantData();
-  }, [day?.restaurants]);
+  }, [day?.restaurants?._id]);
 
   const fetchPlanData = async () => {
     try {
-      const planPromises = day?.plans.map((plan) => getPlan(plan));
+      const planPromises = day?.plans.map((plan) => getPlan(plan._id));
       const planDataList = await Promise.all(planPromises);
       setPlans(planDataList.map((response) => response.data));
     } catch (error) {
