@@ -16,6 +16,7 @@ const StatBox = ({ title, subtitle, icon, progress, increase }) => {
             variant="h4"
             fontWeight="bold"
             sx={{ color: colors.grey[100] }}
+            gutterBottom
           >
             {title}
           </Typography>
@@ -25,7 +26,7 @@ const StatBox = ({ title, subtitle, icon, progress, increase }) => {
         </Box> */}
       </Box>
       <Box display="flex" justifyContent="space-between" mt="2px">
-        <Typography variant="h3" sx={{ color: colors.grey[100] }}>
+        <Typography variant="h3" sx={{ color: colors.grey[100] }} gutterBottom>
           {/* Apply the custom color to the Typography component */}
           {subtitle}
         </Typography>
@@ -33,6 +34,7 @@ const StatBox = ({ title, subtitle, icon, progress, increase }) => {
           variant="h5"
           fontStyle="italic"
           sx={{ color: colors.greenAccent[200] }}
+          gutterBottom
         >
           {increase}
         </Typography>

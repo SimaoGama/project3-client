@@ -100,6 +100,7 @@ const Dashboard = () => {
           justifyContent="center"
           sx={{
             cursor: "pointer",
+            transition: "background-color 0.3s ease",
             "&:hover": {
               backgroundColor: `${colors.greenAccent[500]}`,
             },
@@ -117,11 +118,6 @@ const Dashboard = () => {
                   cursor: "pointer",
                   color: colors.primary[500], // Set the icon color to primary
                   fontSize: "32px",
-                  "&:hover": {
-                    // Apply a different color on hover (greenAccent[500])
-                    color: colors.greenAccent[500],
-                    scale: "1.24",
-                  },
                 }}
               />
             }
@@ -135,6 +131,7 @@ const Dashboard = () => {
           justifyContent="center"
           sx={{
             cursor: "pointer",
+            transition: "background-color 0.3s ease",
             "&:hover": {
               backgroundColor: `${colors.greenAccent[500]}`,
             },
@@ -152,11 +149,6 @@ const Dashboard = () => {
                   cursor: "pointer",
                   color: colors.primary[500], // Set the icon color to primary
                   fontSize: "32px",
-                  "&:hover": {
-                    // Apply a different color on hover (greenAccent[500])
-                    color: colors.greenAccent[500],
-                    scale: "1.24",
-                  },
                 }}
               />
             }
@@ -193,6 +185,7 @@ const Dashboard = () => {
             p="10px"
             sx={{
               cursor: "pointer",
+              transition: "background-color 0.3s ease",
               "&:hover": {
                 backgroundColor: `${colors.greenAccent[500]}`,
               },

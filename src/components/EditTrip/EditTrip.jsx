@@ -95,10 +95,12 @@ const EditTrip = ({ onClose, handleClose }) => {
     try {
       const response = await updateTrip(updatedTrip, tripId); // Include the tripId as a separate parameter
       console.log("Trip updated:", response.data);
-      handleClose();
+      setIsFormSubmitted(true);
 
       authenticateUser(true);
-      navigate("/trips");
+      if (reFetch) {
+        reFetch();
+      }
     } catch (error) {
       console.log("Error updating trip:", error);
     }
