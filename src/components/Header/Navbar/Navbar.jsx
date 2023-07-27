@@ -1,4 +1,10 @@
-import { Link, NavLink } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  useLocation,
+  useNavigate,
+  useNavigationType,
+} from "react-router-dom";
 import "./Navbar.css";
 import { GiWorld } from "react-icons/gi";
 
@@ -6,7 +12,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { IconContext } from "react-icons/lib";
 import { useContext, useState } from "react";
 import { tokens } from "../../../context/theme.context";
-import { Avatar, Box, MenuItem, Typography } from "@mui/material";
+import { Avatar, Box, Button, MenuItem, Typography } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 import Topbar from "../Topbar/Topbar";
 import { ColorModeContext } from "../../../context/theme.context";
@@ -30,6 +36,9 @@ const Navbar = () => {
   const handleClick = () => setIsClicked(!isClicked);
 
   const closeMobileMenu = () => setIsClicked(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
@@ -78,13 +87,33 @@ const Navbar = () => {
 
                 {isLoggedIn && (
                   <>
+                    {location.pathname !== "/" && (
+                      <Box display="flex">
+                        <Button
+                          sx={{ color: "rgb(252,252,252)" }}
+                          onClick={() => navigate(-1)}
+                        >
+                          <Typography
+                            variant="h5"
+                            sx={{
+                              "&:hover": {
+                                color: `${colors.greenAccent[500]}`,
+                              },
+                            }}
+                          >
+                            Back
+                          </Typography>
+                        </Button>
+                      </Box>
+                    )}
                     <li className="nav-item">
                       <NavLink
+                        to={"/dashboard"}
                         className={({ isActive }) =>
                           "nav-links" + (isActive ? " activated" : "")
                         }
                       >
-                        <Typography component="h2" variant="h5">
+                        <Typography component="h2" variant="h4">
                           {`Welcome ${user.firstName}` +
                             " " +
                             `${user.lastName}`}

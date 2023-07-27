@@ -67,13 +67,13 @@ const Dashboard = () => {
 
       <Box
         display="grid"
-        gridTemplateColumns="repeat(12, 1fr)"
+        gridTemplateColumns={isMobile ? "1fr" : "repeat(12, 1fr)"} // Use 1 column for mobile and 12 columns for larger screens
         gridAutoRows="140px"
         gap="20px"
       >
         {/* ROW 1 */}
         <Box
-          gridColumn="span 4"
+          gridColumn={isMobile ? "1" : "span 4"} // Use 1 column for mobile and 4 columns for larger screens
           backgroundColor={colors.greenAccent[500]}
           display="flex"
           alignItems="center"
@@ -93,11 +93,18 @@ const Dashboard = () => {
         </Box>
 
         <Box
-          gridColumn="span 4"
+          gridColumn={isMobile ? "1" : "span 4"} // Use 1 column for mobile and 4 columns for larger screens
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="center"
           justifyContent="center"
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              backgroundColor: `${colors.greenAccent[500]}`,
+            },
+          }}
+          onClick={() => navigate("/user")}
         >
           <StatBox
             title="Edit"
@@ -106,17 +113,33 @@ const Dashboard = () => {
             increase={`${user?.email}`}
             icon={
               <AccountCircleRoundedIcon
-                sx={{ color: colors.greenAccent[500], fontSize: "32px" }}
+                sx={{
+                  cursor: "pointer",
+                  color: colors.primary[500], // Set the icon color to primary
+                  fontSize: "32px",
+                  "&:hover": {
+                    // Apply a different color on hover (greenAccent[500])
+                    color: colors.greenAccent[500],
+                    scale: "1.24",
+                  },
+                }}
               />
             }
           />
         </Box>
         <Box
-          gridColumn="span 4"
+          gridColumn={isMobile ? "1" : "span 4"} // Use 1 column for mobile and 4 columns for larger screens
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="center"
           justifyContent="center"
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              backgroundColor: `${colors.greenAccent[500]}`,
+            },
+          }}
+          onClick={() => navigate("/settings")}
         >
           <StatBox
             title="Change"
@@ -125,7 +148,16 @@ const Dashboard = () => {
             // increase="+43%"
             icon={
               <SettingsSuggestRoundedIcon
-                sx={{ color: colors.greenAccent[500], fontSize: "32px" }}
+                sx={{
+                  cursor: "pointer",
+                  color: colors.primary[500], // Set the icon color to primary
+                  fontSize: "32px",
+                  "&:hover": {
+                    // Apply a different color on hover (greenAccent[500])
+                    color: colors.greenAccent[500],
+                    scale: "1.24",
+                  },
+                }}
               />
             }
           />
@@ -133,7 +165,7 @@ const Dashboard = () => {
 
         {/* ROW 2 */}
         <Box
-          gridColumn="span 8"
+          gridColumn={isMobile ? "1" : "span 8"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
         >
@@ -147,7 +179,7 @@ const Dashboard = () => {
           ></Box>
         </Box>
         <Box
-          gridColumn="span 4"
+          gridColumn={isMobile ? "1" : "span 4"}
           gridRow="span 4"
           backgroundColor={colors.primary[400]}
           overflow="auto"
@@ -159,21 +191,20 @@ const Dashboard = () => {
             borderBottom={`4px solid ${colors.primary[500]}`}
             colors={colors.grey[100]}
             p="10px"
+            sx={{
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: `${colors.greenAccent[500]}`,
+              },
+            }}
           >
             <Typography
               onClick={() => navigate("/calendar")}
               color={colors.grey[100]}
               variant="h3"
               fontWeight="600"
-              sx={{
-                cursor: "pointer",
-                ":hover": {
-                  textDecoration: "underline",
-                  color: `${colors.greenAccent[400]}`,
-                },
-              }} // Add pointer cursor and underline on hover
             >
-              Recent Trips | Calendar
+              Upcoming Trips | Calendar
             </Typography>
           </Box>
           <SimpleCalendar />
@@ -181,7 +212,7 @@ const Dashboard = () => {
 
         {/* ROW 3 */}
         <Box
-          gridColumn="span 4"
+          gridColumn={isMobile ? "1" : "span 4"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           p="30px"
@@ -199,17 +230,36 @@ const Dashboard = () => {
           </Box>
         </Box>
         <Box
-          gridColumn="span 4"
+          gridColumn={isMobile ? "1" : "span 4"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
         >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ padding: "30px 30px 0 30px" }}
+          <Box
+            onClick={() => navigate("/trips")}
+            gridColumn="span 4"
+            gridRow="span 2"
+            backgroundColor={colors.primary[400]}
+            p="30px"
+            sx={{
+              cursor: "pointer",
+              ":hover": {
+                textDecoration: "underline",
+                color: `${colors.greenAccent[400]}`,
+              },
+            }}
           >
-            Sales Quantity
-          </Typography>
+            <Typography variant="h4" fontWeight="600">
+              My Trips
+            </Typography>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              mt="25px"
+            >
+              {/* <ProgressCircle size="125" /> */}
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>
