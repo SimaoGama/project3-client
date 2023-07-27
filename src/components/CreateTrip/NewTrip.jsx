@@ -1,21 +1,24 @@
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useContext, useState } from 'react';
-import { Box } from '@mui/material';
-import { addTrip } from '../../api/trips.api';
-import { AuthContext } from '../../context/auth.context';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useContext, useState } from "react";
+import { Box } from "@mui/material";
+import { addTrip } from "../../api/trips.api";
+import { AuthContext } from "../../context/auth.context";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NewTrip = ({ handleClose, reFetch }) => {
-  const [destination, setDestination] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [destination, setDestination] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [days, setDays] = useState([]);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const { user, authenticateUser } = useContext(AuthContext);
@@ -37,31 +40,42 @@ const NewTrip = ({ handleClose, reFetch }) => {
     }
   }, [isFormSubmitted, open, handleClose, navigate]);
 
-  const handleNameChange = event => {
+  const handleNameChange = (event) => {
     setDestination(event.target.value);
   };
 
-  const handleStartDateChange = event => {
+  const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
   };
 
-  const handleEndDateChange = event => {
+  const handleEndDateChange = (event) => {
     setEndDate(event.target.value);
   };
 
-  const handleCreateNewTrip = async e => {
+  const handleCreateNewTrip = async (e) => {
     e.preventDefault();
     const userId = user._id;
     const newTrip = {
       destination,
       startDate,
       endDate,
-      days
+      days,
     };
 
     try {
       const response = await addTrip(newTrip, userId);
-      console.log('New trip created:', response.data);
+      console.log("New trip created:", response.data);
+
+      toast.success("Trip created successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
       setIsFormSubmitted(true); // Set the form submission status to true
       // Fetch updated user data to include the new trip
       authenticateUser(true);
@@ -69,12 +83,21 @@ const NewTrip = ({ handleClose, reFetch }) => {
         reFetch();
       }
     } catch (error) {
-      console.log('Error creating new trip:', error);
+      console.log("Error creating new trip:", error);
+      toast.error("Error creating trip. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
 
-    setDestination('');
-    setStartDate('');
-    setEndDate('');
+    setDestination("");
+    setStartDate("");
+    setEndDate("");
     setDays([]);
   };
 
@@ -101,7 +124,7 @@ const NewTrip = ({ handleClose, reFetch }) => {
               autoFocus
               margin="dense"
               id="destination"
-              label={'My trip to ...'}
+              label={"My trip to ..."}
               type="text"
               value={destination}
               onChange={handleNameChange}
@@ -135,20 +158,20 @@ const NewTrip = ({ handleClose, reFetch }) => {
               variant="standard"
               InputLabelProps={{
                 style: {
-                  color: 'text.secondary'
-                }
+                  color: "text.secondary",
+                },
               }}
             />
           </Box>
         </DialogContent>
         <DialogActions>
           <Button
-            sx={{ color: 'text.secondary' }}
+            sx={{ color: "text.secondary" }}
             onClick={handleComponentClose}
           >
             Close
           </Button>
-          <Button sx={{ color: 'text.secondary' }} type="submit">
+          <Button sx={{ color: "text.secondary" }} type="submit">
             Submit new trip
           </Button>
         </DialogActions>

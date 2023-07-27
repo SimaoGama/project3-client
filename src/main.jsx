@@ -8,6 +8,8 @@ import ThemeProviderWrapper from "./context/theme.context.jsx";
 import { AuthProviderWrapper } from "./context/auth.context.jsx";
 import { TripColorsProvider } from "./context/tripColors.context.jsx";
 import "./main.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -20,6 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           </AuthProviderWrapper>
         </TripColorsProvider>
       </ThemeProviderWrapper>
+      <ToastContainer />
     </Router>
   </React.StrictMode>
 );

@@ -6,9 +6,41 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-// import styled from "styled-components"; // If you are using styled-components for ModalContainer
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EventOptionsModal = ({ selectedTrip, onClose, onDelete, onEdit }) => {
+  const handleDelete = async () => {
+    try {
+      // Assuming onDelete is an async function that handles deletion
+      await onDelete();
+      // Show success toast notification
+      toast.success("Trip deleted successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      onClose(); // Close the modal after successful deletion
+    } catch (error) {
+      // Handle error if necessary
+      console.error("Error deleting event:", error);
+      // Show error toast notification
+      toast.error("Error deleting Trip. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
   return (
     <Dialog open={Boolean(selectedTrip)} onClose={onClose}>
       <DialogTitle>
@@ -22,17 +54,17 @@ const EventOptionsModal = ({ selectedTrip, onClose, onDelete, onEdit }) => {
           onClick={onEdit}
           variant="contained"
           color="secondary"
-          sx={{ marginRight: 2 }} // Custom margin for spacing between buttons
+          sx={{ marginRight: 2 }}
         >
           Edit
         </Button>
 
         {/* Delete Button */}
         <Button
-          onClick={onDelete}
+          onClick={handleDelete} // Use the handleDelete function here
           variant="contained"
-          color="error" // Red color for the delete button
-          sx={{ marginRight: 2 }} // Custom margin for spacing between buttons
+          color="error"
+          sx={{ marginRight: 2 }}
         >
           Delete
         </Button>

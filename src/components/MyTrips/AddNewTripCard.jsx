@@ -35,7 +35,10 @@ const AddNewTripCard = () => {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia sx={{ height: 140 }} title="Add Trip">
-        <AddIcon sx={{ fontSize: 80, margin: "auto" }} />
+        <AddIcon
+          sx={{ fontSize: 80, margin: "auto", cursor: "pointer" }}
+          onClick={handleAddTrip}
+        />
       </CardMedia>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -45,16 +48,6 @@ const AddNewTripCard = () => {
           Click the plus sign to add a new trip.
         </Typography>
       </CardContent>
-
-      <CardActions>
-        <Button
-          size="small"
-          onClick={handleAddTrip}
-          sx={{ color: "text.secondary" }}
-        >
-          Add Trip
-        </Button>
-      </CardActions>
     </Card>
   );
 };

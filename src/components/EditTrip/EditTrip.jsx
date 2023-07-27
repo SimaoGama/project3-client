@@ -15,6 +15,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { baseURL } from "../../api/trips.api";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const EditTrip = ({ onClose, handleClose }) => {
   const { user, authenticateUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -95,6 +98,17 @@ const EditTrip = ({ onClose, handleClose }) => {
     try {
       const response = await updateTrip(updatedTrip, tripId); // Include the tripId as a separate parameter
       console.log("Trip updated:", response.data);
+
+      toast.success("Trip edited successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
       setIsFormSubmitted(true);
 
       authenticateUser(true);
@@ -103,6 +117,16 @@ const EditTrip = ({ onClose, handleClose }) => {
       }
     } catch (error) {
       console.log("Error updating trip:", error);
+
+      // toast.error("Error updating the trip. Please try again!", {
+      //   position: "top-right",
+      //   autoClose: 3000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      // });
     }
   };
 
