@@ -24,6 +24,10 @@ import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 
 const TripList = () => {
+  const { handleThemeChange: toggleColorMode, theme } =
+    useContext(ColorModeContext);
+  const colors = tokens(theme.palette.mode);
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const { user } = useContext(AuthContext);
 
   const {
@@ -32,10 +36,6 @@ const TripList = () => {
     error,
     reFetch,
   } = useFetch(`${baseURL}/trips?userId=${user._id}`);
-
-  const { handleThemeChange: toggleColorMode, theme } =
-    useContext(ColorModeContext);
-  const colors = tokens(theme.palette.mode);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [displayedTrips, setDisplayedTrips] = useState(null);
@@ -82,8 +82,6 @@ const TripList = () => {
     reFetch();
   };
 
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
-
   const applyFilter = () => {
     if (filteredTrips && filter === "recent") {
       // Sort filteredTrips by most recent created
@@ -128,7 +126,7 @@ const TripList = () => {
         height: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        overflowY: isMobile ? "auto" : "visible",
       }}
     >
       <Container maxWidth="lg" spacing={4}>
@@ -166,6 +164,7 @@ const TripList = () => {
             />
           </Box>
         </Box>
+
         <Grid container spacing={2} justifyContent="center">
           {/* Step 3: Display the filtered trips */}
           {tripsToDisplay?.map((trip) => (

@@ -11,6 +11,7 @@ const DeleteModal = ({
   handleDeleteClick,
   isConfirmationOpen,
   setIsConfirmationOpen,
+  destination,
 }) => {
   return (
     <Dialog
@@ -20,7 +21,7 @@ const DeleteModal = ({
       <DialogTitle>Confirm Delete</DialogTitle>
       <DialogContent>
         <Typography variant="body1">
-          Are you sure you want to delete your trip?
+          {`Are you sure you want to delete your trip ${destination} ?`}
         </Typography>
       </DialogContent>
       <DialogActions>

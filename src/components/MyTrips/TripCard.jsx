@@ -18,9 +18,11 @@ import { useState } from "react";
 import { deleteTrip } from "../../api/trips.api";
 import DeleteModal from "../Modal/DeleteModal";
 import DayList from "./DayList";
-import { Menu, MenuItem } from "@mui/material";
+import { Box, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Link, useNavigate } from "react-router-dom";
+import { tokens } from "../../data/theme";
+import { useTheme } from "@emotion/react";
 
 const IMG_URL =
   "https://www.gtitravel.com/wp-content/uploads/2017/06/Do-Travel-Agents-get-free-trips.jpg";
@@ -79,6 +81,10 @@ const TripCard = ({ trip, handleDelete }) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+
   const navigate = useNavigate();
 
   const handleExpandClick = () => {
@@ -123,10 +129,22 @@ const TripCard = ({ trip, handleDelete }) => {
   };
 
   return (
-    <GlowCard>
+    <Box
+      gridColumn={isMobile ? "1" : "span 4"} // Use 1 column for mobile and 4 columns for larger screens
+      backgroundColor={colors.primary[400]}
+      alignItems="center"
+      justifyContent="center"
+      sx={{
+        cursor: "pointer",
+        transition: "background-color 0.3s ease",
+        "&:hover": {
+          backgroundColor: `${colors.greenAccent[500]}`,
+        },
+      }}
+    >
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+          <Avatar sx={{ bgcolor: colors.greenAccent[200] }} aria-label="recipe">
             {trip?.destination.charAt(0)}
           </Avatar>
         }
@@ -157,7 +175,12 @@ const TripCard = ({ trip, handleDelete }) => {
         }
         title={
           <StyledLink to={`/trip/${trip._id}`}>
-            <Typography variant="h4" component="div">
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{ color: colors.grey[100] }}
+              gutterBottom
+            >
               {trip?.destination}
             </Typography>
           </StyledLink>
@@ -193,6 +216,7 @@ const TripCard = ({ trip, handleDelete }) => {
           isConfirmationOpen={isConfirmationOpen}
           setIsConfirmationOpen={setIsConfirmationOpen}
           handleDeleteClick={handleDeleteClick}
+          destination={trip?.destination}
         />
         <ExpandMore
           onClick={handleExpandClick}
@@ -208,7 +232,7 @@ const TripCard = ({ trip, handleDelete }) => {
           <DayList days={trip.days} />
         </CardContent>
       </Collapse>
-    </GlowCard>
+    </Box>
   );
 };
 
