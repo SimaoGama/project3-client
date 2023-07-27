@@ -65,7 +65,6 @@ function Footer() {
       </div>
       <section className="social-media">
         <div className="social-media-wrap">
-          <Copyright />
           <div className="social-icons">
             <Link
               className="social-icon-link facebook"

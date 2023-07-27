@@ -157,11 +157,11 @@ function Calendar() {
             backgroundColor: savedColor,
             borderColor: savedColor,
           };
-
+          reFetch();
           setCurrentEvents((prevEvents) => [...prevEvents, event]);
         })
         .finally(
-          toast.success("Trip created successfully!", {
+          toast.success(`Trip ${newTrip.destination} created successfully!`, {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -175,7 +175,6 @@ function Calendar() {
           console.error("Error adding trip:", error);
         });
     }
-    reFetch();
   };
 
   // Edit trip to the database using the updateTrip function
@@ -252,10 +251,11 @@ function Calendar() {
       deleteTrip(selectedTrip.id)
         .then(() => {
           // If the trip is deleted successfully, remove the event from the calendar
+
           const updatedEvents = currentEvents.filter(
             (event) => event.id !== selectedTrip.id
           );
-
+          reFetch();
           setCurrentEvents(updatedEvents);
           setSelectedTrip(null);
         })
@@ -264,7 +264,6 @@ function Calendar() {
           setSelectedTrip(null);
         });
     }
-    reFetch();
   };
 
   const handleEditTrip = () => {

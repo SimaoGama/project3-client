@@ -136,7 +136,6 @@ const Dropdown = ({ user }) => {
           </ListItemIcon>
 
           <Link
-            to="/login"
             onClick={handleLogout}
             className="link"
             sx={{ "&:hover": { color: "red" } }}

@@ -17,7 +17,7 @@ const DeleteModal = ({
   destination,
 }) => {
   const deleteModalConfirmation = () => {
-    return toast.success("Trip deleted successfully!", {
+    return toast.success(`Trip deleted successfully!`, {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,

@@ -1,18 +1,18 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Grid, IconButton, InputAdornment, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Grid, IconButton, InputAdornment, TextField } from "@mui/material";
+import React, { useState } from "react";
 
-const PasswordField = ({ theme, colors, setPassword }) => {
+const PasswordField = ({ theme, colors, setPassword, name, value }) => {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
-    setShowPassword(prev => !prev);
+    setShowPassword((prev) => !prev);
   };
 
-  const handleMouseDownPassword = event => {
+  const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  const handlePasswordChange = e => {
+  const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
   return (
@@ -21,16 +21,17 @@ const PasswordField = ({ theme, colors, setPassword }) => {
         required
         fullWidth
         name="password"
-        label="Password"
-        type={showPassword ? 'text' : 'password'} // Toggle visibility based on state
+        value={value || ""}
+        label={name ? name : "Password"}
+        type={showPassword ? "text" : "password"} // Toggle visibility based on state
         id="password"
         onChange={handlePasswordChange}
         autoComplete="new-password"
         InputLabelProps={{
           style: {
             color: theme.palette.text.primary,
-            borderColor: colors.grey[100]
-          }
+            borderColor: colors.grey[100],
+          },
         }}
         InputProps={{
           endAdornment: (
@@ -43,7 +44,7 @@ const PasswordField = ({ theme, colors, setPassword }) => {
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
-          )
+          ),
         }}
       />
     </Grid>

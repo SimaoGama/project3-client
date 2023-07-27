@@ -23,6 +23,7 @@ import TripView from "./pages/Trip/TripView";
 import { useLocation } from "react-router-dom";
 import "./main.css";
 import DayView from "./pages/Day/DayView";
+import EditUserPage from "./pages/UserPage/EditAccount";
 
 function App() {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -79,6 +80,16 @@ function App() {
                   </IsPrivate>
                 }
               />
+
+              <Route
+                path="/user/edit"
+                element={
+                  <IsPrivate>
+                    <EditUserPage />
+                  </IsPrivate>
+                }
+              />
+
               <Route
                 path="/map"
                 element={

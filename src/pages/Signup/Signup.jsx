@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
 import { ThemeProvider } from "@mui/material/styles";
-
+import { toast } from "react-toastify";
 import { tokens } from "../../data/theme";
 import { useContext, useState } from "react";
 import { ColorModeContext } from "../../context/theme.context";
@@ -50,19 +50,56 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    //const data = new FormData(event.currentTarget);
 
     const user = { email, password, firstName, lastName };
     try {
       await signup(user);
 
+      toast.success("Signup successful! You can now log in.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
       navigate("/login");
     } catch (error) {
-      console.log(user);
-      console.log("Error signing up", error);
-      const errorDescription = error.response.data.message;
-      setErrorMessage(errorDescription);
+      console.log("Error Signing In", error);
+      let errorMessage = "Something went wrong, try again later";
+
+      // Check if the error response contains a specific message
+      if (
+        error.response &&
+        error.response.data.message === "All fields are mandatory"
+      ) {
+        errorMessage = "All fields are mandatory.";
+      } else if (
+        error.response &&
+        error.response.data.message === "Provide a valid email address"
+      ) {
+        errorMessage = "Provide a valid email address.";
+      } else if (
+        error.response &&
+        error.response.data.message === "Provide a valid password"
+      ) {
+        errorMessage =
+          "Password must be eight characters including one uppercase letter, and alphanumeric characters";
+      }
+
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
+
     setEmail("");
     setFirstName("");
     setLastName("");

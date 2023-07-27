@@ -99,7 +99,7 @@ const EditTrip = ({ onClose, handleClose }) => {
       const response = await updateTrip(updatedTrip, tripId); // Include the tripId as a separate parameter
       console.log("Trip updated:", response.data);
 
-      toast.success("Trip edited successfully!", {
+      toast.success(`Trip ${updatedTrip?.destination} updated successfully!`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,

@@ -10,12 +10,13 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const EventOptionsModal = ({ selectedTrip, onClose, onDelete, onEdit }) => {
+  console.log("selectedTrip", selectedTrip);
   const handleDelete = async () => {
     try {
       // Assuming onDelete is an async function that handles deletion
       await onDelete();
       // Show success toast notification
-      toast.success("Trip deleted successfully!", {
+      toast.success(`Trip ${selectedTrip?.title} deleted successfully!`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,

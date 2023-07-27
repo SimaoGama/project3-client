@@ -3,36 +3,36 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
 import { ThemeProvider } from "@mui/material/styles";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-
+import { toast } from "react-toastify";
 import { tokens } from "../../data/theme";
 import { useContext, useState } from "react";
 import { ColorModeContext } from "../../context/theme.context";
-import LoginIcon from "@mui/icons-material/Login";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Copyright from "../../components/Footer/Copyright";
+import { signup } from "../../api/auth.api";
+import PasswordField from "../../components/Password/PasswordField";
 import { AuthContext } from "../../context/auth.context";
-import { toast } from "react-toastify";
-import { login } from "../../api/auth.api";
-import { IconButton, InputAdornment } from "@mui/material";
-import "./Login.css";
 
-const LogIn = () => {
+const EditUserPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [showPassword, setShowPassword] = useState(false);
-  const { storeToken, authenticateUser } = useContext(AuthContext);
+
+  const { user } = useContext(AuthContext);
 
   const { handleThemeChange: toggleColorMode, theme } =
     useContext(ColorModeContext);
   const colors = tokens(theme.palette.mode);
-
   const navigate = useNavigate();
 
   const handleEmail = (e) => {
@@ -43,68 +43,52 @@ const LogIn = () => {
     setPassword(e.target.value);
   };
 
-  const handleClickShowPassword = () => {
-    setShowPassword((prev) => !prev);
+  const handleFirstName = (e) => {
+    setFirstName(e.target.value);
+  };
+  const handleLastName = (e) => {
+    setLastName(e.target.value);
   };
 
-  const handleMouseDownPassword = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-  };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+    const user = { email, password, firstName, lastName };
     try {
-      const user = { email, password };
-      const response = await login(user);
-      if (response.data && response.data.authToken) {
-        // If authentication is successful, store the token and navigate to the dashboard
-        storeToken(response.data.authToken);
-        authenticateUser();
+      await signup(user);
 
-        console.log(user);
-        navigate("/dashboard");
+      toast.success("Signup successful! You can now log in.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
-        toast.success(`Log in successful, welcome back!`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      } else {
-        // If the response does not contain an authToken, show an error toast
-        toast.error("Invalid email or password", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
+      navigate("/login");
     } catch (error) {
-      console.log("Error Logging In", error);
+      console.log("Error Signing In", error);
       let errorMessage = "Something went wrong, try again later";
 
       // Check if the error response contains a specific message
       if (
         error.response &&
-        error.response.data.message === "Incorrect password"
+        error.response.data.message === "All fields are mandatory"
       ) {
-        errorMessage = "Invalid password. Please check your password.";
+        errorMessage = "All fields are mandatory.";
       } else if (
         error.response &&
-        error.response.data.message === "Provided email is not registered"
+        error.response.data.message === "Provide a valid email address"
       ) {
-        errorMessage = "Invalid username. Provided email is not registered.";
+        errorMessage = "Provide a valid email address.";
+      } else if (
+        error.response &&
+        error.response.data.message === "Provide a valid password"
+      ) {
+        errorMessage =
+          "Password must be eight characters including one uppercase letter, and alphanumeric characters";
       }
 
       toast.error(errorMessage, {
@@ -117,6 +101,11 @@ const LogIn = () => {
         progress: undefined,
       });
     }
+
+    setEmail("");
+    setFirstName("");
+    setLastName("");
+    setPassword("");
   };
 
   const handleToggleTheme = () => {
@@ -128,7 +117,7 @@ const LogIn = () => {
       <Container
         component="main"
         maxWidth="xs"
-        className="custom-container login-background"
+        className="custom-container signup-background"
       >
         <CssBaseline />
         <Box
@@ -140,10 +129,10 @@ const LogIn = () => {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LoginIcon />
+            <HowToRegTwoToneIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Log in
+            Edit Account
           </Typography>
           <Box
             component="form"
@@ -152,15 +141,14 @@ const LogIn = () => {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
-                  required
+                  autoComplete="given-name"
+                  name="firstName"
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={handleEmail}
+                  id="firstName"
+                  label={user?.firstName}
+                  onChange={handleFirstName}
                   InputLabelProps={{
                     style: {
                       color: theme.palette.text.primary, // Set label color for light and dark themes
@@ -169,58 +157,67 @@ const LogIn = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
-                  required
                   fullWidth
-                  name="password"
-                  label="Password"
-                  type={showPassword ? "text" : "password"} // Toggle visibility based on state
-                  id="password"
-                  onChange={handlePasswordChange}
-                  autoComplete="new-password"
+                  id="lastName"
+                  label={user?.lastName}
+                  onChange={handleLastName}
+                  name="lastName"
+                  autoComplete="family-name"
                   InputLabelProps={{
                     style: {
                       color: theme.palette.text.primary,
-                      borderColor: colors.grey[100],
+                      orderColor: theme.palette.divider,
                     },
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
                   }}
                 />
               </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="email"
+                  label={user?.email}
+                  onChange={handleEmail}
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <PasswordField
+                colors={colors}
+                theme={theme}
+                name={"Current Password"}
+                setPassword={setPassword}
+              />
+              <PasswordField
+                colors={colors}
+                theme={theme}
+                setPassword={setPassword}
+                name={"New Password"}
+              />
             </Grid>
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2, bgcolor: colors.greenAccent[600] }}
             >
-              Log In
+              Save Changes
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <RouterLink
-                  to="/signup"
+                  to="#"
                   variant="body2"
                   sx={{
                     color: theme.palette.mode === "dark" ? "#fff" : "inherit",
                   }}
                 >
-                  <Typography sx={{ fontSize: "0.7rem" }} variant="h6">
-                    Don't have an account? Register today.
-                  </Typography>
+                  {errorMessage && (
+                    <p className="error-message">{errorMessage}</p>
+                  )}
                 </RouterLink>
               </Grid>
             </Grid>
@@ -232,4 +229,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default EditUserPage;

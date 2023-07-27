@@ -111,7 +111,7 @@ const Dashboard = () => {
               backgroundColor: `${colors.greenAccent[500]}`,
             },
           }}
-          onClick={() => navigate("/user")}
+          onClick={() => navigate("/user/edit")}
         >
           <StatBox
             title="Edit"

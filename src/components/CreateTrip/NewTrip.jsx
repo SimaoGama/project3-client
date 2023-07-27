@@ -66,7 +66,7 @@ const NewTrip = ({ handleClose, reFetch }) => {
       const response = await addTrip(newTrip, userId);
       console.log("New trip created:", response.data);
 
-      toast.success("Trip created successfully!", {
+      toast.success(`Trip ${newTrip?.destination} created successfully!`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
