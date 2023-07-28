@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import HeroSection from "./HeroSection";
 import Cards from "./Cards";
 import Footer from "../Footer/Footer";
+import { AuthContext } from "../../context/auth.context";
 
 const LandingPage = () => {
   const { handleThemeChange: toggleColorMode, theme } =

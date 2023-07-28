@@ -3,11 +3,15 @@ import { ButtonComponent } from "./ButtonComponent";
 import TypeWriterEffect from "react-typewriter-effect";
 import React, { useState, useEffect } from "react";
 import "./HeroSection.css";
+import { AuthContext } from "../../context/auth.context";
+import { useContext } from "react";
 
 const HeroSection = () => {
   const [showButtons, setShowButtons] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
+  const { isLoggedIn, user } = useContext(AuthContext);
 
   const textFontSize = isMobile ? "0.8em" : "1.2em";
 
@@ -63,17 +67,18 @@ const HeroSection = () => {
           className="btns"
           buttonStyle="btn--primary"
           buttonSize="btn--large"
-          to={"/signup"}
+          to={!isLoggedIn ? "/signup" : "/dashboard"}
         >
-          GET STARTED
+          {!isLoggedIn ? "GET STARTED" : "DASHBOARD"}
         </ButtonComponent>
         <ButtonComponent
           className="btns"
           buttonStyle="btn--outline"
           buttonSize="btn--large"
-          to={"/login"}
+          to={!isLoggedIn ? "/login" : "/trips"}
         >
-          LOG IN <i className="far fa-play-circle" />
+          {!isLoggedIn ? "LOG IN" : "TRIPS"}{" "}
+          <i className="far fa-play-circle" />
         </ButtonComponent>
       </div>
     </div>
