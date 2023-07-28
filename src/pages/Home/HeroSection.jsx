@@ -18,22 +18,30 @@ const HeroSection = () => {
   // Function to handle the completion of the typing effect
   useEffect(() => {
     // Delay the appearance of the buttons after 10 seconds
-    const timer = setTimeout(() => {
-      setShowButtons(true);
-    }, 10500);
+    if (!isLoggedIn) {
+      const timer = setTimeout(() => {
+        setShowButtons(true);
+      }, 10500);
 
-    // Clear the timer when the component unmounts
-    return () => clearTimeout(timer);
+      // Clear the timer when the component unmounts
+      return () => clearTimeout(timer);
+    } else {
+      setShowButtons(true);
+    }
   }, []);
 
   useEffect(() => {
-    // Delay the appearance of the buttons after 10 seconds
-    const timer = setTimeout(() => {
-      setShowSubtitle(true);
-    }, 9000);
+    if (!isLoggedIn) {
+      // Delay the appearance of the buttons after 10 seconds
+      const timer = setTimeout(() => {
+        setShowSubtitle(true);
+      }, 9000);
 
-    // Clear the timer when the component unmounts
-    return () => clearTimeout(timer);
+      // Clear the timer when the component unmounts
+      return () => clearTimeout(timer);
+    } else {
+      setShowSubtitle(true);
+    }
   }, []);
 
   return (
@@ -59,7 +67,9 @@ const HeroSection = () => {
         </span>{" "}
       </h1>
       <p className={`subtitle-text ${showSubtitle ? "show" : ""}`}>
-        Start your journey now
+        {isLoggedIn
+          ? "Start creating your next trip"
+          : "Start your journey now"}
       </p>
       <div className={`hero-btns ${showButtons ? "show" : ""}`}>
         {/* Add 'show' class when showButtons is true */}

@@ -27,21 +27,28 @@ const DayInfoDialog = ({ isOpen, handleClose, colors, selectedPlace }) => {
       TransitionComponent={Transition}
       // fullScreen
     >
-      {isPlaceArray ? (
-        // If selectedPlace is an array, render a PlaceCard for each place in the array
-        selectedPlace.map((place, index) => (
-          <Box key={index} display="flex" justifyContent="center" mt={2}>
+      {selectedPlace ? ( // Check if selectedPlace is not null or undefined
+        isPlaceArray ? (
+          // If selectedPlace is an array, render a PlaceCard for each place in the array
+          selectedPlace.map((place, index) => (
+            <Box key={index} display="flex" justifyContent="center" mt={2}>
+              <Box maxWidth={400}>
+                <DayPlaceCard place={place} />
+              </Box>
+            </Box>
+          ))
+        ) : (
+          // If selectedPlace is not an array, render a single PlaceCard
+          <Box display="flex" justifyContent="center" mt={2}>
             <Box maxWidth={400}>
-              <DayPlaceCard place={place} />
+              <DayPlaceCard place={selectedPlace} />
             </Box>
           </Box>
-        ))
+        )
       ) : (
-        // If selectedPlace is not an array, render a single PlaceCard
+        // If selectedPlace is null or undefined, display the message
         <Box display="flex" justifyContent="center" mt={2}>
-          <Box maxWidth={400}>
-            <DayPlaceCard place={selectedPlace} />
-          </Box>
+          <Typography variant="body1">No places for this day.</Typography>
         </Box>
       )}
 
