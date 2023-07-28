@@ -15,6 +15,9 @@ import {
 } from "@mui/material";
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
 import SearchButton from "../../pages/Map/SearchButton";
+import IsLoadingRamen from "../Loading/isLoadingRamen";
+import IsLoadingHotel from "../Loading/isLoadingHotel";
+import IsLoadingAttraction from "../Loading/isLoadingAttraction";
 
 const PlacesList = ({
   places,
@@ -46,7 +49,8 @@ const PlacesList = ({
     );
   }, [places]);
 
-  console.log("ismobile?", isMobile);
+  // console.log("ismobile?", isMobile);
+  console.log("type", type);
 
   return (
     <>
@@ -101,11 +105,12 @@ const PlacesList = ({
         <Box
           justifyContent="center"
           alignItems="center"
-          height="100%"
+          height="60%"
           display="flex"
-          // sx={{ height: "20vh", width: "100%" }}
         >
-          <CircularProgress size="5rem" />
+          {type === "restaurants" && <IsLoadingRamen />}
+          {type === "hotels" && <IsLoadingHotel />}
+          {type === "attractions" && <IsLoadingAttraction />}
         </Box>
       ) : (
         <Box sx={{ height: "65vh", width: "100%", overflow: "auto" }}>
