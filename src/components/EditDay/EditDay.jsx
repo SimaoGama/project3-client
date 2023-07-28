@@ -32,6 +32,7 @@ import DayCard from "./DayCard";
 import "./EditDay.css";
 import PlaceCard from "../PlaceDetails/PlaceCard";
 import DeleteModal from "../Modal/DeleteModal";
+import IsLoadingDefault from "../Loading/isLoadingDefault";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} timeout={700} />;
@@ -214,7 +215,7 @@ const EditDay = ({
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <IsLoadingDefault />;
   }
 
   if (error) {

@@ -127,7 +127,7 @@ const Dropdown = ({ user }) => {
           </MenuItem>
         </Link>
 
-        <Link to="/settings" className="link">
+        <Link to="/trips" className="link">
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
               <FlightTakeoffRoundedIcon fontSize="small" />

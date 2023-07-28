@@ -22,11 +22,8 @@ const TripView = () => {
       try {
         const response = await getTripPopulated(tripId);
         const tripData = response.data;
-        console.log("tripdata:", tripData);
 
         setTrip(tripData);
-        console.log("start", tripData.startDate);
-        console.log("end", tripData.endDate);
       } catch (error) {
         console.log("Error fetching trip:", error);
       }
@@ -35,17 +32,17 @@ const TripView = () => {
     fetchTrip();
   }, [tripId]);
 
-  console.log("Days", trip?.days);
+  // console.log("Days", trip?.days);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().substring(0, 10);
   };
 
-  console.log("trip view info:", trip?.days);
+  // console.log("trip view info:", trip?.days);
 
   const navigateToDay = (day) => {
-    console.log("DAYID", day._id);
+    // console.log("DAYID", day._id);
     navigate(`/day/${day?._id}`, { state: { dayInfo: day } });
   };
 
@@ -54,17 +51,17 @@ const TripView = () => {
       {trip ? (
         <>
           <Box textAlign="center" mt={3} mb={4}>
-            <Typography variant="h1">{trip.destination}</Typography>
+            <Typography variant="h1">{trip?.destination}</Typography>
             <Typography variant="subtitle1">
-              From: {formatDate(trip.startDate)} to {formatDate(trip.endDate)}
+              From: {formatDate(trip?.startDate)} to {formatDate(trip?.endDate)}
             </Typography>
           </Box>
           {/* Display other trip details here */}
           <Grid container spacing={2} justifyContent="center">
-            {trip?.days?.map((day) => (
+            {trip?.days?.map((day, index) => (
               <Grid item xs={12} sm={6} md={4} key={day._id}>
                 <Box
-                  gridColumn={isMobile ? "1" : "span 4"} // Use 1 column for mobile and 4 columns for larger screens
+                  gridColumn={isMobile ? "1" : "span 4"}
                   backgroundColor={colors.primary[400]}
                   display="flex"
                   alignItems="center"
@@ -79,8 +76,10 @@ const TripView = () => {
                   onClick={() => navigate(`/day/${day._id}`)}
                 >
                   <StatBox
-                    title={`${day?.destination || "City"}`}
-                    subtitle={`${formatDate(day.date)}`}
+                    title={`Day ${index + 1} of ${trip?.days?.length} in ${
+                      trip?.destination
+                    }`}
+                    subtitle={`${formatDate(day?.date)}`}
                     progress={""}
                     increase={""}
                     icon={

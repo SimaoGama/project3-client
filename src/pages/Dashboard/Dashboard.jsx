@@ -27,6 +27,7 @@ import { baseURL } from "../../api/trips.api";
 import { useNavigate } from "react-router-dom";
 import { CalculateOutlined, CalendarMonthOutlined } from "@mui/icons-material";
 import UserTag from "../../components/UserTag";
+import IsLoadingDefault from "../../components/Loading/isLoadingDefault";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -42,6 +43,14 @@ const Dashboard = () => {
     error,
     reFetch,
   } = useFetch(`${baseURL}/trips?userId=${user?._id}`);
+
+  if (isLoading) {
+    return <IsLoadingDefault />;
+  }
+
+  if (error) {
+    return <Typography>Error: {error.message}</Typography>;
+  }
 
   return (
     <Box m="20px">

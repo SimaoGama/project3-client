@@ -108,9 +108,15 @@ const PlacesList = ({
           height="60%"
           display="flex"
         >
-          {type === "restaurants" && <IsLoadingRamen />}
-          {type === "hotels" && <IsLoadingHotel />}
-          {type === "attractions" && <IsLoadingAttraction />}
+          {type ? (
+            <>
+              {type === "restaurants" && <IsLoadingRamen />}
+              {type === "hotels" && <IsLoadingHotel />}
+              {type === "attractions" && <IsLoadingAttraction />}
+            </>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       ) : (
         <Box sx={{ height: "65vh", width: "100%", overflow: "auto" }}>

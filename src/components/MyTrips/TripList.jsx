@@ -22,6 +22,7 @@ import CardItem from "../../pages/Home/CardItem";
 import "./TripList.css";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
+import IsLoadingDefault from "../Loading/isLoadingDefault";
 
 const TripList = () => {
   const { handleThemeChange: toggleColorMode, theme } =
@@ -104,7 +105,7 @@ const TripList = () => {
 
   if (isLoading || displayedTrips === null) {
     // Show loading state while fetching data or if displayedTrips is null
-    return <div>Loading...</div>;
+    return <IsLoadingDefault />;
   }
 
   if (error) {

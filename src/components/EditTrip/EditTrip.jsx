@@ -17,6 +17,7 @@ import { baseURL } from "../../api/trips.api";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import IsLoadingDefault from "../Loading/isLoadingDefault";
 
 const EditTrip = ({ onClose, handleClose }) => {
   const { user, authenticateUser } = useContext(AuthContext);
@@ -133,7 +134,7 @@ const EditTrip = ({ onClose, handleClose }) => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <IsLoadingDefault />;
   }
 
   if (error) {

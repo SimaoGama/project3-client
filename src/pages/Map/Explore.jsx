@@ -36,13 +36,17 @@ const Explore = () => {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState({});
 
+  const [isLoadingUserTrips, setIsLoadingUserTrips] = useState(true);
+
   useEffect(() => {
     getAllTrips(user._id)
       .then((response) => {
         setUserTrips(response.data);
+        setIsLoadingUserTrips(false); // Set loading state to false after fetching user trips
       })
       .catch((error) => {
         console.log("Error fetching user trips:", error);
+        setIsLoadingUserTrips(false); // Set loading state to false in case of an error
       });
   }, []);
 

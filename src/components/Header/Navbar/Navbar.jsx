@@ -101,13 +101,7 @@ const Navbar = () => {
                             "nav-links" + (isActive ? " activated" : "")
                           }
                         >
-                          <Typography
-                            component="h2"
-                            variant="h4"
-                            className={({ isActive }) =>
-                              "nav-links" + (isActive ? " activated" : "")
-                            }
-                          >
+                          <Typography component="h2" variant="h4">
                             {`Welcome ${user.firstName}` +
                               " " +
                               `${user.lastName}`}
