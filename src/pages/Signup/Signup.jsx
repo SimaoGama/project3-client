@@ -65,6 +65,11 @@ const SignUp = () => {
         progress: undefined,
       });
 
+      setEmail("");
+      setFirstName("");
+      setLastName("");
+      setPassword("");
+
       navigate("/login");
     } catch (error) {
       console.log("Error Signing In", error);
@@ -99,11 +104,6 @@ const SignUp = () => {
         progress: undefined,
       });
     }
-
-    setEmail("");
-    setFirstName("");
-    setLastName("");
-    setPassword("");
   };
 
   const handleToggleTheme = () => {

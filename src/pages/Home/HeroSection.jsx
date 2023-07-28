@@ -46,8 +46,6 @@ const HeroSection = () => {
 
   return (
     <div className="hero-container">
-      {/* go to css and disable the img overwriting the video */}
-      {/* <video src="/videos/video-1.mp4" autoPlay loop muted />{" "} */}
       <h1>
         EXPLORE
         <span>

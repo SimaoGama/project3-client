@@ -112,21 +112,11 @@ const EditTrip = ({ onClose, handleClose }) => {
       setIsFormSubmitted(true);
 
       authenticateUser(true);
-      if (reFetch) {
-        reFetch();
-      }
+      // if (reFetch) {
+      //   reFetch();
+      // }
     } catch (error) {
       console.log("Error updating trip:", error);
-
-      // toast.error("Error updating the trip. Please try again!", {
-      //   position: "top-right",
-      //   autoClose: 3000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      // });
     }
   };
 
