@@ -20,8 +20,8 @@ const PasswordField = ({ theme, colors, setPassword, name, value }) => {
       <TextField
         required
         fullWidth
+        // value={value || ""}
         name="password"
-        value={value || ""}
         label={name ? name : "Password"}
         type={showPassword ? "text" : "password"} // Toggle visibility based on state
         id="password"
