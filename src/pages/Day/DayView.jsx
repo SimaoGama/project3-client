@@ -61,8 +61,6 @@ const DayView = () => {
     setShowPlans(false);
   };
 
-  console.log("restaurants", restaurants);
-
   return (
     <Box
       p={isMobile ? 2 : 0}

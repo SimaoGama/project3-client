@@ -129,3 +129,9 @@ export const deleteAccommodation = async (accommodationId) => {
     throw error; // Rethrow the error to be caught and handled in the component
   }
 };
+
+//get location lat lng
+
+export const getLocation = (locationId) => {
+  return axios.get(`${baseURL}/location/${locationId}`);
+};

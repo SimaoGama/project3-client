@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 import PlaceCard from "../../components/PlaceDetails/PlaceCard";
+import DayPlaceCard from "./DayPlaceCard";
 
 // Other imports specific to this component (e.g., hooks, state, etc.)
 
@@ -24,13 +25,14 @@ const DayInfoDialog = ({ isOpen, handleClose, colors, selectedPlace }) => {
       open={isOpen}
       onClose={handleClose}
       TransitionComponent={Transition}
+      // fullScreen
     >
       {isPlaceArray ? (
         // If selectedPlace is an array, render a PlaceCard for each place in the array
         selectedPlace.map((place, index) => (
           <Box key={index} display="flex" justifyContent="center" mt={2}>
             <Box maxWidth={400}>
-              <PlaceCard place={place} />
+              <DayPlaceCard place={place} />
             </Box>
           </Box>
         ))
@@ -38,7 +40,7 @@ const DayInfoDialog = ({ isOpen, handleClose, colors, selectedPlace }) => {
         // If selectedPlace is not an array, render a single PlaceCard
         <Box display="flex" justifyContent="center" mt={2}>
           <Box maxWidth={400}>
-            <PlaceCard place={selectedPlace} />
+            <DayPlaceCard place={selectedPlace} />
           </Box>
         </Box>
       )}
