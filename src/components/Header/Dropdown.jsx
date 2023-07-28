@@ -12,6 +12,7 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import DashboardCustomizeOutlinedIcon from "@mui/icons-material/DashboardCustomizeOutlined";
+import FlightTakeoffRoundedIcon from "@mui/icons-material/FlightTakeoffRounded";
 import { Link, NavLink } from "react-router-dom";
 import { Typography } from "@mui/material";
 import { AuthContext } from "../../context/auth.context";
@@ -105,11 +106,16 @@ const Dropdown = ({ user }) => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar /> <Typography variant="h5">Profile</Typography>
+          <Avatar />{" "}
+          <Typography variant="h5">
+            {user?.firstName} {user?.lastName}
+          </Typography>
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> <Typography variant="h5">My Account</Typography>
-        </MenuItem>
+        <Link to="/user/edit" className="link">
+          <MenuItem onClick={handleClose}>
+            <Avatar /> <Typography variant="h5">My Account</Typography>
+          </MenuItem>
+        </Link>
         <Divider />
 
         <Link to="/dashboard" className="link">
@@ -124,9 +130,9 @@ const Dropdown = ({ user }) => {
         <Link to="/settings" className="link">
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
-              <Settings fontSize="small" />
+              <FlightTakeoffRoundedIcon fontSize="small" />
             </ListItemIcon>
-            <Typography variant="h5">Settings</Typography>
+            <Typography variant="h5">My Trips</Typography>
           </MenuItem>
         </Link>
 
