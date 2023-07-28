@@ -32,7 +32,7 @@ const DayPlaceCard = ({ place }) => {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
-  console.log("PLACE", place.location);
+  // console.log("PLACE", place.location);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -41,7 +41,7 @@ const DayPlaceCard = ({ place }) => {
         const response = await getLocation(locationId);
         const data = response.data; // Access the 'data' object from the response
 
-        console.log("data", data);
+        // console.log("data", data);
         setLatitude(data.lat);
         setLongitude(data.lng);
       }
@@ -49,8 +49,8 @@ const DayPlaceCard = ({ place }) => {
     fetchLocation();
   }, [place]);
 
-  console.log("LAT", latitude);
-  console.log("LNG", longitude);
+  // console.log("LAT", latitude);
+  // console.log("LNG", longitude);
 
   return (
     <StyledCard elevation={6}>

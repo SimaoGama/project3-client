@@ -17,6 +17,10 @@ import { useLocation } from "react-router-dom";
 import SimpleCalendar from "../Dashboard/SimpleCalendar";
 import SimpleGoogleMap from "../Dashboard/SimpleGoogleMap";
 import DayInfoDialog from "./DayInfoDialog";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import HotelOutlinedIcon from "@mui/icons-material/HotelOutlined";
+import RestaurantOutlinedIcon from "@mui/icons-material/RestaurantOutlined";
+import AttractionsOutlinedIcon from "@mui/icons-material/AttractionsOutlined";
 
 const DayView = () => {
   const theme = useTheme();
@@ -48,6 +52,16 @@ const DayView = () => {
       setPlans(dayData.plans);
     }
   }, [dayData]);
+
+  const formatDate = (dateString) => {
+    if (!dateString || !Date.parse(dateString)) {
+      // Return an empty string or a placeholder text for invalid date
+      return "Date not available";
+    }
+
+    const date = new Date(dateString);
+    return date.toISOString().substring(0, 10);
+  };
 
   const handleCloseAccommodation = () => {
     setShowAccommodation(false);
@@ -88,11 +102,11 @@ const DayView = () => {
         >
           <StatBox
             title="Day"
-            subtitle={"Destination"}
+            subtitle={formatDate(dayData?.date)}
             progress={""}
             increase={""}
             icon={
-              <VerifiedOutlinedIcon
+              <CalendarTodayOutlinedIcon
                 sx={{
                   fontSize: "32px",
                   color: colors.primary[500],
@@ -122,7 +136,7 @@ const DayView = () => {
             subtitle="Accommodation for tonight"
             increase={""}
             icon={
-              <AccountCircleRoundedIcon
+              <HotelOutlinedIcon
                 sx={{
                   cursor: "pointer",
                   color: colors.primary[500], // Set the icon color to primary
@@ -151,7 +165,7 @@ const DayView = () => {
             title="My"
             subtitle="Restaurants for the day"
             icon={
-              <SettingsSuggestRoundedIcon
+              <RestaurantOutlinedIcon
                 sx={{
                   cursor: "pointer",
                   color: colors.primary[500], // Set the icon color to primary
@@ -180,7 +194,7 @@ const DayView = () => {
             title="My"
             subtitle="Activities for the day"
             icon={
-              <SettingsSuggestRoundedIcon
+              <AttractionsOutlinedIcon
                 sx={{
                   cursor: "pointer",
                   color: colors.primary[500], // Set the icon color to primary

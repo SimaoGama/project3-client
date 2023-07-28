@@ -10,7 +10,7 @@ import { GiWorld } from "react-icons/gi";
 
 import { FaBars, FaTimes } from "react-icons/fa";
 import { IconContext } from "react-icons/lib";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { tokens } from "../../../context/theme.context";
 import { Avatar, Box, Button, MenuItem, Typography } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
@@ -18,12 +18,15 @@ import Topbar from "../Topbar/Topbar";
 import { ColorModeContext } from "../../../context/theme.context";
 import { AuthContext } from "../../../context/auth.context";
 import LoginIcon from "@mui/icons-material/Login";
+import KeyboardReturnOutlinedIcon from "@mui/icons-material/KeyboardReturnOutlined";
 import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
 import Darkmode from "../Darkmode";
 
 const Navbar = () => {
   const [isClicked, setIsClicked] = useState(false);
   const { isLoggedIn, user } = useContext(AuthContext);
+  const [isDashboard, setIsDashboard] = useState(false);
+  const [isHoverActive, setIsHoverActive] = useState(false);
 
   const { handleThemeChange: toggleColorMode, theme } =
     useContext(ColorModeContext);
@@ -36,9 +39,20 @@ const Navbar = () => {
   const handleClick = () => setIsClicked(!isClicked);
 
   const closeMobileMenu = () => setIsClicked(false);
-
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const location = useLocation();
+  const firstEndpoint = pathname.split("/")[1];
+
+  useEffect(() => {
+    if (pathname === "/dashboard") {
+      setIsDashboard(true);
+    }
+  }, [pathname]);
+
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
   return (
     <>
@@ -49,7 +63,7 @@ const Navbar = () => {
               <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
                 <GiWorld className="navbar-icon" onClick={closeMobileMenu} />
                 <Typography component="h1" variant="h3">
-                  Travel App
+                  JOURNEYO
                 </Typography>
               </Link>
               <div className="menu-icon" onClick={handleClick}>
@@ -74,25 +88,55 @@ const Navbar = () => {
                               },
                             }}
                           >
-                            Back
+                            <KeyboardReturnOutlinedIcon />
                           </Typography>
                         </Button>
                       </Box>
                     )}
-                    <li className="nav-item">
-                      <NavLink
-                        to={"/dashboard"}
-                        className={({ isActive }) =>
-                          "nav-links" + (isActive ? " activated" : "")
-                        }
-                      >
-                        <Typography component="h2" variant="h4">
-                          {`Welcome ${user.firstName}` +
-                            " " +
-                            `${user.lastName}`}
-                        </Typography>
-                      </NavLink>
-                    </li>
+                    {isDashboard && pathname === "/" ? (
+                      <li className="nav-item">
+                        <NavLink
+                          to={"/dashboard"}
+                          className={({ isActive }) =>
+                            "nav-links" + (isActive ? " activated" : "")
+                          }
+                        >
+                          <Typography
+                            component="h2"
+                            variant="h4"
+                            className={({ isActive }) =>
+                              "nav-links" + (isActive ? " activated" : "")
+                            }
+                          >
+                            {`Welcome ${user.firstName}` +
+                              " " +
+                              `${user.lastName}`}
+                          </Typography>
+                        </NavLink>
+                      </li>
+                    ) : (
+                      <li className="nav-item">
+                        <NavLink
+                          to={"/dashboard"}
+                          className={
+                            isHoverActive ? "nav-links activated" : "nav-links"
+                          }
+                          onMouseEnter={() => setIsHoverActive(true)}
+                          onMouseLeave={() => setIsHoverActive(false)}
+                          // sx={{
+                          //   "&:hover": {
+                          //     transition: "opacity 0.8s ease",
+                          //   },
+                          // }}
+                        >
+                          <Typography component="h2" variant="h4">
+                            {isHoverActive
+                              ? "Dashboard"
+                              : capitalizeFirstLetter(firstEndpoint)}
+                          </Typography>
+                        </NavLink>
+                      </li>
+                    )}
                     <Box display="flex">
                       <Topbar user={user} />
                     </Box>

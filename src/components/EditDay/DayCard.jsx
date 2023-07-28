@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   Input,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -16,6 +17,9 @@ import { getAccommodation, getRestaurant, getPlan } from "../../api/trips.api";
 
 import { Autocomplete } from "@react-google-maps/api";
 import AutocompleteSearch from "../Autocomplete/AutocompleteSearch";
+import StatBox from "../../pages/Dashboard/StatBox";
+import { ColorModeContext } from "../../context/theme.context";
+import { tokens } from "../../data/theme";
 
 const DayCard = ({
   day,
@@ -34,6 +38,11 @@ const DayCard = ({
   const [accommodationHover, setAccommodationHover] = useState(false);
   const [hoveredDay, setHoveredDay] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const { handleThemeChange: toggleColorMode, theme } =
+    useContext(ColorModeContext);
+  const colors = tokens(theme.palette.mode);
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   // Fetch accommodation data when the component mounts or when 'day.accommodation._id' changes
   useEffect(() => {
@@ -180,162 +189,181 @@ const DayCard = ({
 
   return (
     <Card key={day._id} sx={{ width: 300, height: "130%" }}>
-      <CardContent
-        sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+      <Box
+        // onClick={() => navigate("/trips")}
+        gridColumn={isMobile ? "1" : "span 4"}
+        gridRow="span 2"
+        backgroundColor={colors.primary[400]}
+        p="30px"
+        sx={{
+          cursor: "pointer",
+          transition: "background-color 0.3s ease",
+          "&:hover": {
+            backgroundColor: `${colors.grey[800]}`,
+          },
+        }}
       >
-        {loading ? ( // Display loading state when data is being fetched
-          <Typography>Loading...</Typography>
-        ) : (
-          <>
-            <Button
-              onMouseEnter={() => setHoveredDay(formatDate(day?.date))}
-              onMouseLeave={() => setHoveredDay(null)}
-              variant="contained"
-              color="primary"
-              sx={{
-                "&:hover": {
-                  backgroundColor: "secondary.main",
-                  color: "secondary.contrastText",
-                },
-              }}
-              onClick={handleAddPlace}
-            >
-              <Typography variant="h6">
-                {hoveredDay ? `Add place to ${hoveredDay}` : "Add Place"}
+        <CardContent
+          sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+        >
+          {loading ? ( // Display loading state when data is being fetched
+            <Typography>Loading...</Typography>
+          ) : (
+            <>
+              <Button
+                onMouseEnter={() => setHoveredDay(formatDate(day?.date))}
+                onMouseLeave={() => setHoveredDay(null)}
+                variant="contained"
+                color="primary"
+                sx={{
+                  fontSize: "1rem", // Add the fontSize property to change the font size
+                  "&:hover": {
+                    backgroundColor: "secondary.main",
+                    color: "secondary.contrastText",
+                  },
+                }}
+                onClick={handleAddPlace}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontSize: "0.8rem", // Add the fontSize property to change the font size
+                  }}
+                >
+                  {hoveredDay ? `Add place to ${hoveredDay}` : "Add Place"}
+                </Typography>
+              </Button>
+              <StatBox
+                sx={highlightStyle}
+                subtitle={`${formatDate(day?.date)}`}
+              />
+              {/* Render the information for each day */}
+
+              {/* Render the Accommodation */}
+              <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
+                Accommodation:
               </Typography>
-            </Button>
-            <CardHeader
-              sx={highlightStyle}
-              title={`Day ${formatDate(day?.date)}`}
-            />
-            {/* Render the information for each day */}
+              {accommodation ? (
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <StatBox subtitle={accommodation?.name} />
+                  {/* <Typography>{accommodation?.name}</Typography> */}
+                  {accommodationHover ? (
+                    <CloseOutlinedIcon
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        handleRemovePlace("accommodation", accommodation?._id)
+                      }
+                      onMouseLeave={() => setAccommodationHover(false)}
+                    />
+                  ) : (
+                    <RemoveOutlinedIcon
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        handleRemovePlace("accommodation", accommodation?._id)
+                      }
+                      onMouseEnter={() => setAccommodationHover(true)}
+                    />
+                  )}
+                </Box>
+              ) : (
+                <Typography>No accommodation for tonight</Typography>
+              )}
 
-            {/* Select the City */}
-            <Box>
-              <Input type="text" placeholder="Add a city..." />
-            </Box>
+              {/* Render the restaurants */}
+              <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
+                Restaurants:
+              </Typography>
+              <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+                {restaurants.length > 0 ? (
+                  restaurants.map((restaurant) => (
+                    <Box
+                      key={restaurant?._id}
+                      sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                    >
+                      <StatBox subtitle={restaurant?.name} />
+                      {/* <Typography>{restaurant?.name}</Typography> */}
 
-            {/* Render the Accommodation */}
-            <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
-              Accommodation:
-            </Typography>
-            {accommodation ? (
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography>{accommodation?.name}</Typography>
-                {accommodationHover ? (
-                  <CloseOutlinedIcon
-                    style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      handleRemovePlace("accommodation", accommodation?._id)
-                    }
-                    onMouseLeave={() => setAccommodationHover(false)}
-                  />
+                      {restaurantHover[restaurant?._id] ? (
+                        <CloseOutlinedIcon
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            handleRemovePlace("restaurant", restaurant?._id)
+                          }
+                          onMouseLeave={() =>
+                            setRestaurantHover((prevState) => ({
+                              ...prevState,
+                              [restaurant?._id]: false,
+                            }))
+                          }
+                        />
+                      ) : (
+                        <RemoveOutlinedIcon
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            handleRemovePlace("restaurant", restaurant?._id)
+                          }
+                          onMouseEnter={() =>
+                            setRestaurantHover((prevState) => ({
+                              ...prevState,
+                              [restaurant?._id]: true,
+                            }))
+                          }
+                        />
+                      )}
+                    </Box>
+                  ))
                 ) : (
-                  <RemoveOutlinedIcon
-                    style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      handleRemovePlace("accommodation", accommodation?._id)
-                    }
-                    onMouseEnter={() => setAccommodationHover(true)}
-                  />
+                  <Typography>No restaurants today</Typography>
                 )}
               </Box>
-            ) : (
-              <Typography>No accommodation for tonight</Typography>
-            )}
 
-            {/* Render the restaurants */}
-            <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
-              Restaurants:
-            </Typography>
-            <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
-              {restaurants.length > 0 ? (
-                restaurants.map((restaurant) => (
-                  <Box
-                    key={restaurant?._id}
-                    sx={{ display: "flex", alignItems: "center", mb: 1 }}
-                  >
-                    <Typography>{restaurant?.name}</Typography>
+              {/* Render the plans */}
+              <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
+                Plans:
+              </Typography>
+              <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+                {plans.length > 0 ? (
+                  plans.map((plan) => (
+                    <Box
+                      key={plan?._id}
+                      sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                    >
+                      <StatBox subtitle={plan?.name} />
+                      {/* <Typography>{plan?.name}</Typography> */}
 
-                    {restaurantHover[restaurant?._id] ? (
-                      <CloseOutlinedIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() =>
-                          handleRemovePlace("restaurant", restaurant?._id)
-                        }
-                        onMouseLeave={() =>
-                          setRestaurantHover((prevState) => ({
-                            ...prevState,
-                            [restaurant?._id]: false,
-                          }))
-                        }
-                      />
-                    ) : (
-                      <RemoveOutlinedIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() =>
-                          handleRemovePlace("restaurant", restaurant?._id)
-                        }
-                        onMouseEnter={() =>
-                          setRestaurantHover((prevState) => ({
-                            ...prevState,
-                            [restaurant?._id]: true,
-                          }))
-                        }
-                      />
-                    )}
-                  </Box>
-                ))
-              ) : (
-                <Typography>No restaurants today</Typography>
-              )}
-            </Box>
-
-            {/* Render the plans */}
-            <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
-              Plans:
-            </Typography>
-            <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
-              {plans.length > 0 ? (
-                plans.map((plan) => (
-                  <Box
-                    key={plan?._id}
-                    sx={{ display: "flex", alignItems: "center", mb: 1 }}
-                  >
-                    <Typography>{plan?.name}</Typography>
-
-                    {planHover[plan?._id] ? (
-                      <CloseOutlinedIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRemovePlace("plan", plan?._id)}
-                        onMouseLeave={() =>
-                          setPlansHover((prevState) => ({
-                            ...prevState,
-                            [plan?._id]: false,
-                          }))
-                        }
-                      />
-                    ) : (
-                      <RemoveOutlinedIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRemovePlace("plan", plan?._id)}
-                        onMouseEnter={() =>
-                          setPlansHover((prevState) => ({
-                            ...prevState,
-                            [plan?._id]: true,
-                          }))
-                        }
-                      />
-                    )}
-                  </Box>
-                ))
-              ) : (
-                <Typography>No plans for today</Typography>
-              )}
-            </Box>
-          </>
-        )}
-      </CardContent>
+                      {planHover[plan?._id] ? (
+                        <CloseOutlinedIcon
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleRemovePlace("plan", plan?._id)}
+                          onMouseLeave={() =>
+                            setPlansHover((prevState) => ({
+                              ...prevState,
+                              [plan?._id]: false,
+                            }))
+                          }
+                        />
+                      ) : (
+                        <RemoveOutlinedIcon
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleRemovePlace("plan", plan?._id)}
+                          onMouseEnter={() =>
+                            setPlansHover((prevState) => ({
+                              ...prevState,
+                              [plan?._id]: true,
+                            }))
+                          }
+                        />
+                      )}
+                    </Box>
+                  ))
+                ) : (
+                  <Typography>No plans for today</Typography>
+                )}
+              </Box>
+            </>
+          )}
+        </CardContent>
+      </Box>
     </Card>
   );
 };
