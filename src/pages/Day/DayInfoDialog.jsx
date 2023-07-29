@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 import {
   Dialog,
   DialogTitle,
   Typography,
   Box,
   Button,
-  Slide,
-} from "@mui/material";
+  Slide
+} from '@mui/material';
 
-import PlaceCard from "../../components/PlaceDetails/PlaceCard";
-import DayPlaceCard from "./DayPlaceCard";
+import PlaceCard from '../../components/PlaceDetails/PlaceCard';
+import DayPlaceCard from './DayPlaceCard';
 
 // Other imports specific to this component (e.g., hooks, state, etc.)
 
@@ -56,13 +56,13 @@ const DayInfoDialog = ({ isOpen, handleClose, colors, selectedPlace }) => {
         sx={{
           backgroundColor: colors.greenAccent[700],
           color: colors.grey[100],
-          fontSize: "14px",
-          fontWeight: "bold",
-          padding: "10px 20px",
+          fontSize: '14px',
+          fontWeight: 'bold',
+          padding: '10px 20px'
         }}
         onClick={handleClose}
       >
-        No places for this day
+        Close
       </Button>
     </Dialog>
   );
