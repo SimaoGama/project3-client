@@ -15,8 +15,8 @@ import {
 } from "@mui/material";
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
 import SearchButton from "../../pages/Map/SearchButton";
-import IsLoadingRamen from "../Loading/isLoadingRamen";
 import IsLoadingHotel from "../Loading/isLoadingHotel";
+import IsLoadingRamen from "../Loading/IsLoadingRamen";
 import IsLoadingAttraction from "../Loading/isLoadingAttraction";
 
 const PlacesList = ({
