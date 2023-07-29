@@ -11,13 +11,28 @@
 
 ### Trip Routes
 
-| Method | Route          | Description                   |
-| ------ | -------------- | ----------------------------- |
-| GET    | /api/trips     | Returns all trips             |
-| GET    | /api/trips/:id | Returns the specified trip    |
-| POST   | /api/trips     | Creates a new trip            |
-| PUT    | /api/trips/:id | Edits the specified trip      |
-| DELETE | /api/trip/:id  | Deletes the specified project |
+| Method | Route                         | Description                                                                                                       |
+| ------ | ----------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| POST   | /api/trips/new:               | Create a new trip for the logged-in user. (Payload: { destination: string, startDate: Date, endDate: Date })      |
+| GET    | /api/trips:                   | Get all trips for the logged-in user.                                                                             |
+| GET    | /api/trips/:tripId:           | Get a specific trip by ID.                                                                                        |
+| GET    | /api/trips/:tripId/populated: | Get a specific trip by ID with populated days data.                                                               |
+| PUT    | /api/trips/:tripId:           | Update a specific trip by ID. (Payload: { destination: string, startDate: Date, endDate: Date, order: string[] }) |
+| DELETE | /api/trips/:tripId:           | Delete a specific trip by ID.                                                                                     |
+
+### Days Routes
+
+| Method | Route                                                                                                          | Description                                                                         |
+| ------ | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| GET    | /api/day/:dayId:                                                                                               | Get a specific day by ID with populated data.                                       |
+| GET    | /api/day/:dayId/populated:                                                                                     | Get a specific day by ID with populated restaurants, accommodation, and plans data. |
+| PUT    | /api/day/:dayId:                                                                                               | Update a specific day by ID. (Payload: { selectedPlace: object })                   |
+| GET    | /api/restaurant/:restaurantId:                                                                                 | Get a specific restaurant by ID.                                                    |
+| GET    | /api/plan/:planId:                                                                                             | Get a specific plan by ID.                                                          |
+| GET    | /api/accommodation/:accommodationId:                                                                           | Get a specific accommodation by ID.                                                 |
+| DELETE | /api/restaurant/:restaurantId:                                                                                 | Delete a specific restaurant by ID and remove it from associated days.              |
+| DELETE | /api/plan/:planId: Delete a specific plan by ID and remove it from associated days.                            |
+| DELETE | /api/accommodation/:accommodationId: Delete a specific accommodation by ID and remove it from associated days. |
 
 ## Models
 
@@ -79,6 +94,7 @@
   ],
   order: [String]
 }
+
 ```
 
 ### Day Model
@@ -110,6 +126,7 @@
     }
   ]
 }
+
 ```
 
 ### Location Model
@@ -125,6 +142,7 @@
     required: true
   }
 }
+
 ```
 
 ### Accommodation Model
