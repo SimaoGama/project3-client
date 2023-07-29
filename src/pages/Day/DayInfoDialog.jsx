@@ -48,7 +48,7 @@ const DayInfoDialog = ({ isOpen, handleClose, colors, selectedPlace }) => {
       ) : (
         // If selectedPlace is null or undefined, display the message
         <Box display="flex" justifyContent="center" mt={2}>
-          <Typography variant="body1">No places for this day.</Typography>
+          <Typography variant="body1">No accommodation</Typography>
         </Box>
       )}
 
@@ -62,7 +62,7 @@ const DayInfoDialog = ({ isOpen, handleClose, colors, selectedPlace }) => {
         }}
         onClick={handleClose}
       >
-        Close
+        No places for this day
       </Button>
     </Dialog>
   );

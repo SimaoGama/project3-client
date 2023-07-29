@@ -5,6 +5,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import Rating from "@mui/material/Rating";
 import { styled } from "@mui/system";
 import mapStyles from "./mapStyles";
+import IsLoadingDefault from "../Loading/isLoadingDefault";
 
 const MapContainer = styled("div")({
   height: "85vh",
@@ -40,9 +41,28 @@ const Map = ({
   setChildClicked,
 }) => {
   const isDesktop = useMediaQuery("(min-width:600px)");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleMapLoad = () => {
+    // This function is called when the map is loaded
+    setIsLoading(false);
+  };
 
   return (
     <div style={{ height: "82vh", width: "100%" }}>
+      {isLoading && (
+        // Show loading indicator while the map is loading
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <IsLoadingDefault />
+        </div>
+      )}
       <GoogleMapReact
         bootstrapURLKeys={{ key: import.meta.env.VITE_GOOGLE_MAPS_API }}
         center={coordinates}
@@ -61,6 +81,7 @@ const Map = ({
         onChildClick={(child) => {
           setChildClicked(child);
         }}
+        onGoogleApiLoaded={handleMapLoad} // Call handleMapLoad when the map is loaded
       >
         {places?.map((place, i) => (
           <MarkerContainer

@@ -16,6 +16,7 @@ import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRound
 import FlightTakeoffRoundedIcon from "@mui/icons-material/FlightTakeoffRounded";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
+import ModeOfTravelOutlinedIcon from "@mui/icons-material/ModeOfTravelOutlined";
 import StatBox from "./StatBox";
 import Calendar from "../Calendar/Calendar";
 import { AuthContext } from "../../context/auth.context";
@@ -51,6 +52,8 @@ const Dashboard = () => {
   if (error) {
     return <Typography>Error: {error.message}</Typography>;
   }
+
+  const lastCreatedTrip = userTrips[userTrips.length - 1];
 
   return (
     <Box m="20px">
@@ -150,13 +153,19 @@ const Dashboard = () => {
               backgroundColor: `${colors.greenAccent[500]}`,
             },
           }}
-          onClick={() => navigate("/settings")}
+          onClick={() =>
+            lastCreatedTrip
+              ? navigate(`/trip/${lastCreatedTrip?._id}`)
+              : navigate("/trips/new")
+          }
         >
           <StatBox
-            title="Change"
-            subtitle="Settings"
+            title={lastCreatedTrip ? "Last Created Trip" : "Create your"}
+            subtitle={
+              lastCreatedTrip ? lastCreatedTrip?.destination : "First Trip"
+            }
             icon={
-              <SettingsSuggestRoundedIcon
+              <ModeOfTravelOutlinedIcon
                 sx={{
                   cursor: "pointer",
                   color: colors.primary[500], // Set the icon color to primary
